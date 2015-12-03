@@ -1,0 +1,14 @@
+{
+  "name": "Ozra",
+  "version": "0.0.1",
+  "author": "Alexandre Havrileck <oxynozeta.oz@gmail.com>",
+  "description": "Launcher and monitoring server",
+  "readme": "README.md",
+  "license": "See Readme",
+  "main": "",
+  "repository": "https://github.com/oxyno-zeta/Ozra",
+  "scripts": {},
+  "engines": {
+    "node": ">=0.12"
+  }
+}
