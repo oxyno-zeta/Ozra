@@ -12,7 +12,11 @@
     "src/",
     "*.js"
   ],
-  "env": {},
+  "env": {
+    "OZRA_ENV": "dev",
+    "OZRA_PORT": 2049,
+    "OZRA_VERBOSE": true
+  },
   "script": "src/main.js",
   "options": {
     "extensions": ["js"],
