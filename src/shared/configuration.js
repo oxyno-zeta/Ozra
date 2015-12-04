@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2015 Oxyno-zeta. 
+ * Author: Alexandre Havrileck (Oxyno-zeta)
+ * Date: 04/12/2015
  * Licence: See Readme
  */
 
