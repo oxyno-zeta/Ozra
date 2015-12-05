@@ -9,6 +9,11 @@ var uuid = require('uuid');
 var design = require('./designs/group.js');
 var utils = require('../shared/utils.js');
 
+/**
+ * Action model
+ * @constructor
+ * @returns {actionModel}
+ */
 function actionModel(){
     // Base
     var json = {};
