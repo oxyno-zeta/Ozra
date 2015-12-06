@@ -11,14 +11,16 @@ var config;
 var MODE = 'OZRA_ENV';
 var PORT = 'OZRA_PORT';
 var VERBOSE = 'OZRA_VERBOSE';
-var ENV_VARIABLES = [MODE, PORT, VERBOSE];
+var DATABASE = 'OZRA_DATABASE';
+var ENV_VARIABLES = [MODE, PORT, VERBOSE, DATABASE];
 var POSSIBLE_ENV = ['dev', 'prod'];
 
 // Default configuration
 var DEFAULT_CONFIG = {
     'OZRA_ENV': 'dev',
     'OZRA_PORT': 2049,
-    'OZRA_VERBOSE': true
+    'OZRA_VERBOSE': true,
+    'OZRA_DATABASE': 'Ozra_database'
 };
 
 /**
@@ -113,10 +115,19 @@ function isDeveloperMode(){
     return (getConfig()[MODE] === 'dev');
 }
 
+/**
+ * Get database configuration
+ * @returns {*}
+ */
+function getDatabaseConfig(){
+    return getConfig()[DATABASE];
+}
+
 // Exports
 module.exports = {
     getConfig: getConfig,
     getPort: getPort,
     isVerbose: isVerbose,
-    isDeveloperMode: isDeveloperMode
+    isDeveloperMode: isDeveloperMode,
+    getDatabaseConfig: getDatabaseConfig
 };
