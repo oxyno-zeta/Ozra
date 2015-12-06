@@ -25,6 +25,15 @@ var userDesign = {
                     emit(doc.token, doc.name);
                 }
             }.toString()
+        },
+        getFromGroup: {
+            map: function(doc){
+                if (doc.type === "user"){
+                    doc.groups.forEach(function(groupId){
+                        emit(groupId, doc._id);
+                    });
+                }
+            }.toString()
         }
     }
     /* jshint ignore:end */
@@ -35,7 +44,8 @@ var design = {
     designDocument: userDesign,
     query: {
         getAll: 'users/getAll',
-        getFromToken: 'users/getFromToken'
+        getFromToken: 'users/getFromToken',
+        getFromGroup: 'users/getFromGroup'
     }
 };
 

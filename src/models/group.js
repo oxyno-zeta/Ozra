@@ -106,7 +106,7 @@ function groupModel(){
 
 // Export
 module.exports = {
-    document: groupModel,
+    Group: groupModel,
     design: design.design,
     type: design.type
 };

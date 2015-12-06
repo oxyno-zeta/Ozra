@@ -173,7 +173,7 @@ function userModel(){
 
 // Export
 module.exports = {
-    document: userModel,
+    User: userModel,
     design: design.design,
     type: design.type
 };

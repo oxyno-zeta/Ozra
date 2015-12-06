@@ -6,7 +6,7 @@
 
 // Require
 var uuid = require('uuid');
-var design = require('./designs/group.js');
+var design = require('./designs/action.js');
 var utils = require('../shared/utils.js');
 
 /**
@@ -173,7 +173,7 @@ function actionModel(){
 
 // Export
 module.exports = {
-    document: actionModel,
+    Action: actionModel,
     design: design.design,
     type: design.type
 };
