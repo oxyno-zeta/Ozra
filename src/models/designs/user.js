@@ -10,6 +10,7 @@ var type = 'user';
 /* istanbul ignore next */
 var userDesign = {
     _id: '_design/users',
+    version: '0.0.1',
     /* jshint ignore:start */
     views: {
         getAll: {

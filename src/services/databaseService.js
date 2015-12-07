@@ -25,6 +25,8 @@ var dbOptions = {'include_docs': true};
 module.exports = {
     // Init
     initDatabase: initDatabase,
+    // Update
+    updateDesignDocument: updateDesignDocument,
     // User
     getAllUsers: getAllUsers,
     getUserFromToken: getUserFromToken,
@@ -52,31 +54,17 @@ function initDatabase(){
         var group = new groupModel.Group()
             .setName('Administrator')
             .setAdministrator(true);
-        var group2 = new groupModel.Group()
-            .setName('test')
-            .setAdministrator(false);
         var salt = security.genSaltSync();
         var user = new userModel.User()
             .setName('admin')
             .setPassword(security.genHashSync('admin', salt))
             .setSalt(salt)
             .setToken(security.genTokenSync())
-            .addGroup(group.getId())
-            .addGroup(group2.getId());
-        var user2 = new userModel.User()
-            .setName('testUser')
-            .setPassword(security.genHashSync('admin', salt))
-            .setSalt(salt)
-            .setToken(security.genTokenSync())
-            .addGroup(group2.getId());
-        var action = new actionModel.Action()
-            .setName('uuu')
-            .setCategory('category')
-            .setScript('');
+            .addGroup(group.getId());
 
 
         db.allDocs().then(function(result){
-            if (result['total_rows'] >= 4){
+            if (result['total_rows'] >= 5){
                 // Initialized
                 resolve();
             }
@@ -102,22 +90,85 @@ function initDatabase(){
                         db.put(group.toJson()).then(resolve).catch(reject);
                     }));
                     promises.push(new promise(function(resolve, reject){
-                        db.put(group2.toJson()).then(resolve).catch(reject);
-                    }));
-                    promises.push(new promise(function(resolve, reject){
                         db.put(user.toJson()).then(resolve).catch(reject);
-                    }));
-                    promises.push(new promise(function(resolve, reject){
-                        db.put(user2.toJson()).then(resolve).catch(reject);
-                    }));
-                    promises.push(new promise(function(resolve, reject){
-                        db.put(action.toJson()).then(resolve).catch(reject);
                     }));
                     // Launch functions
                     promise.all(promises).then(resolve,reject);
                 }, reject);
             }
         }, reject);
+    });
+}
+
+/**
+ * Update design document
+ * @warning Use this function when init database is finished
+ * @returns {promise}
+ */
+function updateDesignDocument(){
+    return new promise(function(resolve, reject){
+        // Here: assume that every design document are integrated
+        var promises = [];
+        // Get all design documents
+        // User design
+        promises.push(new promise(function(resolve, reject){
+            db.get(userModel.design.designDocument._id).then(function(document){
+                var designDoc = userModel.design.designDocument;
+                // Check version
+                if (designDoc.version !== document.version){
+                    // Need update
+
+                    // Update rev to update easily
+                    designDoc._rev = document._rev;
+                    // Update in db
+                    db.put(designDoc).then(resolve).catch(reject);
+                }
+                else {
+                    // Update at good version
+                    resolve();
+                }
+            }).catch(reject);
+        }));
+        // Group design
+        promises.push(new promise(function(resolve, reject){
+            db.get(groupModel.design.designDocument._id).then(function(document){
+                var designDoc = groupModel.design.designDocument;
+                // Check version
+                if (designDoc.version !== document.version){
+                    // Need update
+
+                    // Update rev to update easily
+                    designDoc._rev = document._rev;
+                    // Update in db
+                    db.put(designDoc).then(resolve).catch(reject);
+                }
+                else {
+                    // Update at good version
+                    resolve();
+                }
+            }).catch(reject);
+        }));
+        // Action design
+        promises.push(new promise(function(resolve, reject){
+            db.get(actionModel.design.designDocument._id).then(function(document){
+                var designDoc = actionModel.design.designDocument;
+                // Check version
+                if (designDoc.version !== document.version){
+                    // Need update
+
+                    // Update rev to update easily
+                    designDoc._rev = document._rev;
+                    // Update in db
+                    db.put(designDoc).then(resolve).catch(reject);
+                }
+                else {
+                    // Update at good version
+                    resolve();
+                }
+            }).catch(reject);
+        }));
+
+        promise.all(promises).then(resolve, reject);
     });
 }
 
