@@ -38,7 +38,11 @@ module.exports = {
     getGroupsFromIds: getGroupsFromIds,
     // Action
     getAllActions: getAllActions,
-    getActionFromId: getActionFromId
+    getActionFromId: getActionFromId,
+    // Put
+    put: put,
+    // Delete
+    remove: remove
 };
 
 
@@ -366,9 +370,28 @@ function getActionFromId(id){
     });
 }
 
+/**
+ * Put document in database
+ * @param document {object} document
+ * @returns {promise}
+ */
+function put(document){
+    return new promise(function(resolve,reject){
+        // Put document in db
+        db.put(document).then(resolve).catch(reject);
+    });
+}
 
-
-
+/**
+ * Remove a document in db
+ * @param document {object} document to remove
+ * @returns {promise}
+ */
+function remove(document){
+    return new promise(function(resolve, reject){
+        db.remove(document).then(resolve).catch(reject);
+    });
+}
 
 
 
