@@ -24,7 +24,7 @@ function logClient(req){
     var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
     // Log Request
-    logger.info('Client IP Address = ' + ip + '  |  URL = ' + req.url);
+    logger.info('Client IP Address = ' + ip + '  |  URL = ' + req.url + '  |  Method = ' + req.method);
 }
 
 /**
