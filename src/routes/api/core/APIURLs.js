@@ -6,8 +6,8 @@
 
 // Exports
 module.exports = {
-    ActionURL: '/api/action/',
-    UserURL: '/api/user/',
-    RoleURL: '/api/role/'
+    actionUrl: '/api/actions/',
+    userUrl: '/api/users/',
+    groupsUrl: '/api/groups/'
 };
 

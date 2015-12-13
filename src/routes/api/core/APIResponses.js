@@ -30,7 +30,7 @@ function sendResponse(response, body, status, success){
 	response.status(status.code);
 	response.set({'Content-Type': 'application/json'});
 	// Debug part
-	if (ConfigService.getVerbose()) {
+	if (ConfigService.isVerbose()) {
 		logger.debug('Answer = ' + JSON.stringify(body));
 	}
 	// Send response
