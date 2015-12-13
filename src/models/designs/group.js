@@ -20,6 +20,13 @@ var groupDesign = {
                     emit(doc._id, doc.name);
                 }
             }.toString()
+        },
+        getFromName: {
+            map: function(doc){
+                if (doc.type === "group"){
+                    emit(doc.name, doc._id);
+                }
+            }.toString()
         }
     }
     /* jshint ignore:end */
@@ -28,7 +35,8 @@ var groupDesign = {
 var design = {
     designDocument: groupDesign,
     query: {
-        getAll: 'groups/getAll'
+        getAll: 'groups/getAll',
+        getFromName: 'groups/getFromName'
     }
 
 };
