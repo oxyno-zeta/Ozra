@@ -7,6 +7,7 @@
 //Require
 var promise = require('promise');
 var pouchDB = require('pouchdb');
+var _ = require('lodash');
 var config = require('../shared/configuration.js');
 var security = require('../base/security.js');
 
@@ -186,7 +187,7 @@ function getAllUsers(){
             var rows = results.rows;
             var usersDocuments = [];
 
-            rows.forEach(function(user){
+            _.forEach(rows, function(user){
                 usersDocuments.push(new userModel.User().clone(user.doc));
             });
 
@@ -250,24 +251,16 @@ function getUsersFromGroupId(groupId){
     return new promise(function(resolve, reject){
         db.query(userModel.design.query.getFromGroup, dbOptions).then(function(results){
             var rows = results.rows;
-            var usersStorage = {};
+            var users = [];
 
-            rows.forEach(function(row){
+            _.forEach(rows, function(row){
                 // key : group id
                 // value : user id
                 // doc : user document
                 if (row.key === groupId){
-                    usersStorage[row.value] = row.doc;
+                    users.push(new userModel.User().clone(row.doc));
                 }
             });
-
-            var users = [];
-            var key;
-            for (key in usersStorage){
-                if (usersStorage.hasOwnProperty(key)){
-                    users.push(new userModel.User().clone(usersStorage[key]));
-                }
-            }
 
             resolve(users);
         }).catch(reject);
@@ -284,7 +277,7 @@ function getAllGroups(){
             var rows = results.rows;
             var documents = [];
 
-            rows.forEach(function(group){
+            _.forEach(rows, function(group){
                 documents.push(new groupModel.Group().clone(group.doc));
             });
 
@@ -323,7 +316,7 @@ function getGroupsFromIds(ids){
     return new promise(function(resolve, reject){
         var promises = [];
 
-        ids.forEach(function(id){
+        _.forEach(ids, function(id){
             promises.push(getGroupFromId(id));
         });
 
@@ -341,7 +334,7 @@ function getAllActions(){
             var rows = results.rows;
 
             var actions = [];
-            rows.forEach(function(row){
+            _.forEach(rows, function(row){
                 actions.push(new actionModel.Action().clone(row.doc));
             });
 
