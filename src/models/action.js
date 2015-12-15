@@ -6,8 +6,8 @@
 
 // Require
 var uuid = require('uuid');
+var _ = require('lodash');
 var design = require('./designs/action.js');
-var utils = require('../shared/utils.js');
 
 /**
  * Action model
@@ -33,6 +33,15 @@ function actionModel(){
      */
     this.getId = function(){
         return json._id;
+    };
+    /**
+     * Set Id
+     * @param id
+     * @returns {groupModel}
+     */
+    this.setId = function(id){
+        json._id = id;
+        return this;
     };
     /**
      * Get Revision
@@ -147,7 +156,7 @@ function actionModel(){
      * @returns {*}
      */
     this.toJson = function(){
-        return utils.clone(json);
+        return _.cloneDeep(json);
     };
     /**
      * Clone data
@@ -161,7 +170,7 @@ function actionModel(){
         json.category = data.category;
         json.script = data.script;
         json.application = data.application;
-        json.groups = utils.clone(data.groups);
+        json.groups = _.cloneDeep(data.groups);
         // Return object
         return this;
     };

@@ -6,8 +6,8 @@
 
 // Require
 var uuid = require('uuid');
+var _ = require('lodash');
 var design = require('./designs/group.js');
-var utils = require('../shared/utils.js');
 
 /**
  * Group Model
@@ -35,11 +35,29 @@ function groupModel(){
         return json._id;
     };
     /**
+     * Set Id
+     * @param id {string} id
+     * @returns {groupModel}
+     */
+    this.setId = function(id){
+        json._id = id;
+        return this;
+    };
+    /**
      * Get Revision
      * @returns {undefined|*|json._rev}
      */
     this.getRevision = function(){
         return json._rev;
+    };
+    /**
+     * Set a revision
+     * @param rev {string} revision
+     * @returns {groupModel}
+     */
+    this.setRevision = function(rev){
+        json._rev = rev;
+        return this;
     };
     /**
      * Get type
@@ -97,7 +115,28 @@ function groupModel(){
      * @returns {*}
      */
     this.toJson = function(){
-        return utils.clone(json);
+        return _.cloneDeep(json);
+    };
+    /**
+     * Is minimum valid function
+     * @returns {boolean}
+     */
+    this.isMinimumValid = function(){
+        // Check id
+        if (!_.isString(json._id) || _.isUndefined(json._id)|| _.isNull(json._id)){
+            return false;
+        }
+        // Check name
+        if (!_.isString(json.name) || _.isUndefined(json.name)|| _.isNull(json.name)){
+            return false;
+        }
+        // Check administrator
+        if (!_.isBoolean(json.administrator) || _.isUndefined(json.administrator)|| _.isNull(json.administrator)){
+            return false;
+        }
+
+        // Ok
+        return true;
     };
 
     return this;

@@ -6,8 +6,8 @@
 
 // Require
 var uuid = require('uuid');
+var _ = require('lodash');
 var design = require('./designs/user.js');
-var utils = require('../shared/utils.js');
 
 /**
  * User model
@@ -34,6 +34,15 @@ function userModel(){
      */
     this.getId = function(){
         return json._id;
+    };
+    /**
+     * Set Id
+     * @param id
+     * @returns {groupModel}
+     */
+    this.setId = function(id){
+        json._id = id;
+        return this;
     };
     /**
      * Get Revision
@@ -148,7 +157,7 @@ function userModel(){
      * @returns {*}
      */
     this.toJson = function(){
-        return utils.clone(json);
+        return _.cloneDeep(json);
     };
     /**
      * Clone data
@@ -162,10 +171,36 @@ function userModel(){
         json.password = data.password;
         json.salt = data.salt;
         json.token = data.token;
-        json.groups = utils.clone(data.groups);
+        json.groups = _.cloneDeep(data.groups);
         // Return object
         return this;
     };
+    /*json._id = uuid.v1();
+    json._rev = undefined;
+    json.type = design.type;
+    json.name = undefined;
+    json.password = undefined;
+    json.salt = undefined;
+    json.token = undefined;
+    json.groups = [];
+    this.isValid = function(){
+        // Check id
+        if (!_.isString(json._id) || _.isUndefined(json._id)|| _.isNull(json._id)){
+            return false;
+        }
+        // Check name
+        if (!_.isString(json.name) || _.isUndefined(json.name)|| _.isNull(json.name)){
+            return false;
+        }
+        // Check password
+        if (!_.isString(json.password) || _.isUndefined(json.password)|| _.isNull(json.password)){
+            return false;
+        }
+        // Check password
+        if (!_.isString(json.password) || _.isUndefined(json.password)|| _.isNull(json.password)){
+            return false;
+        }
+    };*/
 
     // return
     return this;
