@@ -14,6 +14,7 @@ var databaseService = require('./services/databaseService.js');
 var logger = require('./shared/logger.js');
 var ConfigService = require('./shared/configuration.js');
 var base = require('./routes/routesBase.js');
+var apiRoutes = require('./routes/apiRoutes.js');
 
 // Get Configuration
 var config = ConfigService.getConfig();
@@ -66,11 +67,13 @@ function initServer(){
         // Update design document
         databaseService.updateDesignDocument().then(function(){
             logger.info('Server fully launched !');
+            // Put api
+            apiRoutes.putApiRoutes(app);
         }, function(err){
             // Error
             logger.fatal('Server OFFLINE => DB failed to be updated with design documents => Stop');
             if (ConfigService.isVerbose()){
-                logger.warn(err);
+                logger.debug(err);
             }
         });
     }, function(err){

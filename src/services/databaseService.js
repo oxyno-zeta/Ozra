@@ -36,6 +36,7 @@ module.exports = {
     // Group
     getAllGroups: getAllGroups,
     getGroupFromId: getGroupFromId,
+    getGroupFromName: getGroupFromName,
     getGroupsFromIds: getGroupsFromIds,
     // Action
     getAllActions: getAllActions,
@@ -132,7 +133,17 @@ function updateDesignDocument(){
                     // Update at good version
                     resolve();
                 }
-            }).catch(reject);
+            }).catch(function(err){
+                if (err.status === 404){
+                    // Not found => put it in place
+                    var designDoc = userModel.design.designDocument;
+                    db.put(designDoc).then(resolve).catch(reject);
+                }
+                else {
+                    // Error
+                    reject();
+                }
+            });
         }));
         // Group design
         promises.push(new promise(function(resolve, reject){
@@ -151,7 +162,17 @@ function updateDesignDocument(){
                     // Update at good version
                     resolve();
                 }
-            }).catch(reject);
+            }).catch(function(err){
+                if (err.status === 404){
+                    // Not found => put it in place
+                    var designDoc = groupModel.design.designDocument;
+                    db.put(designDoc).then(resolve).catch(reject);
+                }
+                else {
+                    // Error
+                    reject();
+                }
+            });
         }));
         // Action design
         promises.push(new promise(function(resolve, reject){
@@ -170,7 +191,17 @@ function updateDesignDocument(){
                     // Update at good version
                     resolve();
                 }
-            }).catch(reject);
+            }).catch(function(err){
+                if (err.status === 404){
+                    // Not found => put it in place
+                    var designDoc = actionModel.design.designDocument;
+                    db.put(designDoc).then(resolve).catch(reject);
+                }
+                else {
+                    // Error
+                    reject();
+                }
+            });
         }));
 
         promise.all(promises).then(resolve, reject);
@@ -303,6 +334,31 @@ function getGroupFromId(id){
 
             // Group document
             resolve(new groupModel.Group().clone(document));
+        }).catch(reject);
+    });
+}
+
+/**
+ * Get Group from name
+ * @param name
+ * @returns {promise}
+ */
+function getGroupFromName(name){
+    return new promise(function(resolve, reject){
+        db.query(groupModel.design.query.getFromName, dbOptions).then(function(result){
+            var rows = result.rows;
+
+            // Get group from name
+            var i;
+            for (i = 0; i < rows.length; i++){
+                if (rows[i].key === name){
+                    resolve(new groupModel.Group().clone(rows[i].doc));
+                    return; // Found => stop
+                }
+            }
+
+            // Not found
+            reject();
         }).catch(reject);
     });
 }
