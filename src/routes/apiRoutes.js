@@ -7,6 +7,7 @@
 // Require
 var errorsAPI = require('./api/errors.js');
 var groupsAPI = require('./api/groups.js');
+var usersAPI = require('./api/users.js');
 
 // Exports
 module.exports = {
@@ -24,6 +25,9 @@ function putApiRoutes(mainApp){
 
     // Groups urls
     groupsAPI.groupsUrls(mainApp);
+
+    // Users urls
+    usersAPI.usersUrls(mainApp);
 
     // Errors urls
     errorsAPI.errorUrls(mainApp);
