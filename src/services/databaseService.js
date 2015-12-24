@@ -30,6 +30,7 @@ module.exports = {
     updateDesignDocument: updateDesignDocument,
     // User
     getAllUsers: getAllUsers,
+    getUserFromName: getUserFromName,
     getUserFromToken: getUserFromToken,
     getUserFromId: getUserFromId,
     getUsersFromGroupId: getUsersFromGroupId,
@@ -224,6 +225,31 @@ function getAllUsers(){
 
             // Resolve
             resolve(usersDocuments);
+        }).catch(reject);
+    });
+}
+
+/**
+ * Get user from name
+ * @param name {string} user name
+ * @returns {promise}
+ */
+function getUserFromName(name){
+    return new promise(function(resolve, reject){
+        db.query(userModel.design.query.getFromName, dbOptions).then(function(results){
+            var rows = results.rows;
+
+            // Get user from token
+            var i;
+            for (i = 0; i < rows.length; i++){
+                if (rows[i].key === name){
+                    resolve(new userModel.User().clone(rows[i].doc));
+                    return; // Stop here
+                }
+            }
+
+            // Error
+            reject();
         }).catch(reject);
     });
 }
