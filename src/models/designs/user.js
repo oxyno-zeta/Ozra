@@ -10,7 +10,7 @@ var type = 'user';
 /* istanbul ignore next */
 var userDesign = {
     _id: '_design/users',
-    version: '0.0.1',
+    version: '0.0.2',
     /* jshint ignore:start */
     views: {
         getAll: {
@@ -35,6 +35,13 @@ var userDesign = {
                     });
                 }
             }.toString()
+        },
+        getFromName: {
+            map: function(doc){
+                if (doc.type === "user"){
+                    emit(doc.name, doc._id);
+                }
+            }.toString()
         }
     }
     /* jshint ignore:end */
@@ -46,7 +53,8 @@ var design = {
     query: {
         getAll: 'users/getAll',
         getFromToken: 'users/getFromToken',
-        getFromGroup: 'users/getFromGroup'
+        getFromGroup: 'users/getFromGroup',
+        getFromName: 'users/getFromName'
     }
 };
 

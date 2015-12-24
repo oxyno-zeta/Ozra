@@ -11,7 +11,7 @@ var type = 'group';
 /* istanbul ignore next */
 var groupDesign = {
     _id: '_design/groups',
-    version: '0.0.1',
+    version: '0.0.2',
     /* jshint ignore:start */
     views: {
         getAll: {

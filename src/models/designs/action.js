@@ -10,7 +10,7 @@ var type = 'action';
 /* istanbul ignore next */
 var actionDesign = {
     _id: '_design/actions',
-    version: '0.0.1',
+    version: '0.0.2',
     /* jshint ignore:start */
     views: {
         getAll: {

@@ -45,6 +45,15 @@ function userModel(){
         return this;
     };
     /**
+     * Set a revision
+     * @param rev
+     * @returns {actionModel}
+     */
+    this.setRevision = function(rev){
+        json._rev = rev;
+        return this;
+    };
+    /**
      * Get Revision
      * @returns {undefined|*|json._rev}
      */
@@ -153,11 +162,29 @@ function userModel(){
         return this;
     };
     /**
+     * Set groupIds
+     * @param groupIds
+     */
+    this.setGroups = function(groupIds){
+        json.groups = groupIds;
+        return this;
+    };
+    /**
      * To json
      * @returns {*}
      */
     this.toJson = function(){
         return _.cloneDeep(json);
+    };
+    /**
+     * To minimum json
+     */
+    this.toMinimumJson = function(){
+        var result = this.toJson();
+        delete result.type;
+        delete result.password;
+        delete result.salt;
+        return result;
     };
     /**
      * Clone data
@@ -175,32 +202,75 @@ function userModel(){
         // Return object
         return this;
     };
-    /*json._id = uuid.v1();
-    json._rev = undefined;
-    json.type = design.type;
-    json.name = undefined;
-    json.password = undefined;
-    json.salt = undefined;
-    json.token = undefined;
-    json.groups = [];
-    this.isValid = function(){
+    /**
+     * Check minimum required
+     * @returns {boolean}
+     */
+    this.isMinimumValid = function(){
         // Check id
-        if (!_.isString(json._id) || _.isUndefined(json._id)|| _.isNull(json._id)){
+        if (!_.isString(json._id) || _.isUndefined(json._id)||
+            _.isNull(json._id) || _.isEqual(json._id, '')){
             return false;
         }
         // Check name
-        if (!_.isString(json.name) || _.isUndefined(json.name)|| _.isNull(json.name)){
+        if (!_.isString(json.name) || _.isUndefined(json.name)||
+            _.isNull(json.name) || _.isEqual(json.name, '')){
             return false;
         }
+        // Check groups
+        if (!_.isArray(json.groups) || _.isUndefined(json.groups)||
+            _.isNull(json.groups)){
+            return false;
+        }
+        // Check that a group is inserted
+        if (json.groups.length === 0){
+            return false;
+        }
+
+        // Check that every keys are strings
+        var i;
+        var groupId;
+        for (i = 0; i < json.groups.length; i++){
+            groupId = json.groups[i];
+            if (!_.isString(groupId) || _.isUndefined(groupId)||
+                _.isNull(groupId) || _.isEqual(groupId, '')){
+                return false;
+            }
+        }
+
+        // Ok
+        return true;
+    };
+    /**
+     * Check if full valid user
+     * @returns {boolean}
+     */
+    this.isFullValid = function(){
+        // Check minimum valid
+        if (!this.isMinimumValid()){
+            return false;
+        }
+
+        // Check token
+        if (!_.isString(json.token) || _.isUndefined(json.token)||
+            _.isNull(json.token) || _.isEqual(json.token, '')){
+            return false;
+        }
+
         // Check password
-        if (!_.isString(json.password) || _.isUndefined(json.password)|| _.isNull(json.password)){
+        if (!_.isString(json.password) || _.isUndefined(json.password)||
+            _.isNull(json.password) || _.isEqual(json.password, '')){
             return false;
         }
-        // Check password
-        if (!_.isString(json.password) || _.isUndefined(json.password)|| _.isNull(json.password)){
+
+        // Check salt
+        if (!_.isString(json.salt) || _.isUndefined(json.salt)||
+            _.isNull(json.salt) || _.isEqual(json.salt, '')){
             return false;
         }
-    };*/
+
+        return true;
+    };
 
     // return
     return this;

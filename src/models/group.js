@@ -123,15 +123,18 @@ function groupModel(){
      */
     this.isMinimumValid = function(){
         // Check id
-        if (!_.isString(json._id) || _.isUndefined(json._id)|| _.isNull(json._id)){
+        if (!_.isString(json._id) || _.isUndefined(json._id)||
+            _.isNull(json._id)|| _.isEqual(json._id, '')){
             return false;
         }
         // Check name
-        if (!_.isString(json.name) || _.isUndefined(json.name)|| _.isNull(json.name)){
+        if (!_.isString(json.name) || _.isUndefined(json.name)||
+            _.isNull(json.name)|| _.isEqual(json.name, '')){
             return false;
         }
         // Check administrator
-        if (!_.isBoolean(json.administrator) || _.isUndefined(json.administrator)|| _.isNull(json.administrator)){
+        if (!_.isBoolean(json.administrator) || _.isUndefined(json.administrator)||
+            _.isNull(json.administrator)){
             return false;
         }
 

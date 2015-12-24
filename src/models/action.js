@@ -51,6 +51,15 @@ function actionModel(){
         return json._rev;
     };
     /**
+     * Set a revision
+     * @param rev
+     * @returns {actionModel}
+     */
+    this.setRevision = function(rev){
+        json._rev = rev;
+        return this;
+    };
+    /**
      * Get type
      * @returns {exports.type|*|json.type}
      */
