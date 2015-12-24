@@ -74,15 +74,32 @@ function deleteGroup(req, res){
 
             // Get group
             databaseService.getGroupFromId(groupId).then(function(group){
-                // Got it => delete it
-                databaseService.remove(group.toJson()).then(function(){
-                    // Done
-                    logger.info('Delete group : "' + group.getName() + '" one');
-                    // Log group if verbose activated
-                    if (configurationService.isVerbose()){
-                        logger.debug(group.toJson());
+                base.isGroupLastAdministrator(group).then(function(isLastAdminGroup){
+                    // Check if last administrator group
+                    if (isLastAdminGroup){
+                        logger.error('Delete group failed => Trying to remove last administrator group => Stop');
+                        APIResponses.sendResponse(res, responseBody, APICodes.clientErrors.FORBIDDEN, false);
+                        return;
                     }
-                    APIResponses.sendResponse(res, responseBody, APICodes.normal.OK, true);
+
+                    // Got it => delete it
+                    databaseService.remove(group.toJson()).then(function(){
+                        // Done
+                        logger.info('Delete group : "' + group.getName() + '" done');
+                        // Log group if verbose activated
+                        if (configurationService.isVerbose()){
+                            logger.debug(group.toJson());
+                        }
+                        APIResponses.sendResponse(res, responseBody, APICodes.normal.OK, true);
+                    }, function(err){
+                        // Fail
+                        logger.error('Delete group failed => Something failed... => Stop');
+                        if (configurationService.isVerbose()){
+                            // Debug
+                            logger.debug(err);
+                        }
+                        APIResponses.sendResponse(res, responseBody, APICodes.serverErrors.INTERNAL_ERROR, false);
+                    });
                 }, function(err){
                     // Fail
                     logger.error('Delete group failed => Something failed... => Stop');
@@ -125,10 +142,6 @@ function addGroup(req, res){
         var body = req.body;
         // Get default response body
         var responseBody = APIResponses.getDefaultResponseBody(token);
-        // Transform data
-        if (body.administrator === 'false' || body.administrator === 'true'){
-            body.administrator = (body.administrator === 'true'); // Replace by real boolean
-        }
         // Get data
         var newGroup = groupModel.Group()
             .setName(body.name)
@@ -265,19 +278,19 @@ function getAllGroups(req, res){
             }
 
             databaseService.getAllGroups().then(function(groups){
-                var groupsObject = [];
+                var groupsArray = [];
                 _.forEach(groups, function(group){
-                    groupsObject.push(group.toJson());
+                    groupsArray.push(group.toJson());
                 });
                 // Add Groups
-                responseBody.groups = groupsObject;
+                responseBody.groups = groupsArray;
 
                 // Log
-                logger.info('Normal response');
+                logger.info('Get all groups => ok');
 
                 // Log groups if verbose activated
                 if (configurationService.isVerbose()){
-                    logger.debug(groupsObject);
+                    logger.debug(groupsArray);
                 }
 
                 // Response
@@ -314,36 +327,33 @@ function modifyGroup(req, res){
         var body = req.body;
         // Get default body
         var responseBody = APIResponses.getDefaultResponseBody(token);
-        // Transform data
-        if (body.administrator === 'false' || body.administrator === 'true'){
-            body.administrator = (body.administrator === 'true'); // Replace by real boolean
-        }
         // Data
-        var groupModification = new groupModel.Group().clone(body);
+        var groupModification = new groupModel.Group()
+            .setId(body._id)
+            .setName(body.name)
+            .setAdministrator(body.administrator);
         // Log
         logger.info('User "' + user.getName() + '" authenticated');
-
-        // Check if data are correct (same id in body and params) and data
-        if (!_.isEqual(req.params.id, body._id) || !groupModification.isMinimumValid()){
-            // Error
-            logger.error('Modification group failed => data not valid => Stop');
-            if (configurationService.isVerbose()){
-                // Debug
-                logger.debug(groupModification.toJson());
-            }
-            APIResponses.sendResponse(res, responseBody, APICodes.clientErrors.FORBIDDEN, false);
-            return; // Stop here
-        }
-
-        // Data ok
 
         // Check if user is administrator
         base.isUserAdministrator(user).then(function(isAdmin){
             if (!isAdmin){
                 // Not admin
-                logger.error('Add group failed => User "' + user.getName() + '" not administrator => Stop');
+                logger.error('Modification group failed => User "' + user.getName() + '" not administrator => Stop');
                 APIResponses.sendResponse(res, responseBody, APICodes.clientErrors.FORBIDDEN, false);
                 return;
+            }
+
+            // Check if data are correct (same id in body and params) and data
+            if (!_.isEqual(req.params.id, body._id) || !groupModification.isMinimumValid()){
+                // Error
+                logger.error('Modification group failed => data not valid => Stop');
+                if (configurationService.isVerbose()){
+                    // Debug
+                    logger.debug(groupModification.toJson());
+                }
+                APIResponses.sendResponse(res, responseBody, APICodes.clientErrors.FORBIDDEN, false);
+                return; // Stop here
             }
 
             // Check if group exist in database
@@ -383,9 +393,11 @@ function modifyGroup(req, res){
                         return;
                     }
                     // Same group detected
+                    // Data ok
                     go();
                 }, function(){
                     // Ok => not found
+                    // Data ok
                     go();
                 });
             }, function(err){
@@ -398,7 +410,7 @@ function modifyGroup(req, res){
                 APIResponses.sendResponse(res, responseBody, APICodes.serverErrors.NOT_FOUND, false);
             });
         }, function(err){
-            logger.error('Add group failed => Something failed... => Stop');
+            logger.error('Modification group failed => Something failed... => Stop');
             if (configurationService.isVerbose()){
                 // Debug
                 logger.debug(err);

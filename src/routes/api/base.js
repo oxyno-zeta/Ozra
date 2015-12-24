@@ -6,6 +6,7 @@
 
 // Require
 var promise = require('promise');
+var _ = require('lodash');
 var APICodes = require('./core/APICodes.js');
 var APIResponses = require('./core/APIResponses.js');
 var logger = require('../../shared/logger.js');
@@ -14,7 +15,8 @@ var databaseService = require('../../services/databaseService.js');
 // Exports
 module.exports = {
     apiTokenSecurity: apiTokenSecurity,
-    isUserAdministrator: isUserAdministrator
+    isUserAdministrator: isUserAdministrator,
+    isGroupLastAdministrator: isGroupLastAdministrator
 };
 
 // Functions
@@ -70,6 +72,33 @@ function isUserAdministrator(user){
             }
 
             resolve(false);
+        }, reject);
+    });
+}
+
+/**
+ * Check if group is last administrator group
+ * @param group {groupModel}
+ * @returns {promise} (resolve: false if not last administrator, true if last administrator, reject: error)
+ */
+function isGroupLastAdministrator(group){
+    return new promise(function(resolve, reject){
+        databaseService.getAllGroups().then(function(groups){
+            // Remove group from result to find
+            groups = _.remove(groups, function(element){
+                return !_.isEqual(element.getId(), group.getId());
+            });
+
+            // Check if it still exist a administrator group
+            var i;
+            for (i = 0; i < groups.length; i++){
+                if (groups[i].isAdministrator()){
+                    resolve(false);
+                    return; // Stop here
+                }
+            }
+
+            resolve(true);
         }, reject);
     });
 }
