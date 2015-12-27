@@ -143,15 +143,15 @@ function getUser(req, res){
                 logger.info('Get user "' + user.getName() + '" => ok');
                 APIResponses.sendResponse(res, responseBody, APICodes.normal.OK, true);
             }, function(err){
-                logger.error('Add user failed => Something failed... => Stop');
+                logger.error('Get user failed => Not found => Stop');
                 if (configurationService.isVerbose()){
                     // Debug
                     logger.debug(err);
                 }
-                APIResponses.sendResponse(res, responseBody, APICodes.serverErrors.INTERNAL_ERROR, false);
+                APIResponses.sendResponse(res, responseBody, APICodes.clientErrors.NOT_FOUND, false);
             });
         }, function(err){
-            logger.error('Add user failed => Something failed... => Stop');
+            logger.error('Get user failed => Something failed... => Stop');
             if (configurationService.isVerbose()){
                 // Debug
                 logger.debug(err);
@@ -242,7 +242,6 @@ function addUser(req, res){
 
                     // Add user in database
                     databaseService.put(newUser.toJson()).then(function(){
-                        // Admin user detected
                         logger.info('Add user "' + newUser.getName() + '" success');
 
                         // Add user
