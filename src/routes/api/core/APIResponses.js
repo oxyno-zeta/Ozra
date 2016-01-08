@@ -28,13 +28,12 @@ function sendResponse(response, body, status, success){
 	body.success = success;
 	// Update response
 	response.status(status.code);
-	response.set({'Content-Type': 'application/json'});
 	// Debug part
 	if (ConfigService.isVerbose()) {
 		logger.debug('Answer = ' + JSON.stringify(body));
 	}
 	// Send response
-	response.send(body);
+	response.json(body);
 }
 
 /**
