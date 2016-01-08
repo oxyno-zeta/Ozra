@@ -27,17 +27,17 @@ module.exports = {
  */
 function actionsUrls(mainApp){
     // Get all actions
-    mainApp.get('/api/actions/', getAllActions);
+    mainApp.get('/actions/', getAllActions);
     // Get specific action
-    mainApp.get('/api/actions/:id', getAction);
+    mainApp.get('/actions/:id', getAction);
     // Get specific action
-    mainApp.get('/api/actions/:id/run', runAction);
+    mainApp.get('/actions/:id/run', runAction);
     // Add action
-    mainApp.post('/api/actions/', addAction);
+    mainApp.post('/actions/', addAction);
     // Delete action
-    mainApp.delete('/api/actions/:id', deleteAction);
+    mainApp.delete('/actions/:id', deleteAction);
     // Modify a action
-    mainApp.put('/api/actions/:id', modifyAction);
+    mainApp.put('/actions/:id', modifyAction);
 }
 
 /**

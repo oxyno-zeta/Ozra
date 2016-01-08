@@ -5,6 +5,8 @@
  */
 
 // Require
+var express = require('express');
+var router = express.Router();
 var errorsAPI = require('./api/errors.js');
 var groupsAPI = require('./api/groups.js');
 var usersAPI = require('./api/users.js');
@@ -22,18 +24,19 @@ module.exports = {
  * @param mainApp {object} Main express application
  */
 function putApiRoutes(mainApp){
-    // Put api routes
-
     // Groups urls
-    groupsAPI.groupsUrls(mainApp);
+    groupsAPI.groupsUrls(router);
 
     // Users urls
-    usersAPI.usersUrls(mainApp);
+    usersAPI.usersUrls(router);
 
     // Actions urls
-    actionsAPI.actionsUrls(mainApp);
+    actionsAPI.actionsUrls(router);
 
     // Errors urls
-    errorsAPI.errorUrls(mainApp);
+    errorsAPI.errorUrls(router);
+
+    // Put api routes
+    mainApp.use('/api', router);
 }
 

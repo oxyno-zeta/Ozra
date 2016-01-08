@@ -26,15 +26,15 @@ module.exports = {
  */
 function groupsUrls(mainApp){
     // Get all groups
-    mainApp.get('/api/groups/', getAllGroups);
+    mainApp.get('/groups/', getAllGroups);
     // Get all groups
-    mainApp.get('/api/groups/user/', getGroupsFromUser);
+    mainApp.get('//groups/user/', getGroupsFromUser);
     // Add group
-    mainApp.post('/api/groups/', addGroup);
+    mainApp.post('/groups/', addGroup);
     // Delete group
-    mainApp.delete('/api/groups/:id', deleteGroup);
+    mainApp.delete('/groups/:id', deleteGroup);
     // Modify a group
-    mainApp.put('/api/groups/:id', modifyGroup);
+    mainApp.put('/groups/:id', modifyGroup);
 }
 
 /**

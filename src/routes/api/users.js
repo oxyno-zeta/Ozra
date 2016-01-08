@@ -27,17 +27,17 @@ module.exports = {
  */
 function usersUrls(mainApp){
     // Get all users
-    mainApp.get('/api/users/', getAllUsers);
+    mainApp.get('/users/', getAllUsers);
     // Get all users
-    mainApp.get('/api/users/:id', getUser);
+    mainApp.get('/users/:id', getUser);
     // Add user
-    mainApp.post('/api/users/', addUser);
+    mainApp.post('/users/', addUser);
     // Delete user
-    mainApp.delete('/api/users/:id', deleteUser);
+    mainApp.delete('/users/:id', deleteUser);
     // Modify a user
-    mainApp.put('/api/users/:id', modifyUser);
+    mainApp.put('/users/:id', modifyUser);
     // Modify user password
-    mainApp.put('/api/users/:id/password', modifyUserPassword);
+    mainApp.put('/users/:id/password', modifyUserPassword);
 }
 
 /**
