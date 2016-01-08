@@ -181,7 +181,6 @@ function userModel(){
      */
     this.toMinimumJson = function(){
         var result = this.toJson();
-        delete result.type;
         delete result.password;
         delete result.salt;
         return result;

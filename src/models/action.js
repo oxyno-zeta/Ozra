@@ -23,7 +23,7 @@ function actionModel(){
     json.name = undefined;
     json.category = undefined;
     json.script = undefined;
-    json.application = ''; // Init with nothing
+    json.application = null; // Init with nothing
     json.groups = [];
 
     // Functions
@@ -127,7 +127,7 @@ function actionModel(){
      * @returns {actionModel}
      */
     this.setApplication = function(application){
-        json.script = application;
+        json.application = application;
         return this;
     };
     /**
@@ -138,12 +138,21 @@ function actionModel(){
         return json.groups;
     };
     /**
+     * Set action group ids
+     * @param groups
+     * @returns {actionModel}
+     */
+    this.setGroups = function(groups){
+        json.groups = groups;
+        return this;
+    };
+    /**
      * Add group id
      * @param groupId
      * @returns {actionModel}
      */
     this.addGroup = function(groupId){
-        if (json.groups.indexOf(groupId) !== -1){
+        if (json.groups.indexOf(groupId) === -1){
             json.groups.push(groupId);
         }
         return this;
@@ -182,6 +191,59 @@ function actionModel(){
         json.groups = _.cloneDeep(data.groups);
         // Return object
         return this;
+    };
+    /**
+     * Check if action is valid
+     * @returns {boolean}
+     */
+    this.isValid = function(){
+        // Check id
+        if (!_.isString(json._id) || _.isUndefined(json._id)||
+            _.isNull(json._id) || _.isEqual(json._id, '')){
+            return false;
+        }
+        // Check name
+        if (!_.isString(json.name) || _.isUndefined(json.name)||
+            _.isNull(json.name) || _.isEqual(json.name, '')){
+            return false;
+        }
+        // Check category
+        if (!_.isString(json.category) || _.isUndefined(json.category)||
+            _.isNull(json.category) || _.isEqual(json.category, '')){
+            return false;
+        }
+        // Check script
+        if (!_.isString(json.script) || _.isUndefined(json.script)||
+            _.isNull(json.script) || _.isEqual(json.script, '')){
+            return false;
+        }
+        // Check application
+        if (!_.isNull(json.application) && (!_.isString(json.application) || _.isUndefined(json.application)||
+            _.isEqual(json.application, '')) ){
+            return false;
+        }
+        // Check groups
+        if (!_.isArray(json.groups) || _.isUndefined(json.groups)||
+            _.isNull(json.groups)){
+            return false;
+        }
+        // Check that a group is inserted
+        if (json.groups.length === 0){
+            return false;
+        }
+
+        // Check that every keys are strings
+        var i;
+        var groupId;
+        for (i = 0; i < json.groups.length; i++){
+            groupId = json.groups[i];
+            if (!_.isString(groupId) || _.isUndefined(groupId)||
+                _.isNull(groupId) || _.isEqual(groupId, '')){
+                return false;
+            }
+        }
+
+        return true;
     };
 
 
