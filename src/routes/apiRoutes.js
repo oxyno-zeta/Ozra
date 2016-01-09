@@ -11,6 +11,7 @@ var errorsAPI = require('./api/errors.js');
 var groupsAPI = require('./api/groups.js');
 var usersAPI = require('./api/users.js');
 var actionsAPI = require('./api/actions.js');
+var systemsAPI = require('./api/system.js');
 
 // Exports
 module.exports = {
@@ -32,6 +33,9 @@ function putApiRoutes(mainApp){
 
     // Actions urls
     actionsAPI.actionsUrls(router);
+
+    // System urls
+    systemsAPI.systemsUrls(router);
 
     // Errors urls
     errorsAPI.errorUrls(router);
