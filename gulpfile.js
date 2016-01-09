@@ -27,10 +27,10 @@ var nodemonConfig = require('./nodemon.json');
 // Remove some parts
 delete nodemonConfig.events;
 
-var sources = ["src/**/*", "!src/**/*.spec.js", "package.json", "log4js_Configuration.json"];
-var distDirTemp = ".tmp";
-var distTempSources = distDirTemp + "/**/*";
-var distDir = "dist";
+var sources = ['src/**/*', '!src/**/*.spec.js', 'package.json', 'log4jsConf.json'];
+var distDirTemp = '.tmp';
+var distTempSources = distDirTemp + '/**/*';
+var distDir = 'dist';
 
 
 // **************************************************** \\
@@ -42,9 +42,9 @@ gulp.task('default', ['nodemon'], function () {});
 // **************************************************** \\
 // ******************     Bump    ********************* \\
 // **************************************************** \\
-// MAJOR ("major") version when you make incompatible API changes
-// MINOR ("minor") version when you add functionality in a backwards-compatible manner
-// PATCH ("patch") version when you make backwards-compatible bug fixes.
+// MAJOR ('major') version when you make incompatible API changes
+// MINOR ('minor') version when you add functionality in a backwards-compatible manner
+// PATCH ('patch') version when you make backwards-compatible bug fixes.
 gulp.task('bump', ['bump:patch']);
 
 gulp.task('bump:major', function(){
@@ -71,9 +71,9 @@ gulp.task('bump:patch', function(){
 
 gulp.task('browser-sync', function() {
 	return browserSync.init(null, {
-		proxy: "http://localhost:2050",
-		files: ["src/**/*.*"],
-		browser: "google-chrome",
+		proxy: 'http://localhost:2050',
+		files: ['src/**/*.*'],
+		browser: 'google-chrome',
 		port: 7000
 	});
 });
