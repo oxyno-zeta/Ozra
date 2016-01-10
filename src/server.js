@@ -94,6 +94,11 @@ function initServer(){
         next();
     });
 
+    // Static files and views
+    app.set('views', __dirname + '/views');
+    app.use('/bower_components', serveStatic(__dirname + '/bower_components/'));
+    app.use(serveStatic(__dirname + '/views/'));
+
 }
 
 /**
