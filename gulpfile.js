@@ -41,9 +41,7 @@ var distDir = 'dist';
 // *****************    Default    ******************** \\
 // **************************************************** \\
 
-gulp.task('default', function(cb){
-    return gulpSequence('nodemon', 'web:watch', 'browser-sync', cb);
-});
+gulp.task('default', ['dev:env']);
 
 // **************************************************** \\
 // ******************     Bump    ********************* \\
@@ -99,7 +97,7 @@ gulp.task('nodemon', function (cb) {
 });
 
 gulp.task('dev:env', function(cb){
-    gulpSequence('nodemon', 'browser-sync', cb);
+    return gulpSequence('nodemon', 'web:watch', 'browser-sync', cb);
 });
 
 // **************************************************** \\
