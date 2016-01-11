@@ -4,15 +4,18 @@
  * Licence: See Readme
  */
 
+var nconf = require('nconf');
+var _ = require('lodash');
+
 // Save config
 var config;
 
 // Variables
-var MODE = 'OZRA_ENV';
+var ENV = 'OZRA_ENV';
 var PORT = 'OZRA_PORT';
 var VERBOSE = 'OZRA_VERBOSE';
-var DATABASE = 'OZRA_DATABASE';
-var ENV_VARIABLES = [MODE, PORT, VERBOSE, DATABASE];
+var DATABASE_NAME = 'OZRA_DATABASE_NAME';
+var DATABASE_URL = 'OZRA_DATABASE_SERVER_URL';
 var POSSIBLE_ENV = ['dev', 'prod'];
 
 // Default configuration
@@ -20,63 +23,33 @@ var DEFAULT_CONFIG = {
     'OZRA_ENV': 'dev',
     'OZRA_PORT': 2049,
     'OZRA_VERBOSE': true,
-    'OZRA_DATABASE': 'Ozra_database'
+    'OZRA_DATABASE_SERVER_URL': '',
+    'OZRA_DATABASE_NAME': 'Ozra_database'
 };
 
 /**
- * Transform type of configuration entries
- * @param key {string} JSON key
- * @param DEFAULT_CONFIG {object} Default configuration
- * @param config {object} Configuration
- * @returns {*}
+ * 1) Default
+ * 2) Configuration file
+ * 3) Env variables
+ * 4) Command line
  */
-function transformType(key, DEFAULT_CONFIG, config){
-    switch (typeof DEFAULT_CONFIG[key]) {
-        case 'boolean':
-            return (config[key] === 'true');
-        case 'number':
-            return parseInt(config[key], 10);
-        /* istanbul ignore next */
-        default :
-            return config[key];
-    }
-}
+// Configuration file
+nconf.file({file: 'config.json'});
+// Environment variables
+nconf.env();
+// Command line
+nconf.argv();
+// Default
+nconf.defaults(DEFAULT_CONFIG);
 
-/**
- * Update configuration
- * @returns {{}}
- */
-function update(){
-    // Config doesn't ready -> build it
-    config = {};
-    var i;
-    var value;
-    for (i = 0; i < ENV_VARIABLES.length; i++){
-        value = process.env[ENV_VARIABLES[i]];
-        if (value !== undefined){
-            config[ENV_VARIABLES[i]] = value;
-        }
-        else {
-            config[ENV_VARIABLES[i]] = DEFAULT_CONFIG[ENV_VARIABLES[i]];
-        }
-    }
-
-    if (POSSIBLE_ENV.indexOf(config[MODE]) === -1){
-        // Environment not usable
-        // Using dev
-        config[MODE] = 'dev';
-    }
-
-    // Transform string to other (int or boolean) when necessary
-    var key;
-    for (key in DEFAULT_CONFIG){
-        if ( DEFAULT_CONFIG.hasOwnProperty(key) && ((typeof DEFAULT_CONFIG[key]) !== (typeof config[key])) ){
-            config[key] = transformType(key, DEFAULT_CONFIG, config);
-        }
-    }
-
-    return config;
-}
+// Exports
+module.exports = {
+    getConfig: getConfig,
+    getPort: getPort,
+    isVerbose: isVerbose,
+    isDeveloperMode: isDeveloperMode,
+    getDatabaseConfig: getDatabaseConfig
+};
 
 /**
  * Get configuration
@@ -84,11 +57,28 @@ function update(){
  */
 function getConfig(){
     // Check if config ready
-    if (config !== undefined){
-        return config;
+    if (_.isUndefined(config)){
+        config = {};
+        var key;
+        for (key in DEFAULT_CONFIG){
+            if (DEFAULT_CONFIG.hasOwnProperty(key)) {
+                config[key] = nconf.get(key);
+            }
+        }
+
+        var authorized = false;
+        _.forEach(POSSIBLE_ENV, function(env){
+            if (_.isEqual(config[ENV], env)){
+                authorized = true;
+            }
+        });
+
+        if (!authorized){
+            config[ENV] = 'dev';
+        }
     }
 
-    return update();
+    return config;
 }
 
 /**
@@ -112,7 +102,7 @@ function isVerbose() {
  * @returns {boolean}
  */
 function isDeveloperMode(){
-    return (getConfig()[MODE] === 'dev');
+    return _.isEqual(getConfig()[ENV], 'dev');
 }
 
 /**
@@ -120,14 +110,14 @@ function isDeveloperMode(){
  * @returns {*}
  */
 function getDatabaseConfig(){
-    return getConfig()[DATABASE];
-}
+    var _config = getConfig();
+    // Get URL
+    var url = _config[DATABASE_URL];
+    // Verify url
+    if (!_.isEqual(url.length, 0) && !_.isEqual(url[url.length], '/')){
+        url += '/';
+    }
+    var name = _config[DATABASE_NAME];
 
-// Exports
-module.exports = {
-    getConfig: getConfig,
-    getPort: getPort,
-    isVerbose: isVerbose,
-    isDeveloperMode: isDeveloperMode,
-    getDatabaseConfig: getDatabaseConfig
-};
+    return url + name;
+}
