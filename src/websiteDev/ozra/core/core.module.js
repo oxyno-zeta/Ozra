@@ -8,6 +8,10 @@
     'use strict';
 
     angular
-        .module('ozra.core', []);
+        .module('ozra.core', [
+            'ngMaterial',
+            'ui.router',
+            'restangular'
+        ]);
 
 })();
