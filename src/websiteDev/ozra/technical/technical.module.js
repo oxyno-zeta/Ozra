@@ -10,7 +10,8 @@
     angular
         .module('ozra.technical', [
             'ozra.technical.model',
-            'ozra.technical.services'
+            'ozra.technical.services',
+            'ozra.technical.base'
         ]);
 
 })();

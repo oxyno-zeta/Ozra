@@ -8,7 +8,7 @@
     'use strict';
 
     angular
-        .module('ozra.technical.services')
+        .module('ozra.technical.base')
         .factory('netService', netService);
 
     /**@ngInject */
