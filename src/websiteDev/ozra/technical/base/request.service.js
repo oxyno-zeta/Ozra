@@ -9,10 +9,10 @@
 
     angular
         .module('ozra.technical.base')
-        .factory('netService', netService);
+        .factory('requestService', requestService);
 
     /**@ngInject */
-    function netService($q, Restangular) {
+    function requestService($q, Restangular) {
         var service = {
             get: get,
             post: post,
