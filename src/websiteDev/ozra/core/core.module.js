@@ -11,7 +11,8 @@
         .module('ozra.core', [
             'ngMaterial',
             'ui.router',
-            'restangular'
+            'restangular',
+            'ngStorage'
         ]);
 
 })();
