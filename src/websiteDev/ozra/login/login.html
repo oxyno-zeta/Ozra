@@ -1,0 +1,14 @@
+
+<md-content layout-padding>
+    <md-input-container>
+        <label>Username</label>
+        <input type="text" ng-model="loginCtrl.username" required>
+    </md-input-container>
+    <br>
+    <md-input-container>
+        <label>Password</label>
+        <input type="password" ng-model="loginCtrl.password" required>
+    </md-input-container>
+    <br>
+    <md-button ng-disabled="loginCtrl.isDisabled()" ng-click="loginCtrl.submit()">Login</md-button>
+</md-content>
