@@ -8,57 +8,62 @@
 
     angular
         .module('ozra.technical.model')
-        .factory('userModelFactory', userModelFactory);
+        .service('actionModelFactory', actionModelFactory);
 
     /* @ngInject */
-    function userModelFactory() {
-        var service = {
-            getFromData: getFromData
-        };
-        return service;
+    function actionModelFactory() {
+        /* jshint validthis: true */
+        var self = this;
+
+        // Export
+        self.getFromData = getFromData;
 
         ////////////////
 
         /**
-         * User model
+         * Action model
          * @constructor
-         * @returns {UserModel}
+         * @returns {ActionModel}
          */
-        function UserModel(data) {
+        function ActionModel(data){
             // Model
             /* jshint validthis: true */
             var model = this;
             // Base
             if (_.isUndefined(data)) {
+                // No data
                 model.id = undefined;
                 model.rev = undefined;
                 model.name = undefined;
-                model.password = undefined;
-                model.salt = undefined;
-                model.token = undefined;
+                model.category = undefined;
+                model.script = undefined;
+                model.application = null; // Init with nothing
                 model.groups = [];
             }
             else {
+                // Data detected
                 model.id = data._id;
                 model.rev = data._rev;
                 model.name = data.name;
-                model.password = data.password;
-                model.salt = data.salt;
-                model.token = data.token;
+                model.category = data.category;
+                model.script = data.script;
+                model.application = data.application;
                 model.groups = data.groups;
             }
+
+            return model;
         }
 
         /**
-         * Create User from data
+         * Create Action from data
          * @param data
-         * @returns {userModelFactory.UserModel}
+         * @returns {actionModelFactory.ActionModel}
          */
-        function getFromData(data) {
-            return new UserModel(data);
+        function getFromData(data){
+            return new ActionModel(data);
         }
+
     }
 
 })();
-
 

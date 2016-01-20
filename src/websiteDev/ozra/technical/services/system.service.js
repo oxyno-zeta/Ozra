@@ -9,15 +9,16 @@
 
     angular
         .module('ozra.technical.services')
-        .factory('systemService', systemService);
+        .service('systemService', systemService);
 
     /** @ngInject */
     function systemService($q, requestService, dataCacheService) {
-        var service = {
-            login: login,
-            logout: logout
-        };
-        return service;
+        /* jshint validthis: true */
+        var self = this;
+
+        // Public
+        self.login = login;
+        self.logout = logout;
 
         ////////////////
 

@@ -9,17 +9,18 @@
 
     angular
         .module('ozra.technical.base')
-        .factory('requestService', requestService);
+        .service('requestService', requestService);
 
     /**@ngInject */
     function requestService($q, Restangular) {
-        var service = {
-            get: get,
-            post: post,
-            put: put,
-            remove: remove
-        };
-        return service;
+        /* jshint validthis: true */
+        var self = this;
+
+        // Export
+        self.get = get;
+        self.post = post;
+        self.put = put;
+        self.remove = remove;
 
         ////////////////
 

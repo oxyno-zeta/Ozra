@@ -9,14 +9,15 @@
 
     angular
         .module('ozra.technical.model')
-        .factory('groupModelFactory', groupModelFactory);
+        .service('groupModelFactory', groupModelFactory);
 
     /* @ngInject */
     function groupModelFactory() {
-        var service = {
-            getFromData: getFromData
-        };
-        return service;
+        /* jshint validthis: true */
+        var self = this;
+
+        // Export
+        self.getFromData = getFromData;
 
         ////////////////
 

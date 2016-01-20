@@ -9,23 +9,18 @@
 
     angular
         .module('ozra.technical.services')
-        .factory('dataCacheService', dataCacheService);
+        .service('dataCacheService', dataCacheService);
 
     /** @ngInject */
     function dataCacheService($localStorage) {
-        // Private
-        var token = $localStorage.token;
-        var currentUser = {};
+        /* jshint validthis: true */
+        var self = this;
 
         // Public
-        var service = {
-            token: token,
-            currentUser: currentUser,
-            setToken: setToken,
-            removeToken: removeToken
-        };
-
-        return service;
+        self.token = $localStorage.token;
+        self.currentUser = {};
+        self.setToken = setToken;
+        self.removeToken = removeToken;
 
         ////////////////
 
@@ -35,7 +30,7 @@
          */
         function setToken(_token){
             $localStorage.token = _token;
-            token = _token;
+            self.token = _token;
         }
 
         /**
@@ -43,7 +38,7 @@
          */
         function removeToken(){
             delete $localStorage.token;
-            token = $localStorage.token;
+            self.token = $localStorage.token;
         }
 
     }
