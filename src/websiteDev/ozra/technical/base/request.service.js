@@ -12,7 +12,7 @@
         .service('requestService', requestService);
 
     /**@ngInject */
-    function requestService($q, Restangular) {
+    function requestService($q, Restangular, dataCacheService) {
         /* jshint validthis: true */
         var self = this;
 
@@ -21,6 +21,7 @@
         self.post = post;
         self.put = put;
         self.remove = remove;
+        self.setDefaultParams = setDefaultParams;
 
         ////////////////
 
@@ -76,6 +77,16 @@
             var deferred = $q.defer();
             Restangular.one(url).remove(params, headers).then(deferred.resolve, deferred.reject);
             return deferred.promise;
+        }
+
+        /**
+         * Set Default params
+         */
+        function setDefaultParams(){
+            var requestParams = {
+                token: dataCacheService.token
+            };
+            Restangular.setDefaultRequestParams(requestParams);
         }
 
     }
