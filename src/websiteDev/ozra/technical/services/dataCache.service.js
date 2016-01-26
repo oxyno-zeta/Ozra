@@ -18,9 +18,12 @@
 
         // Public
         self.token = $localStorage.token;
+        self.userId = $localStorage.userId;
         self.currentUser = {};
         self.setToken = setToken;
         self.removeToken = removeToken;
+        self.setUserId = setUserId;
+        self.removeUserId = removeUserId;
 
         ////////////////
 
@@ -39,6 +42,23 @@
         function removeToken(){
             delete $localStorage.token;
             self.token = $localStorage.token;
+        }
+
+        /**
+         * Set userId
+         * @param _userId
+         */
+        function setUserId(_userId){
+            $localStorage.userId = _userId;
+            self.userId = _userId;
+        }
+
+        /**
+         * Remove userId
+         */
+        function removeUserId(){
+            delete $localStorage.userId;
+            self.userId = $localStorage.userId;
         }
 
     }
