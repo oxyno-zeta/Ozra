@@ -68,6 +68,7 @@ function login(req, res){
             logger.info('Login Success for user "' + user.getName() + '"');
 
             responseBody.token = user.getToken();
+            responseBody.userId = user.getId();
 
             APIResponses.sendResponse(res, responseBody, APICodes.normal.OK, true);
         }, function(err){

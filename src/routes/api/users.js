@@ -28,7 +28,7 @@ module.exports = {
 function usersUrls(mainApp){
     // Get all users
     mainApp.get('/users/', getAllUsers);
-    // Get all users
+    // Get specific user
     mainApp.get('/users/:id', getUser);
     // Add user
     mainApp.post('/users/', addUser);
@@ -101,7 +101,7 @@ function getAllUsers(req, res){
 }
 
 /**
- * Get specific user
+ * Get specific user from id
  * @param req
  * @param res
  */
