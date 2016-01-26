@@ -47,7 +47,7 @@
 
         function submit(){
             systemService.login(vm.username, vm.password).then(function(result){
-
+                $state.go('ozra');
             }, function(err){
                 if (_.isEqual(err.status, 401)){
                     $mdToast.show(

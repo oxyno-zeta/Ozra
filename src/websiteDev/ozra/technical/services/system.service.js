@@ -35,7 +35,12 @@
                 password: password
             };
             requestService.post('/api/system/login/', data).then(function(result){
+                // Store data
                 dataCacheService.setToken(result.token);
+                dataCacheService.setUserId(result.userId);
+                // Put default params
+                requestService.setDefaultParams();
+                // Resolve
                 deferred.resolve(result);
             }, deferred.reject);
             return deferred.promise;

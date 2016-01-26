@@ -16,9 +16,13 @@
         $stateProvider
             .state('login', {
                 url: '/',
-                templateUrl: 'ozra/login/login.html',
-                controller: 'LoginController',
-                controllerAs: 'loginCtrl'
+                views: {
+                    content: {
+                        templateUrl: 'ozra/login/login.html',
+                        controller: 'LoginController',
+                        controllerAs: 'loginCtrl'
+                    }
+                }
             });
     }
 
