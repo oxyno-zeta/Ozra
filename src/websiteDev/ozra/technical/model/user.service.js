@@ -35,7 +35,6 @@
                 model.rev = undefined;
                 model.name = undefined;
                 model.password = undefined;
-                model.salt = undefined;
                 model.token = undefined;
                 model.groups = [];
             }
@@ -43,8 +42,7 @@
                 model.id = data._id;
                 model.rev = data._rev;
                 model.name = data.name;
-                model.password = data.password;
-                model.salt = data.salt;
+                model.password = undefined;
                 model.token = data.token;
                 model.groups = data.groups;
             }
