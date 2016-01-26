@@ -1,0 +1,46 @@
+/*
+ * Author: Alexandre Havrileck (Oxyno-zeta) 
+ * Date: 19/01/16
+ * Licence: See Readme
+ */
+
+(function () {
+    'use strict';
+
+    angular
+        .module('ozra.technical.services')
+        .service('userService', userService);
+
+    /** @ngInject */
+    function userService($q, requestService, dataCacheService, userModelFactory) {
+        /* jshint validthis: true */
+        var self = this;
+
+        // Private
+        var baseUrl = '/api/users/';
+        // Public
+        self.getCurrentFromId = getCurrentFromId;
+
+        ////////////////
+
+        /**
+         * Get current user from id
+         * @returns {*}
+         */
+        function getCurrentFromId() {
+            var deferred = $q.defer();
+            var url = baseUrl + dataCacheService.userId;
+
+            requestService.get(url).then(function(response){
+                var user = userModelFactory.getFromData(response.user);
+                dataCacheService.currentUser = user;
+                deferred.resolve(user);
+            }, deferred.reject);
+            return deferred.promise;
+        }
+    }
+
+})();
+
+
+
