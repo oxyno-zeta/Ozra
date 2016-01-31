@@ -15,9 +15,7 @@
     function userService($q, userDaoService, dataCacheService) {
         /* jshint validthis: true */
         var self = this;
-
-        // Private
-        var baseUrl = '/api/users/';
+        
         // Public
         self.getCurrentFromId = getCurrentFromId;
 
