@@ -16,10 +16,10 @@
         /* jshint validthis: true */
         var self = this;
 
-        // Public
+        // Variables
         self.token = $localStorage.token;
         self.userId = $localStorage.userId;
-        self.currentUser = {};
+        // Functions
         self.setToken = setToken;
         self.removeToken = removeToken;
         self.setUserId = setUserId;
