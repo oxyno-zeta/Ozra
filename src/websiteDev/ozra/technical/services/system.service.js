@@ -12,7 +12,7 @@
         .service('systemService', systemService);
 
     /** @ngInject */
-    function systemService($q, requestService, dataCacheService) {
+    function systemService($q, systemDaoService, requestService, dataCacheService) {
         /* jshint validthis: true */
         var self = this;
 
@@ -30,11 +30,7 @@
          */
         function login(username, password) {
             var deferred = $q.defer();
-            var data = {
-                username: username,
-                password: password
-            };
-            requestService.post('/api/system/login/', data).then(function(result){
+            systemDaoService.login(username, password).then(function(result){
                 // Store data
                 dataCacheService.setToken(result.token);
                 dataCacheService.setUserId(result.userId);
