@@ -28,7 +28,7 @@ function groupsUrls(mainApp){
     // Get all groups
     mainApp.get('/groups/', getAllGroups);
     // Get all groups
-    mainApp.get('//groups/user/', getGroupsFromUser);
+    mainApp.get('/groups/user/', getGroupsFromUser);
     // Add group
     mainApp.post('/groups/', addGroup);
     // Delete group
