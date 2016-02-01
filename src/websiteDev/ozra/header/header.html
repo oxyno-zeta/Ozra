@@ -1,1 +1,24 @@
-TEST
+<md-content>
+    <md-toolbar>
+        <div class="md-toolbar-tools header">
+            <md-button class="md-icon-button" aria-label="Node list">
+                <ng-md-icon icon="dehaze"></ng-md-icon>
+            </md-button>
+            <div class="node">
+                <span>Master</span>
+            </div>
+            <h2>
+                <span>Ozra</span>
+            </h2>
+            <span flex></span>
+            <md-button class="md-icon-button" aria-label="Administration" ng-if="!headerCtrl.isAdmin">
+                <ng-md-icon icon="tune"></ng-md-icon>
+            </md-button>
+            <md-button class="md-icon-button" aria-label="Settings">
+                <ng-md-icon icon="settings"></ng-md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <div ui-view="content"></div>
+</md-content>

@@ -17,12 +17,17 @@
             url: '/ozra',
             views: {
                 content: {
-                    templateUrl: 'ozra/header/header.html'
+                    templateUrl: 'ozra/header/header.html',
+                    controller: 'HeaderController',
+                    controllerAs: 'headerCtrl'
                 }
             },
             resolve: {
                 currentUser: function(userService){
                     return userService.getCurrentFromId();
+                },
+                currentGroups: function(groupService){
+                    return groupService.getCurrentUserGroups();
                 }
             }
         });
