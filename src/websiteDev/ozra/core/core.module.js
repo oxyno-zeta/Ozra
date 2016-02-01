@@ -12,7 +12,8 @@
             'ngMaterial',
             'ui.router',
             'restangular',
-            'ngStorage'
+            'ngStorage',
+            'ngMdIcons'
         ]);
 
 })();
