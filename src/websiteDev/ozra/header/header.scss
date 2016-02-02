@@ -1,7 +1,16 @@
 .header {
+  .spacing-right {
+    margin-right: 15px;
+  }
   .node {
     font-size: 17px;
-    margin-right: 10px;
     margin-top: 4px;
+  }
+  .top-button {
+    padding: 14px 0px 14px 0px;
+    .title {
+      font-size: 20px;
+      font-weight: bold;
+    }
   }
 }

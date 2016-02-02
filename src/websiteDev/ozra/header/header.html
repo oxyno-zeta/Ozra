@@ -1,15 +1,21 @@
 <md-content>
     <md-toolbar>
         <div class="md-toolbar-tools header">
-            <md-button class="md-icon-button" aria-label="Node list">
+            <md-button class="md-icon-button" aria-label="Node list" ng-disabled="true">
                 <ng-md-icon icon="dehaze"></ng-md-icon>
             </md-button>
-            <div class="node">
+            <div class="node spacing-right">
                 <span>Master</span>
             </div>
-            <h2>
-                <span>Ozra</span>
-            </h2>
+            <md-button class="spacing-right top-button" aria-label="Ozra">
+                <span class="title">Ozra</span>
+            </md-button>
+            <md-button class="top-button" aria-label="Actions">
+                Actions
+            </md-button>
+            <md-button class="top-button" aria-label="Monitoring" ng-disabled="true">
+                Monitoring
+            </md-button>
             <span flex></span>
             <md-button class="md-icon-button" aria-label="Administration" ng-if="!headerCtrl.isAdmin">
                 <ng-md-icon icon="tune"></ng-md-icon>
