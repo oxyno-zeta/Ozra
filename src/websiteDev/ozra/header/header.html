@@ -17,10 +17,13 @@
                 Monitoring
             </md-button>
             <span flex></span>
-            <md-button class="md-icon-button" aria-label="Administration" ng-if="!headerCtrl.isAdmin">
+            <md-button class="md-icon-button" aria-label="Administration"
+                       ng-if="!headerCtrl.isAdmin"
+                       ng-disabled="true">
                 <ng-md-icon icon="tune"></ng-md-icon>
             </md-button>
-            <md-button class="md-icon-button" aria-label="Settings">
+            <md-button class="md-icon-button" aria-label="Settings"
+                       ng-disabled="true">
                 <ng-md-icon icon="settings"></ng-md-icon>
             </md-button>
         </div>
