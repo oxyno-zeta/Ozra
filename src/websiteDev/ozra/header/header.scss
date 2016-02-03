@@ -14,4 +14,9 @@
       font-weight: bold;
     }
   }
+  .active {
+    background-color: white;
+    color: rgb(16,108,200) !important;
+    border-bottom: 2px solid rgb(255,82,82);
+  }
 }

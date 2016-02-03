@@ -7,16 +7,21 @@
             <div class="node spacing-right">
                 <span>Master</span>
             </div>
-            <md-button class="spacing-right top-button" aria-label="Ozra">
+            <md-button class="spacing-right top-button" aria-label="Ozra"
+                       ui-sref="ozra.actions">
                 <span class="title">Ozra</span>
             </md-button>
-            <md-button class="top-button" aria-label="Actions">
+            <md-button class="top-button" aria-label="Actions"
+                       ui-sref="ozra.actions"
+                       ui-sref-active="active">
                 Actions
             </md-button>
             <md-button class="top-button" aria-label="Monitoring" ng-disabled="true">
                 Monitoring
             </md-button>
+
             <span flex></span>
+
             <md-button class="md-icon-button" aria-label="Administration"
                        ng-if="!headerCtrl.isAdmin"
                        ng-disabled="true">

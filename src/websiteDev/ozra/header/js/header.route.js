@@ -14,7 +14,7 @@
     /* @ngInject */
     function routeConfig ($stateProvider) {
         $stateProvider.state('ozra', {
-            url: '/ozra',
+            abstract: true,
             views: {
                 content: {
                     templateUrl: 'ozra/header/header.html',

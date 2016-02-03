@@ -12,21 +12,13 @@
         .controller('HeaderController', HeaderController);
 
     /** @ngInject */
-    function HeaderController($state, groupService, currentUser, currentGroups) {
+    function HeaderController(groupService, currentGroups) {
         var vm = this;
         // Variables
         vm.isAdmin = groupService.isOneGroupAdministrator(currentGroups);
         // Functions
 
-        activate();
-
         ////////////////
-
-        function activate() {
-            //
-            console.log(currentGroups);
-            console.log(currentUser);
-        }
     }
 
 })();
