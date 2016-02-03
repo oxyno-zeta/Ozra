@@ -11,6 +11,7 @@
         'ozra.core',
         'ozra.login',
         'ozra.header',
+        'ozra.actions',
         'ozra.technical'
     ]);
 })();
