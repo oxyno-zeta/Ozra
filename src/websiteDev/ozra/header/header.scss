@@ -18,5 +18,8 @@
     background-color: white;
     color: rgb(16,108,200) !important;
     border-bottom: 2px solid rgb(255,82,82);
+    &:hover {
+      background-color: rgba(255,255,255,0.8) !important;
+    }
   }
 }
