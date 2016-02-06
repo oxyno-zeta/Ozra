@@ -8,7 +8,7 @@
     'use strict';
 
     angular
-        .module('ozra.actions')
+        .module('ozra.actions.list')
         .config(routeConfig);
 
         /** @ngInject */
@@ -18,9 +18,9 @@
                     url: '/ozra',
                     views: {
                         content: {
-                            templateUrl: 'ozra/actions/actions.html',
-                            controller: 'ActionsController',
-                            controllerAs: 'actionsCtrl'
+                            templateUrl: 'ozra/actions/list/actions.list.html',
+                            controller: 'ActionsListController',
+                            controllerAs: 'actionsListCtrl'
                         }
                     },
                     resolve: {

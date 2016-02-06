@@ -1,6 +1,6 @@
 /*
  * Author: Alexandre Havrileck (Oxyno-zeta) 
- * Date: 02/02/16
+ * Date: 06/02/16
  * Licence: See Readme
  */
 
@@ -8,6 +8,9 @@
     'use strict';
 
     angular
-        .module('ozra.actions', []);
+        .module('ozra.actions', [
+            'ozra.actions.list'
+        ]);
 
 })();
+
