@@ -34,7 +34,7 @@
 
                 if (_.isEqual(toState.name, 'login') && !(_.isUndefined(token) || _.isNull(token)) ){
                     event.preventDefault();
-                    $state.go('ozra');
+                    $state.go('ozra.actions');
                 }
             });
         }
