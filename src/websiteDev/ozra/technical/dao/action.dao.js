@@ -19,6 +19,7 @@
         var baseUrl = '/api/actions/';
         // Public
         self.getAll = getAll;
+        self.getFromId = getFromId;
 
         ////////////////
 
@@ -34,6 +35,20 @@
                     actions.push(actionModelFactory.getFromData(actionData));
                 });
                 deferred.resolve(actions);
+            }, deferred.reject);
+            return deferred.promise;
+        }
+
+        /**
+         * Get specific action from id
+         * @param id {String} Action id
+         * @returns {*}
+         */
+        function getFromId(id){
+            var deferred = $q.defer();
+            var url = baseUrl + id;
+            requestService.get(url).then(function(response){
+                deferred.resolve(actionModelFactory.getFromData(response.plain().action));
             }, deferred.reject);
             return deferred.promise;
         }

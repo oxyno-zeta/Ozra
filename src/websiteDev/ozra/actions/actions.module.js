@@ -9,7 +9,8 @@
 
     angular
         .module('ozra.actions', [
-            'ozra.actions.list'
+            'ozra.actions.list',
+            'ozra.actions.properties'
         ]);
 
 })();

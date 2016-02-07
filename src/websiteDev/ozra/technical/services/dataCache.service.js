@@ -19,6 +19,8 @@
         // Variables
         self.token = $localStorage.token;
         self.userId = $localStorage.userId;
+        self.currentUser = undefined;
+        self.currentGroups = undefined;
         // Functions
         self.setToken = setToken;
         self.removeToken = removeToken;

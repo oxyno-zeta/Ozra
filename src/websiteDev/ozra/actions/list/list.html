@@ -1,4 +1,4 @@
-<md-content class="md-padding" layout="column" flex md-scroll-y>
+<div class="md-padding" layout="column" flex md-scroll-y>
     <div layout="row" layout-wrap layout-align="start center">
         <md-card ng-repeat="action in actionsListCtrl.actions" class="actions-card">
             <md-card-title>
@@ -8,12 +8,12 @@
                 </md-card-title-text>
             </md-card-title>
             <md-card-actions layout="row" layout-align="end center">
-                <md-button class="md-raised" ng-disabled="true">See / Edit</md-button>
+                <md-button class="md-raised" ui-sref="ozra.actions.properties({id:action.id})">See / Edit</md-button>
                 <md-button class="md-raised md-primary" ng-disabled="true">Run</md-button>
             </md-card-actions>
         </md-card>
     </div>
-</md-content>
+</div>
 <md-fab-speed-dial class="md-fab md-fab-bottom-right">
     <md-fab-trigger>
         <md-button aria-label="Add" class="md-fab md-warn" ng-disabled="true">

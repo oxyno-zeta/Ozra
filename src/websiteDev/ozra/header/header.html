@@ -1,4 +1,4 @@
-<md-content layout-fill>
+<div layout="column" flex layout-fill>
     <md-toolbar>
         <div class="md-toolbar-tools header">
             <md-button class="md-icon-button" aria-label="Node list" ng-disabled="true">
@@ -34,5 +34,5 @@
         </div>
     </md-toolbar>
 
-    <div ui-view="content"></div>
-</md-content>
+    <md-content ui-view="content" class="full-size" md-scroll-y></md-content>
+</div>
