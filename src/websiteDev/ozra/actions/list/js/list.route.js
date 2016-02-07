@@ -18,7 +18,7 @@
                     url: '/ozra',
                     views: {
                         content: {
-                            templateUrl: 'ozra/actions/list/actions.list.html',
+                            templateUrl: 'ozra/actions/list/list.html',
                             controller: 'ActionsListController',
                             controllerAs: 'actionsListCtrl'
                         }
