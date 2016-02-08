@@ -15,7 +15,7 @@
         function routeConfig ($stateProvider) {
             $stateProvider
                 .state('ozra.actions', {
-                    url: '/ozra',
+                    url: '/actions',
                     views: {
                         content: {
                             templateUrl: 'ozra/actions/list/list.html',

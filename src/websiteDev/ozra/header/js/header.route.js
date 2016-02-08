@@ -15,6 +15,7 @@
     function routeConfig ($stateProvider) {
         $stateProvider.state('ozra', {
             abstract: true,
+            url: '/ozra',
             views: {
                 content: {
                     templateUrl: 'ozra/header/header.html',
