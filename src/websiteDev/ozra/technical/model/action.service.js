@@ -33,7 +33,6 @@
             if (_.isUndefined(data)) {
                 // No data
                 model.id = undefined;
-                model.rev = undefined;
                 model.name = undefined;
                 model.category = undefined;
                 model.script = undefined;
@@ -43,7 +42,6 @@
             else {
                 // Data detected
                 model.id = data._id;
-                model.rev = data._rev;
                 model.name = data.name;
                 model.category = data.category;
                 model.script = data.script;

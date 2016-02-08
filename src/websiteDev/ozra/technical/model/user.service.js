@@ -32,7 +32,6 @@
             // Base
             if (_.isUndefined(data)) {
                 model.id = undefined;
-                model.rev = undefined;
                 model.name = undefined;
                 model.password = undefined;
                 model.token = undefined;
@@ -40,7 +39,6 @@
             }
             else {
                 model.id = data._id;
-                model.rev = data._rev;
                 model.name = data.name;
                 model.password = undefined;
                 model.token = data.token;
