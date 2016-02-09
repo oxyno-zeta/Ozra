@@ -18,19 +18,18 @@
         // Variables
         vm.action = action;
         vm.disableEdit = true;
+        vm.isFabOpen = false;
         // Functions
         vm.filterCurrentGroups = filterCurrentGroups;
-
-        activate();
+        vm.fabMouseClick = fabMouseClick;
+        vm.enterEditMode = enterEditMode;
+        vm.leaveEditMode = leaveEditMode;
 
         // Private
         var currentGroups = transformToArray(dataCacheService.currentGroups);
+        var actionCopy;
 
         ////////////////
-
-        function activate() {
-
-        }
 
         /**
          * Filter text in current groups
@@ -44,6 +43,27 @@
                 itemNameL = angular.lowercase(item.name);
                 return (!_.isEqual(itemNameL.indexOf(searchTextL) ,-1));
             });
+        }
+
+        /**
+         * On mouse click for FAB
+         */
+        function fabMouseClick(){
+            vm.isFabOpen = !vm.isFabOpen;
+        }
+
+        function enterEditMode(){
+            // Copy action
+            actionCopy = _.cloneDeep(vm.action);
+            // Enable edit
+            vm.disableEdit = false;
+        }
+
+        function leaveEditMode(){
+            // Replace action
+            vm.action = actionCopy;
+            // Disable edit
+            vm.disableEdit = true;
         }
 
         /**

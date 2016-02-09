@@ -1,24 +1,24 @@
 <div class="md-padding" layout="column" flex>
     <md-input-container>
-        <label>Name</label>
-        <input required ng-model="actionsPropertiesCtrl.action.name"
+        <label>Name *</label>
+        <input ng-model="actionsPropertiesCtrl.action.name"
                ng-disabled="actionsPropertiesCtrl.disableEdit">
     </md-input-container>
 
     <md-input-container>
-        <label>Category</label>
+        <label>Category *</label>
         <input ng-model="actionsPropertiesCtrl.action.category"
                ng-disabled="actionsPropertiesCtrl.disableEdit">
     </md-input-container>
 
-    <md-input-container ng-class="{'md-input-has-value': actionsPropertiesCtrl.disableEdit
-        && (actionsPropertiesCtrl.action.groups.length !== 0)}">
-        <label>Groups</label>
+    <div class="md-input-container">
+        <label class="label-color">Groups *</label>
         <md-chips ng-model="actionsPropertiesCtrl.action.groups"
                   md-autocomplete-snap
                   md-require-match="true"
                   readonly="actionsPropertiesCtrl.disableEdit">
             <md-autocomplete
+                    md-no-cache="true"
                     md-selected-item="selectedItem"
                     md-search-text="searchText"
                     md-items="item in actionsPropertiesCtrl.filterCurrentGroups(searchText)"
@@ -27,12 +27,12 @@
                 <span>{{item.name}}</span>
             </md-autocomplete>
             <md-chip-template>
-            <span>
-              <strong>{{$chip.name}}</strong>
-            </span>
+                <span>
+                  {{$chip.name}}
+                </span>
             </md-chip-template>
         </md-chips>
-    </md-input-container>
+    </div>
 
     <md-input-container>
         <label>Application</label>
@@ -41,27 +41,71 @@
     </md-input-container>
 
     <md-input-container>
-        <label>Script</label>
+        <label>Script *</label>
         <textarea ng-model="actionsPropertiesCtrl.action.script"
-                  ng-disabled="actionsPropertiesCtrl.disableEdit">
+                  ng-disabled="actionsPropertiesCtrl.disableEdit"
+                  md-select-on-focus>
         </textarea>
     </md-input-container>
 
-    <div flex layout="row" layout-align="center">
-        <div ng-if="!actionsPropertiesCtrl.disableEdit">
-            <md-button>Cancel</md-button>
-            <md-button>Save</md-button>
-        </div>
-        <div ng-if="actionsPropertiesCtrl.disableEdit">
-            <md-button class="md-raised md-primary">Edit</md-button>
-        </div>
-    </div>
+    <br>
+    <em>* Mandatory fields</em>
 </div>
 
-<md-fab-speed-dial class="md-fab md-fab-bottom-right">
+
+<md-fab-speed-dial md-direction="up" md-open="actionsPropertiesCtrl.isFabOpen"
+                   class="md-scale md-fab md-fab-bottom-right"
+                   ng-click="actionsPropertiesCtrl.fabMouseClick()">
     <md-fab-trigger>
-        <md-button aria-label="Add" class="md-fab md-warn" ng-disabled="true">
-            <ng-md-icon icon="add"></ng-md-icon>
+        <md-button aria-label="Menu" class="md-fab md-warn">
+            <md-tooltip md-direction="left"
+                        md-autohide="true">
+                Menu
+            </md-tooltip>
+            <ng-md-icon icon="dehaze"></ng-md-icon>
         </md-button>
     </md-fab-trigger>
+    <md-fab-actions>
+        <md-button aria-label="Edit" class="md-fab md-raised md-mini"
+                   ng-if="actionsPropertiesCtrl.disableEdit"
+                   ng-click="actionsPropertiesCtrl.enterEditMode()">
+            <md-tooltip md-direction="left"
+                        md-autohide="true">
+                Edit
+            </md-tooltip>
+            <ng-md-icon icon="mode_edit"></ng-md-icon>
+        </md-button>
+
+        <md-button aria-label="Launch" class="md-fab md-raised md-mini"
+                   ng-if="actionsPropertiesCtrl.disableEdit"
+                   ng-disabled="true"
+                   ng-click="">
+            <md-tooltip md-direction="left"
+                        md-autohide="true">
+                Launch
+            </md-tooltip>
+            <ng-md-icon icon="launch"></ng-md-icon>
+        </md-button>
+
+        <md-button aria-label="Cancel" class="md-fab md-raised md-mini"
+                   ng-if="!actionsPropertiesCtrl.disableEdit"
+                   ng-click="actionsPropertiesCtrl.leaveEditMode()">
+            <md-tooltip md-direction="left"
+                        md-autohide="true">
+                Cancel
+            </md-tooltip>
+            <ng-md-icon icon="cancel"></ng-md-icon>
+        </md-button>
+
+        <md-button aria-label="Save" class="md-fab md-raised md-mini"
+                   ng-if="!actionsPropertiesCtrl.disableEdit"
+                   ng-disabled="true"
+                   ng-click="">
+            <md-tooltip md-direction="left"
+                        md-autohide="true">
+                Save
+            </md-tooltip>
+            <ng-md-icon icon="save"></ng-md-icon>
+        </md-button>
+    </md-fab-actions>
 </md-fab-speed-dial>
