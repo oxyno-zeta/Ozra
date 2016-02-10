@@ -1,15 +1,19 @@
 <div class="md-padding" layout="column" flex>
-    <md-input-container>
-        <label>Name *</label>
-        <input ng-model="actionsPropertiesCtrl.action.name"
-               ng-disabled="actionsPropertiesCtrl.disableEdit">
-    </md-input-container>
+    <div layout="row" flex>
+        <md-input-container flex>
+            <label>Name *</label>
+            <input ng-model="actionsPropertiesCtrl.action.name"
+                   ng-disabled="actionsPropertiesCtrl.disableEdit">
+        </md-input-container>
 
-    <md-input-container>
-        <label>Category *</label>
-        <input ng-model="actionsPropertiesCtrl.action.category"
-               ng-disabled="actionsPropertiesCtrl.disableEdit">
-    </md-input-container>
+        <div class="separator"></div>
+
+        <md-input-container flex>
+            <label>Category *</label>
+            <input ng-model="actionsPropertiesCtrl.action.category"
+                   ng-disabled="actionsPropertiesCtrl.disableEdit">
+        </md-input-container>
+    </div>
 
     <div class="md-input-container">
         <label class="label-color">Groups *</label>
