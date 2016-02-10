@@ -76,9 +76,8 @@
 
         /**
          * Run action
-         * @param event
          */
-        function run(event){
+        function run(){
             actionService.runFromId(action.id).then(function(response){
                 // Content text : default error
                 var contentText = 'Error launching action !';
