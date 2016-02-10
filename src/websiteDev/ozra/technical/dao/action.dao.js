@@ -18,10 +18,22 @@
         // Private
         var baseUrl = '/api/actions/';
         // Public
+        self.runFromId = runFromId;
         self.getAll = getAll;
         self.getFromId = getFromId;
 
         ////////////////
+
+        function runFromId(actionId){
+            var deferred = $q.defer();
+            var url = baseUrl + actionId + '/run';
+            requestService.get(url).then(function(result){
+                deferred.resolve(result.plain());
+            }, function(error){
+                deferred.reject(error.plain());
+            });
+            return deferred.promise;
+        }
 
         /**
          * Get all actions for current user

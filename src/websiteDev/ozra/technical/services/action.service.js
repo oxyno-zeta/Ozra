@@ -17,12 +17,17 @@
         var self = this;
 
         // Public
+        self.runFromId = runFromId;
         self.getAllActions = getAllActions;
         self.getFromId = getFromId;
 
         ////////////////
 
         // Public
+        function runFromId(actionId){
+            return actionDaoService.runFromId(actionId);
+        }
+
         /**
          * Get all actions for current user
          * @returns {*}

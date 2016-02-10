@@ -12,7 +12,7 @@
         .controller('ActionsPropertiesController', ActionsPropertiesController);
 
     /** @ngInject */
-    function ActionsPropertiesController(dataCacheService, action) {
+    function ActionsPropertiesController($mdDialog, $mdToast, dataCacheService, actionService, action) {
         // Public
         var vm = this;
         // Variables
@@ -24,6 +24,7 @@
         vm.fabMouseClick = fabMouseClick;
         vm.enterEditMode = enterEditMode;
         vm.leaveEditMode = leaveEditMode;
+        vm.run = run;
 
         // Private
         var currentGroups = transformToArray(dataCacheService.currentGroups);
@@ -31,6 +32,7 @@
 
         ////////////////
 
+        // Public
         /**
          * Filter text in current groups
          * @param searchText
@@ -52,6 +54,9 @@
             vm.isFabOpen = !vm.isFabOpen;
         }
 
+        /**
+         * Enter in edit mode
+         */
         function enterEditMode(){
             // Copy action
             actionCopy = _.cloneDeep(vm.action);
@@ -59,6 +64,9 @@
             vm.disableEdit = false;
         }
 
+        /**
+         * Leave edit mode
+         */
         function leaveEditMode(){
             // Replace action
             vm.action = actionCopy;
@@ -66,6 +74,52 @@
             vm.disableEdit = true;
         }
 
+        /**
+         * Run action
+         * @param event
+         */
+        function run(event){
+            actionService.runFromId(action.id).then(function(response){
+                // Content text : default error
+                var contentText = 'Error launching action !';
+                if (_.isEqual(response.result.code, 0)){
+                    contentText = 'Action successfully launched !';
+                }
+
+                // Create toast
+                var toast = $mdToast.simple()
+                    .textContent(contentText)
+                    .position('top right')
+                    .action('See log ?')
+                    .hideDelay(1500);
+
+                // Show toast
+                $mdToast.show(toast).then(function(_response){
+                    if (_.isEqual(_response, 'ok')){
+                        $mdDialog.show({
+                            controller: 'ActionLogDialog',
+                            controllerAs: 'actionLogDialog',
+                            templateUrl: 'ozra/dialogs/actionLogDialog/actionLogDialog.html',
+                            locals: {
+                                result: response.result
+                            },
+                            clickOutsideToClose:true
+                        });
+                    }
+                });
+            }, function(err){
+                if (err.hasOwnProperty('reason')) {
+                    var toast = $mdToast.simple()
+                        .textContent(err.reason)
+                        .position('top right')
+                        .hideDelay(1500);
+                    // Show toast
+                    $mdToast.show(toast);
+                }
+            });
+        }
+
+        // Private
         /**
          * Transform object to array
          * @param obj {Object}
