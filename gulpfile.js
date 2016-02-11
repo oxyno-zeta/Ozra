@@ -183,7 +183,7 @@ var gulpif = require('gulp-if');
 var webSourcesDir = 'src/websiteDev';
 var webDistDir = 'src/views';
 var wiredepConf = {
-    directory: 'bower_components'
+    directory: 'src/bower_components'
 };
 
 gulp.task('web:partials', function () {
@@ -205,6 +205,7 @@ gulp.task('web:partials', function () {
 gulp.task('web:sass', function(){
     var injectFiles = gulp.src([
         path.join(webSourcesDir, '/**/*.scss'),
+        path.join(wiredepConf.directory, '/**/*.scss'),
         path.join('!' + webSourcesDir, '/ozra.scss')
     ], {
         read: false
