@@ -21,9 +21,31 @@
         self.runFromId = runFromId;
         self.getAll = getAll;
         self.getFromId = getFromId;
+        self.createEmptyNew = createEmptyNew;
+        self.addNewAction = addNewAction;
 
         ////////////////
 
+        /**
+         * Add new action
+         * @param newAction
+         * @returns {*}
+         */
+        function addNewAction(newAction){
+            var deferred = $q.defer();
+            requestService.post(baseUrl, newAction).then(function(response){
+                deferred.resolve(actionModelFactory.getFromData(response.plain().action));
+            }, function(err){
+                deferred.reject(err.plain());
+            });
+            return deferred.promise;
+        }
+
+        /**
+         * Run action from id
+         * @param actionId
+         * @returns {*}
+         */
         function runFromId(actionId){
             var deferred = $q.defer();
             var url = baseUrl + actionId + '/run';
@@ -63,6 +85,14 @@
                 deferred.resolve(actionModelFactory.getFromData(response.plain().action));
             }, deferred.reject);
             return deferred.promise;
+        }
+
+        /**
+         * Create Empty New action
+         * @returns {*}
+         */
+        function createEmptyNew(){
+            return actionModelFactory.createEmptyNew();
         }
     }
 

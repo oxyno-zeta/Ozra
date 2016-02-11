@@ -1,0 +1,86 @@
+<div class="md-padding" layout="column" flex>
+    <div layout="row" flex>
+        <md-input-container flex>
+            <label>Name *</label>
+            <input ng-model="actionsAddCtrl.action.name">
+        </md-input-container>
+
+        <div class="separator"></div>
+
+        <md-input-container flex>
+            <label>Category *</label>
+            <input ng-model="actionsAddCtrl.action.category">
+        </md-input-container>
+    </div>
+
+    <div class="md-input-container">
+        <label class="label-color">Groups *</label>
+        <md-chips ng-model="actionsAddCtrl.action.groups"
+                  md-autocomplete-snap
+                  md-require-match="true">
+            <md-autocomplete
+                    md-no-cache="true"
+                    md-selected-item="selectedItem"
+                    md-search-text="searchText"
+                    md-items="item in actionsAddCtrl.filterCurrentGroups(searchText)"
+                    md-item-text="item.name"
+                    placeholder="Search for a group">
+                <span>{{item.name}}</span>
+            </md-autocomplete>
+            <md-chip-template>
+                <span>
+                  {{$chip.name}}
+                </span>
+            </md-chip-template>
+        </md-chips>
+    </div>
+
+    <md-input-container>
+        <label>Application</label>
+        <input ng-model="actionsAddCtrl.action.application">
+    </md-input-container>
+
+    <md-input-container>
+        <label>Script *</label>
+        <textarea ng-model="actionsAddCtrl.action.script"
+                  md-select-on-focus>
+        </textarea>
+    </md-input-container>
+
+    <br>
+    <em>* Mandatory fields</em>
+</div>
+
+
+<md-fab-speed-dial md-direction="up" md-open="actionsAddCtrl.isFabOpen"
+                   class="md-scale md-fab md-fab-bottom-right"
+                   ng-click="actionsAddCtrl.fabMouseClick()">
+    <md-fab-trigger>
+        <md-button aria-label="Menu" class="md-fab md-warn">
+            <md-tooltip md-direction="left"
+                        md-autohide="true">
+                Menu
+            </md-tooltip>
+            <ng-md-icon icon="dehaze"></ng-md-icon>
+        </md-button>
+    </md-fab-trigger>
+    <md-fab-actions>
+        <md-button aria-label="Cancel" class="md-fab md-raised md-mini">
+            <md-tooltip md-direction="left"
+                        md-autohide="true">
+                Cancel
+            </md-tooltip>
+            <ng-md-icon icon="cancel"></ng-md-icon>
+        </md-button>
+
+        <md-button aria-label="Save" class="md-fab md-raised md-mini"
+                   ng-disabled="!actionsAddCtrl.isActionComplete()"
+                   ng-click="actionsAddCtrl.save()">
+            <md-tooltip md-direction="left"
+                        md-autohide="true">
+                Save
+            </md-tooltip>
+            <ng-md-icon icon="save"></ng-md-icon>
+        </md-button>
+    </md-fab-actions>
+</md-fab-speed-dial>

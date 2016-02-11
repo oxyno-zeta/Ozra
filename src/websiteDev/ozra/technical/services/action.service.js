@@ -20,12 +20,36 @@
         self.runFromId = runFromId;
         self.getAllActions = getAllActions;
         self.getFromId = getFromId;
+        self.createEmptyNew = createEmptyNew;
+        self.addNewAction = addNewAction;
 
         ////////////////
 
         // Public
+        /**
+         * Add new action
+         * @param newAction
+         * @returns {*}
+         */
+        function addNewAction(newAction){
+            return actionDaoService.addNewAction(newAction);
+        }
+
+        /**
+         * Run action from id
+         * @param actionId
+         * @returns {*}
+         */
         function runFromId(actionId){
             return actionDaoService.runFromId(actionId);
+        }
+
+        /**
+         * Create new action model
+         * @returns {*}
+         */
+        function createEmptyNew(){
+            return actionDaoService.createEmptyNew();
         }
 
         /**

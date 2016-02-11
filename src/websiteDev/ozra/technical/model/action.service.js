@@ -17,6 +17,7 @@
 
         // Export
         self.getFromData = getFromData;
+        self.createEmptyNew = createEmptyNew;
 
         ////////////////
 
@@ -59,6 +60,14 @@
          */
         function getFromData(data){
             return new ActionModel(data);
+        }
+
+        /**
+         * Create new empty action
+         * @returns {actionModelFactory.ActionModel}
+         */
+        function createEmptyNew(){
+            return new ActionModel();
         }
 
     }
