@@ -15,7 +15,7 @@
         function routeConfig ($stateProvider) {
             $stateProvider
                 .state('ozra.actions.properties', {
-                    url: '/:id',
+                    url: '/:id/edit',
                     views: {
                         'content@ozra': {
                             templateUrl: 'ozra/actions/properties/properties.html',
