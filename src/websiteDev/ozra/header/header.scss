@@ -24,6 +24,22 @@
   }
 }
 
+@media only screen and (min-width: 0) and (max-width: 959px) and (orientation: portrait) {
+  .md-toolbar-tools {
+    .top-button {
+      padding: 13px 0px 13px 0px;
+    }
+  }
+}
+
+@media only screen and (min-width: 0) and (max-width: 959px) and (orientation: landscape) {
+  .md-toolbar-tools {
+    .top-button {
+      padding: 5px 0px 5px 0px;
+    }
+  }
+}
+
 .static-position {
   position: static;
 }
