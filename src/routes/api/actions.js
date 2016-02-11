@@ -352,7 +352,7 @@ function addAction(req, res){
                         logger.info('Add action "' + newAction.getName() + '" success');
 
                         // Add user
-                        responseBody.user = newAction.toJson();
+                        responseBody.action = newAction.toJson();
 
                         // Debug
                         if (configurationService.isVerbose()){
