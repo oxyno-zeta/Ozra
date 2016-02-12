@@ -3,13 +3,16 @@
         <md-card ng-repeat="action in actionsListCtrl.actions" class="actions-card">
             <md-card-title>
                 <md-card-title-text>
-                    <span class="md-headline" ng-bind="action.name"></span>
-                    <span class="md-subhead" ng-bind="action.category"></span>
+                    <span class="md-headline text-limiter" ng-bind="action.name | textLimiter:50"></span>
+                    <span class="md-subhead text-limiter" ng-bind="action.category"></span>
                 </md-card-title-text>
             </md-card-title>
             <md-card-actions layout="row" layout-align="end center">
                 <md-button class="md-raised" ui-sref="ozra.actions.properties({id:action.id})">See / Edit</md-button>
-                <md-button class="md-raised md-primary" ng-disabled="true">Run</md-button>
+
+                <div class="separator"></div>
+
+                <md-button class="md-raised md-primary" ng-click="actionsListCtrl.run(action.id)">Run</md-button>
             </md-card-actions>
         </md-card>
     </div>
