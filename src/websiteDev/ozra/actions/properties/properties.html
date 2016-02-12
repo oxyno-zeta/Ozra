@@ -82,6 +82,16 @@
 
         <md-button aria-label="Launch" class="md-fab md-raised md-mini"
                    ng-if="actionsPropertiesCtrl.disableEdit"
+                   ng-click="actionsPropertiesCtrl.deleteAction($event)">
+            <md-tooltip md-direction="left"
+                        md-autohide="true">
+                Delete
+            </md-tooltip>
+            <ng-md-icon icon="delete"></ng-md-icon>
+        </md-button>
+
+        <md-button aria-label="Launch" class="md-fab md-raised md-mini"
+                   ng-if="actionsPropertiesCtrl.disableEdit"
                    ng-click="actionsPropertiesCtrl.run()">
             <md-tooltip md-direction="left"
                         md-autohide="true">
@@ -89,6 +99,8 @@
             </md-tooltip>
             <ng-md-icon icon="launch"></ng-md-icon>
         </md-button>
+
+        <!-- ------------------------------------------------------------------- -->
 
         <md-button aria-label="Cancel" class="md-fab md-raised md-mini"
                    ng-if="!actionsPropertiesCtrl.disableEdit"

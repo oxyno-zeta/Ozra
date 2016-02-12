@@ -23,8 +23,25 @@
         self.getFromId = getFromId;
         self.createEmptyNew = createEmptyNew;
         self.addNewAction = addNewAction;
+        self.deleteAction = deleteAction;
 
         ////////////////
+
+        /**
+         * Delete an action
+         * @param actionId
+         * @returns {*}
+         */
+        function deleteAction(actionId){
+            var deferred = $q.defer();
+            var url = baseUrl + actionId;
+            requestService.remove(url).then(function(result){
+                deferred.resolve(result.plain());
+            }, function(err){
+                deferred.reject(err.plain());
+            });
+            return deferred.promise;
+        }
 
         /**
          * Add new action

@@ -12,7 +12,8 @@
         .controller('ActionsPropertiesController', ActionsPropertiesController);
 
     /** @ngInject */
-    function ActionsPropertiesController($mdDialog, $mdToast, dataCacheService, actionService, action) {
+    function ActionsPropertiesController($mdDialog, $mdToast, $timeout, $state,
+                                         dataCacheService, actionService, action) {
         // Public
         var vm = this;
         // Variables
@@ -25,6 +26,7 @@
         vm.enterEditMode = enterEditMode;
         vm.leaveEditMode = leaveEditMode;
         vm.run = run;
+        vm.deleteAction = deleteAction;
 
         // Private
         var currentGroups = transformToArray(dataCacheService.currentGroups);
@@ -90,7 +92,7 @@
                     .textContent(contentText)
                     .position('top right')
                     .action('See log ?')
-                    .hideDelay(1500);
+                    .hideDelay(3000);
 
                 // Show toast
                 $mdToast.show(toast).then(function(_response){
@@ -111,10 +113,54 @@
                     var toast = $mdToast.simple()
                         .textContent(err.reason)
                         .position('top right')
-                        .hideDelay(1500);
+                        .hideDelay(3000);
                     // Show toast
                     $mdToast.show(toast);
                 }
+            });
+        }
+
+        /**
+         * Delete action
+         * @param event
+         */
+        function deleteAction(event){
+            // Confirm dialog creation
+            var confirm = $mdDialog.confirm()
+                .title('Delete confirmation')
+                .textContent('Are you sure about deleting "' + action.name + '" ?')
+                .ariaLabel('Delete confirmation')
+                .clickOutsideToClose(true)
+                .targetEvent(event)
+                .ok('Ok')
+                .cancel('Cancel');
+
+            $mdDialog.show(confirm).then(function(){
+                // Ok
+                actionService.deleteAction(action.id).then(function(result){
+                    // Create toast
+                    var toast = $mdToast.simple()
+                        .textContent('Delete action succeed !')
+                        .position('top right')
+                        .hideDelay(1500);
+
+                    // Show toast
+                    $mdToast.show(toast);
+
+                    // Wait a little
+                    $timeout(function(){
+                        $state.go('ozra.actions', null, {reload: true});
+                    }, 300);
+                }, function(){
+                    // Create toast
+                    var toast = $mdToast.simple()
+                        .textContent('Delete action failed !')
+                        .position('top right')
+                        .hideDelay(1500);
+
+                    // Show toast
+                    $mdToast.show(toast);
+                });
             });
         }
 
