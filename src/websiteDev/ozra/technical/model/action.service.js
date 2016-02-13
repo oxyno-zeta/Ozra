@@ -42,7 +42,7 @@
             }
             else {
                 // Data detected
-                model.id = data._id;
+                model.id = data.id;
                 model.name = data.name;
                 model.category = data.category;
                 model.script = data.script;

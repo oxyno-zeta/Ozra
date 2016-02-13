@@ -65,7 +65,7 @@ function getAllUsers(req, res){
             databaseService.getAllUsers().then(function(users){
                 var usersArray = [];
                 _.forEach(users, function(user){
-                    usersArray.push(user.toMinimumJson());
+                    usersArray.push(user.toAPIJson());
                 });
 
                 // Add Users
@@ -129,7 +129,7 @@ function getUser(req, res){
             // Return for non admin user
             if (!isAdmin) {
                 // Return user
-                responseBody.user = user.toMinimumJson();
+                responseBody.user = user.toAPIJson();
 
                 logger.info('Get user "' + user.getName() + '" => ok');
                 APIResponses.sendResponse(res, responseBody, APICodes.normal.OK, true);
@@ -138,7 +138,7 @@ function getUser(req, res){
 
             databaseService.getUserFromId(userId).then(function(user){
                 // Return user
-                responseBody.user = user.toMinimumJson();
+                responseBody.user = user.toAPIJson();
 
                 logger.info('Get user "' + user.getName() + '" => ok');
                 APIResponses.sendResponse(res, responseBody, APICodes.normal.OK, true);
@@ -201,7 +201,7 @@ function addUser(req, res){
         if (!newUser.isFullValid()){
             logger.error('Add user failed => Data not valid (data error) => Stop');
             if (configurationService.isVerbose()){
-                logger.debug(newUser.toMinimumJson());
+                logger.debug(newUser.toAPIJson());
             }
             APIResponses.sendResponse(res, responseBody, APICodes.clientErrors.FORBIDDEN, false);
             return;
@@ -222,7 +222,7 @@ function addUser(req, res){
                     // User found => fail
                     logger.error('Add user failed => user "' + newUser.getName() + '" already exist => Stop');
                     if (configurationService.isVerbose()){
-                        logger.debug(newUser.toMinimumJson());
+                        logger.debug(newUser.toAPIJson());
                     }
                     APIResponses.sendResponse(res, responseBody, APICodes.clientErrors.CONFLICT, false);
                 }, function(err){
@@ -245,11 +245,11 @@ function addUser(req, res){
                         logger.info('Add user "' + newUser.getName() + '" success');
 
                         // Add user
-                        responseBody.user = newUser.toMinimumJson();
+                        responseBody.user = newUser.toAPIJson();
 
                         // Debug
                         if (configurationService.isVerbose()){
-                            logger.debug(newUser.toMinimumJson());
+                            logger.debug(newUser.toAPIJson());
                         }
 
                         APIResponses.sendResponse(res, responseBody, APICodes.normal.CREATED, true);
@@ -273,7 +273,7 @@ function addUser(req, res){
         }, function(err){
             logger.error('Add user failed => Data not valid (groups error) => Stop');
             if (configurationService.isVerbose()){
-                logger.debug(newUser.toMinimumJson());
+                logger.debug(newUser.toAPIJson());
                 logger.debug(err);
             }
             APIResponses.sendResponse(res, responseBody, APICodes.clientErrors.FORBIDDEN, false);
@@ -336,7 +336,7 @@ function deleteUser(req, res){
                     logger.info('Delete user : "' + userFromId.getName() + '" done');
                     // Log user if verbose activated
                     if (configurationService.isVerbose()){
-                        logger.debug(userFromId.toMinimumJson());
+                        logger.debug(userFromId.toAPIJson());
                     }
                     APIResponses.sendResponse(res, responseBody, APICodes.normal.OK, true);
                 }, function(err){
@@ -386,7 +386,7 @@ function modifyUser(req, res){
 
         // Create data
         var userModified = new userModel.User()
-            .setId(body._id)
+            .setId(body.id)
             .setName(body.name)
             .setGroups(body.groups);
 
@@ -399,12 +399,12 @@ function modifyUser(req, res){
             }
 
             // Check if data are valid
-            if (!_.isEqual(req.params.id, body._id) || !userModified.isMinimumValid()){
+            if (!_.isEqual(req.params.id, body.id) || !userModified.isMinimumValid()){
                 // Error
                 logger.error('Modification user failed => data not valid => Stop');
                 if (configurationService.isVerbose()){
                     // Debug
-                    logger.debug(userModified.toMinimumJson());
+                    logger.debug(userModified.toAPIJson());
                 }
                 APIResponses.sendResponse(res, responseBody, APICodes.clientErrors.FORBIDDEN, false);
                 return; // Stop here
@@ -433,7 +433,7 @@ function modifyUser(req, res){
                             // Ok
                             logger.info('Modification user "' + userModified.getName() + '" success !');
                             // Put user in response
-                            responseBody.user = userModified.toMinimumJson();
+                            responseBody.user = userModified.toAPIJson();
                             APIResponses.sendResponse(res, responseBody, APICodes.normal.OK, true);
                         }, function(err){
                             logger.error('Modification user failed => Something failed... => Stop');
@@ -463,7 +463,7 @@ function modifyUser(req, res){
                             '" already exist => Stop');
                         if (configurationService.isVerbose()){
                             // Debug
-                            logger.debug(userModified.toMinimumJson());
+                            logger.debug(userModified.toAPIJson());
                         }
                         APIResponses.sendResponse(res, responseBody, APICodes.clientErrors.CONFLICT, false);
                         return;
@@ -512,7 +512,7 @@ function modifyUserPassword(req, res){
         logger.info('User "' + user.getName() + '" authenticated');
 
         base.isUserAdministrator(user).then(function(isAdmin){
-            if (!isAdmin && !_.isEqual(body._id, user.getId()) ){
+            if (!isAdmin && !_.isEqual(body.id, user.getId()) ){
                 // Not admin or not same user
                 logger.error('Modification user password failed => User "' + user.getName() +
                     '" not administrator => Stop');
@@ -534,7 +534,7 @@ function modifyUserPassword(req, res){
                 return; // Stop here
             }
 
-            if (!_.isEqual(body._id, user.getId()) && !_.isEqual(req.params.id, body._id)){
+            if (!_.isEqual(body.id, user.getId()) && !_.isEqual(req.params.id, body.id)){
                 // Error
                 logger.error('Modification user password failed => data not valid => Stop');
                 if (configurationService.isVerbose()){
@@ -547,7 +547,7 @@ function modifyUserPassword(req, res){
 
             // Password detected
 
-            databaseService.getUserFromId(body._id).then(function(userInDB){
+            databaseService.getUserFromId(body.id).then(function(userInDB){
                 // Change user password
                 var salt = userInDB.getSalt();
                 userInDB.setPassword(securityBase.genHashSync(body.password, salt));
@@ -557,7 +557,7 @@ function modifyUserPassword(req, res){
                     // Ok
                     logger.info('Modification user password for "' + userInDB.getName() + '" success !');
                     // Put user in response
-                    responseBody.user = userInDB.toMinimumJson();
+                    responseBody.user = userInDB.toAPIJson();
                     APIResponses.sendResponse(res, responseBody, APICodes.normal.OK, true);
                 }, function(err){
                     logger.error('Modification user failed => Something failed... => Stop');

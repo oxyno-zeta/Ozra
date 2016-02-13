@@ -38,7 +38,7 @@
                 model.groups = [];
             }
             else {
-                model.id = data._id;
+                model.id = data.id;
                 model.name = data.name;
                 model.password = undefined;
                 model.token = data.token;

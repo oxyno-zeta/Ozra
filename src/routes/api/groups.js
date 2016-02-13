@@ -188,7 +188,7 @@ function addGroup(req, res){
                         logger.debug(newGroup.toJson());
                     }
                     // Add information to response body
-                    responseBody.group = newGroup.toJson();
+                    responseBody.group = newGroup.toAPIJson();
                     // Response
                     APIResponses.sendResponse(res, responseBody, APICodes.normal.CREATED, true);
                 }, function(err){
@@ -230,7 +230,7 @@ function getGroupsFromUser(req, res){
         databaseService.getGroupsFromIds(user.getGroups()).then(function(groups){
             var groupsObject = [];
             _.forEach(groups, function(group){
-                groupsObject.push(group.toJson());
+                groupsObject.push(group.toAPIJson());
             });
             // Add Groups
             responseBody.groups = groupsObject;
@@ -280,7 +280,7 @@ function getAllGroups(req, res){
             databaseService.getAllGroups().then(function(groups){
                 var groupsArray = [];
                 _.forEach(groups, function(group){
-                    groupsArray.push(group.toJson());
+                    groupsArray.push(group.toAPIJson());
                 });
                 // Add Groups
                 responseBody.groups = groupsArray;
@@ -329,7 +329,7 @@ function modifyGroup(req, res){
         var responseBody = APIResponses.getDefaultResponseBody(token);
         // Data
         var groupModification = new groupModel.Group()
-            .setId(body._id)
+            .setId(body.id)
             .setName(body.name)
             .setAdministrator(body.administrator);
         // Log
@@ -345,7 +345,7 @@ function modifyGroup(req, res){
             }
 
             // Check if data are correct (same id in body and params) and data
-            if (!_.isEqual(req.params.id, body._id) || !groupModification.isMinimumValid()){
+            if (!_.isEqual(req.params.id, body.id) || !groupModification.isMinimumValid()){
                 // Error
                 logger.error('Modification group failed => data not valid => Stop');
                 if (configurationService.isVerbose()){
@@ -370,7 +370,7 @@ function modifyGroup(req, res){
                             logger.debug(groupModification.toJson());
                         }
                         // Add information to response body
-                        responseBody.group = groupModification.toJson();
+                        responseBody.group = groupModification.toAPIJson();
                         // Response
                         APIResponses.sendResponse(res, responseBody, APICodes.normal.OK, true);
                     }, function(err){

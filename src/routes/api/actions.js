@@ -60,7 +60,7 @@ function getAllActions(req, res){
             function success(actions){
                 var actionsArray = [];
                 _.forEach(actions, function(action){
-                    actionsArray.push(action.toJson());
+                    actionsArray.push(action.toAPIJson());
                 });
 
                 // Add Users
@@ -153,7 +153,7 @@ function getAction(req, res){
                 logger.info('Get action "' + action.getName() + '" success !');
 
                 // Put action
-                responseBody.action = action.toJson();
+                responseBody.action = action.toAPIJson();
 
                 APIResponses.sendResponse(res, responseBody, APICodes.normal.OK, true);
             }, function(err){
@@ -352,7 +352,7 @@ function addAction(req, res){
                         logger.info('Add action "' + newAction.getName() + '" success');
 
                         // Add user
-                        responseBody.action = newAction.toJson();
+                        responseBody.action = newAction.toAPIJson();
 
                         // Debug
                         if (configurationService.isVerbose()){
@@ -495,7 +495,7 @@ function modifyAction(req,res){
         logger.info('User "' + user.getName() + '" authenticated');
         // Data
         var newAction = actionModel.Action()
-            .setId(body._id)
+            .setId(body.id)
             .setName(body.name)
             .setCategory(body.category)
             .setScript(body.script)
@@ -518,7 +518,7 @@ function modifyAction(req,res){
 
         base.isUserAdministrator(user).then(function(isAdmin){
             // Check if data are correct (same id in body and params) and data
-            if (!_.isEqual(req.params.id, body._id) || !newAction.isValid()){
+            if (!_.isEqual(req.params.id, body.id) || !newAction.isValid()){
                 // Error
                 logger.error('Modification action failed => data not valid => Stop');
                 if (configurationService.isVerbose()){
@@ -549,6 +549,7 @@ function modifyAction(req,res){
                                     // Debug
                                     logger.debug(result);
                                 }
+                                responseBody.action = newAction.toAPIJson();
                                 APIResponses.sendResponse(res, responseBody, APICodes.normal.OK, true);
                             }, function (err) {
                                 logger.error('Modification action failed => Something failed... => Stop');

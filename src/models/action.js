@@ -176,6 +176,21 @@ function actionModel(){
     this.toJson = function(){
         return _.cloneDeep(json);
     };
+
+    /**
+     * To API Json
+     * @returns {*}
+     */
+    this.toAPIJson = function(){
+        var result = _.cloneDeep(json);
+        // Put data in right place
+        result.id = result._id;
+        // Delete data
+        delete result._id;
+        delete result._rev;
+        return result;
+    };
+
     /**
      * Clone data
      * @param data {object} action

@@ -37,7 +37,7 @@
                 model.administrator = false;
             }
             else {
-                model.id = data._id;
+                model.id = data.id;
                 model.name = data.name;
                 model.administrator = data.administrator;
             }

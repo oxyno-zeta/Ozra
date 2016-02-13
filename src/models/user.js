@@ -177,12 +177,18 @@ function userModel(){
         return _.cloneDeep(json);
     };
     /**
-     * To minimum json
+     * To API Json
+     * @returns {*}
      */
-    this.toMinimumJson = function(){
-        var result = this.toJson();
+    this.toAPIJson = function(){
+        var result = _.cloneDeep(json);
+        // Put data in right place
+        result.id = result._id;
+        // Delete data
         delete result.password;
         delete result.salt;
+        delete result._id;
+        delete result._rev;
         return result;
     };
     /**
