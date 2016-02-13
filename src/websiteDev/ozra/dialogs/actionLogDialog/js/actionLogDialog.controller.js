@@ -13,7 +13,6 @@
 
     /** @ngInject */
     function ActionLogDialog($mdDialog, result) {
-        console.log(result);
         var vm = this;
         // Variables
         vm.result = result;
