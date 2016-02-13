@@ -23,10 +23,20 @@
         self.createEmptyNew = createEmptyNew;
         self.addNewAction = addNewAction;
         self.deleteAction = deleteAction;
+        self.updateAction = updateAction;
 
         ////////////////
 
         // Public
+        /**
+         * Update action
+         * @param action
+         * @returns {*}
+         */
+        function updateAction(action){
+            return actionDaoService.updateAction(action);
+        }
+
         /**
          * Delete action
          * @param actionId

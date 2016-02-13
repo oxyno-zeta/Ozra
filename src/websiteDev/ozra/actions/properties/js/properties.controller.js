@@ -27,6 +27,8 @@
         vm.leaveEditMode = leaveEditMode;
         vm.run = run;
         vm.deleteAction = deleteAction;
+        vm.isActionComplete = isActionComplete;
+        vm.save = save;
 
         // Private
         var currentGroups = transformToArray(dataCacheService.currentGroups);
@@ -162,6 +164,66 @@
                     $mdToast.show(toast);
                 });
             });
+        }
+
+        /**
+         * Save new action
+         */
+        function save(){
+            // Copy action object
+            var actionToPost = _.cloneDeep(vm.action);
+            // Transform groups
+            var groupIds = [];
+            _.forEach(actionToPost.groups, function(group){
+                groupIds.push(group.id);
+            });
+            // Put it in place
+            actionToPost.groups = groupIds;
+            // Save action
+            actionService.updateAction(actionToPost).then(function(action){
+                $state.go('ozra.actions.properties', {
+                    id: action.id
+                }, {reload:true});
+            }, function(){
+                // Create toast
+                var toast = $mdToast.simple()
+                    .textContent('Add action failed !')
+                    .position('top right')
+                    .hideDelay(1500);
+
+                // Show toast
+                $mdToast.show(toast);
+            });
+        }
+
+        /**
+         * Is Action complete
+         * @returns {boolean}
+         */
+        function isActionComplete(){
+            var action = vm.action;
+            // Check name
+            if (_.isUndefined(action.name) || _.isEqual(action.name, '')){
+                return false;
+            }
+            // Check category
+            if (_.isUndefined(action.category) || _.isEqual(action.category, '')){
+                return false;
+            }
+            // Check groups
+            if (_.isUndefined(action.groups)){
+                return false;
+            }
+            if (_.isEqual(action.groups.length, 0)){
+                return false;
+            }
+            // Check script
+            if (_.isUndefined(action.script) || _.isEqual(action.script, '')){
+                return false;
+            }
+
+            // Ok
+            return true;
         }
 
         // Private

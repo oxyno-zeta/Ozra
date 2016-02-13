@@ -24,8 +24,23 @@
         self.createEmptyNew = createEmptyNew;
         self.addNewAction = addNewAction;
         self.deleteAction = deleteAction;
+        self.updateAction = updateAction;
 
         ////////////////
+
+        /**
+         * Update action
+         * @param action
+         * @returns {*}
+         */
+        function updateAction(action){
+            var deferred = $q.defer();
+            var url = baseUrl + action.id;
+            requestService.put(url, action).then(function(response){
+                deferred.resolve(actionModelFactory.getFromData(response.plain().action));
+            }, deferred.reject);
+            return deferred.promise;
+        }
 
         /**
          * Delete an action
@@ -37,9 +52,7 @@
             var url = baseUrl + actionId;
             requestService.remove(url).then(function(result){
                 deferred.resolve(result.plain());
-            }, function(err){
-                deferred.reject(err.plain());
-            });
+            }, deferred.reject);
             return deferred.promise;
         }
 
@@ -52,9 +65,7 @@
             var deferred = $q.defer();
             requestService.post(baseUrl, newAction).then(function(response){
                 deferred.resolve(actionModelFactory.getFromData(response.plain().action));
-            }, function(err){
-                deferred.reject(err.plain());
-            });
+            }, deferred.reject);
             return deferred.promise;
         }
 
@@ -68,9 +79,7 @@
             var url = baseUrl + actionId + '/run';
             requestService.get(url).then(function(result){
                 deferred.resolve(result.plain());
-            }, function(error){
-                deferred.reject(error.plain());
-            });
+            }, deferred.reject);
             return deferred.promise;
         }
 

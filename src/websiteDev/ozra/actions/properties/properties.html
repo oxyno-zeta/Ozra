@@ -114,8 +114,8 @@
 
         <md-button aria-label="Save" class="md-fab md-raised md-mini"
                    ng-if="!actionsPropertiesCtrl.disableEdit"
-                   ng-disabled="true"
-                   ng-click="">
+                   ng-disabled="!actionsPropertiesCtrl.isActionComplete()"
+                   ng-click="actionsPropertiesCtrl.save()">
             <md-tooltip md-direction="left"
                         md-autohide="true">
                 Save
