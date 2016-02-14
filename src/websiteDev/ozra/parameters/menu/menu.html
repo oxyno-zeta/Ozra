@@ -1,0 +1,17 @@
+<div layout="row" flex class="user-parameters">
+    <div flex="18">
+        <md-list class="menu">
+            <md-subheader class="md-no-sticky title-menu">User Parameters</md-subheader>
+            <md-divider></md-divider>
+            <md-list-item ng-class="{'active': parametersMenuCtrl.isGeneral()}"
+                    ng-click="parametersMenuCtrl.goToGeneral()">
+                <p>General</p>
+            </md-list-item>
+            <md-list-item ng-click="test()">
+                <p>Change Password</p>
+            </md-list-item>
+        </md-list>
+    </div>
+
+    <div flex ui-view="content" style="height: 500px;"></div>
+</div>

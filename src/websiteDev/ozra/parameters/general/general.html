@@ -1,0 +1,21 @@
+<div class="md-padding" layout="column" flex>
+    <md-input-container>
+        <label>Name</label>
+        <input ng-model="generalUserCtrl.user.name"
+               ng-disabled="true">
+    </md-input-container>
+
+    <div class="md-input-container">
+        <label class="label-color">Groups *</label>
+        <md-chips ng-model="generalUserCtrl.groups"
+                  md-autocomplete-snap
+                  md-require-match="true"
+                  readonly="true">
+            <md-chip-template>
+                <span>
+                  {{$chip.name}}
+                </span>
+            </md-chip-template>
+        </md-chips>
+    </div>
+</div>

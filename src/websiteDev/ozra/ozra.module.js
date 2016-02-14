@@ -12,6 +12,7 @@
         'ozra.login',
         'ozra.header',
         'ozra.actions',
+        'ozra.parameters',
         'ozra.dialogs',
         'ozra.technical'
     ]);
