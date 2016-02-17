@@ -9,7 +9,8 @@
     angular
         .module('ozra.parameters', [
             'ozra.parameters.menu',
-            'ozra.parameters.general'
+            'ozra.parameters.general',
+            'ozra.parameters.password'
         ]);
 
 })();

@@ -7,11 +7,12 @@
                     ng-click="parametersMenuCtrl.goToGeneral()">
                 <p>General</p>
             </md-list-item>
-            <md-list-item ng-click="test()">
+            <md-list-item ng-class="{'active': parametersMenuCtrl.isPassword()}"
+                          ng-click="parametersMenuCtrl.goToPassword()">
                 <p>Change Password</p>
             </md-list-item>
         </md-list>
     </div>
 
-    <div flex ui-view="content" style="height: 500px;"></div>
+    <div flex ui-view="content"></div>
 </div>

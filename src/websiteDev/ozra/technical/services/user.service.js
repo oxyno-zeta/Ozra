@@ -18,8 +18,20 @@
         
         // Public
         self.getCurrentFromId = getCurrentFromId;
+        self.updateUserPassword = updateUserPassword;
 
         ////////////////
+
+        /**
+         * Change user password
+         * @param userWithPassword
+         * @returns {*}
+         */
+        function updateUserPassword(userWithPassword){
+            var deferred = $q.defer();
+            userDaoService.updateUserPassword(userWithPassword).then(deferred.resolve, deferred.reject);
+            return deferred.promise;
+        }
 
         /**
          * Get current user from id

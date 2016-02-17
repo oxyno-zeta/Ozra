@@ -19,8 +19,24 @@
         var baseUrl = '/api/users/';
         // Public
         self.getFromId = getFromId;
+        self.updateUserPassword = updateUserPassword;
 
         ////////////////
+
+        /**
+         * Change user password
+         * @param userWithPassword
+         * @returns {*}
+         */
+        function updateUserPassword(userWithPassword){
+            var deferred = $q.defer();
+            var url = baseUrl + userWithPassword.id + '/password';
+            requestService.put(url, userWithPassword).then(function(response){
+                var user = userModelFactory.getFromData(response.user);
+                deferred.resolve(user);
+            }, deferred.reject);
+            return deferred.promise;
+        }
 
         /**
          * Get current user from id

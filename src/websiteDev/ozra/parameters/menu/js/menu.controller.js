@@ -18,6 +18,8 @@
         // Functions
         vm.goToGeneral = goToGeneral;
         vm.isGeneral = isGeneral;
+        vm.goToPassword = goToPassword;
+        vm.isPassword = isPassword;
 
         ////////////////
 
@@ -34,6 +36,21 @@
          */
         function isGeneral(){
             return $state.is('ozra.parameters.general');
+        }
+
+        /**
+         * Go to change password page
+         */
+        function goToPassword() {
+            $state.go('ozra.parameters.password');
+        }
+
+        /**
+         * Check if password change button is ok
+         * @returns {boolean}
+         */
+        function isPassword(){
+            return $state.is('ozra.parameters.password');
         }
     }
 
