@@ -1,0 +1,17 @@
+<div layout="row" flex class="user-parameters">
+    <div flex="18">
+        <md-list class="menu">
+            <md-subheader class="md-no-sticky title-menu">Administration</md-subheader>
+            <md-divider></md-divider>
+            <md-list-item ng-class="{'active': administrationMenuCtrl.isUsers()}"
+                    ng-click="administrationMenuCtrl.goToUsers()">
+                <p>Users</p>
+            </md-list-item>
+            <md-list-item ng-disabled="true">
+                <p>Groups</p>
+            </md-list-item>
+        </md-list>
+    </div>
+
+    <div flex ui-view="content"></div>
+</div>

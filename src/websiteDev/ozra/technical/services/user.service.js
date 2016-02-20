@@ -17,10 +17,21 @@
         var self = this;
         
         // Public
+        self.getAll = getAll;
         self.getCurrentFromId = getCurrentFromId;
         self.updateUserPassword = updateUserPassword;
 
         ////////////////
+
+        /**
+         * Get All users (only for admin)
+         * @returns {*}
+         */
+        function getAll(){
+            var deferred = $q.defer();
+            userDaoService.getAll().then(deferred.resolve, deferred.reject);
+            return deferred.promise;
+        }
 
         /**
          * Change user password

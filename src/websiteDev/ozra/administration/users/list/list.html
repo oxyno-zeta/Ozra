@@ -1,0 +1,7 @@
+<md-list class="md-padding">
+    <md-subheader class="md-no-sticky">Users list</md-subheader>
+    <md-list-item ng-repeat="user in usersListAdminCtrl.listUsers"
+                  aria-label="{{user.name}} user">
+        <p ng-bind="user.name"></p>
+    </md-list-item>
+</md-list>

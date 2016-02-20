@@ -18,10 +18,27 @@
         // Private
         var baseUrl = '/api/users/';
         // Public
+        self.getAll = getAll;
         self.getFromId = getFromId;
         self.updateUserPassword = updateUserPassword;
 
         ////////////////
+
+        /**
+         * Get all users (only for admin)
+         * @returns {*}
+         */
+        function getAll(){
+            var deferred = $q.defer();
+            requestService.get(baseUrl).then(function(response){
+                var users = [];
+                _.forEach(response.plain().users, function(data){
+                    users.push(userModelFactory.getFromData(data));
+                });
+                deferred.resolve(users);
+            }, deferred.reject);
+            return deferred.promise;
+        }
 
         /**
          * Change user password
