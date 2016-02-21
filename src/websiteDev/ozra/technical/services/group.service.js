@@ -17,11 +17,70 @@
         var self = this;
 
         // Public
+        // Admin part
+        self.updateGroup = updateGroup;
+        self.deleteGroup = deleteGroup;
+        self.addNewGroup = addNewGroup;
+        self.createEmptyNew = createEmptyNew;
+        self.getSpecificById = getSpecificById;
+        // Normal part
         self.getAll = getAll;
         self.getCurrentUserGroups = getCurrentUserGroups;
         self.isOneGroupAdministrator = isOneGroupAdministrator;
 
         ////////////////
+
+        /**
+         * Update group
+         * @param group
+         * @returns {*}
+         */
+        function updateGroup(group){
+            var deferred = $q.defer();
+            groupDaoService.updateGroup(group).then(deferred.resolve, deferred.reject);
+            return deferred.promise;
+        }
+
+        /**
+         * Delete group
+         * @param group
+         * @returns {*}
+         */
+        function deleteGroup(group){
+            var deferred = $q.defer();
+            groupDaoService.deleteGroup(group).then(deferred.resolve, deferred.reject);
+            return deferred.promise;
+        }
+
+        /**
+         * Add new group
+         * @param newGroup
+         * @returns {*}
+         */
+        function addNewGroup(newGroup){
+            var deferred = $q.defer();
+            groupDaoService.addNewGroup(newGroup).then(deferred.resolve, deferred.reject);
+            return deferred.promise;
+        }
+
+        /**
+         * Create empty group
+         * @returns {*}
+         */
+        function createEmptyNew(){
+            return groupDaoService.createEmptyNew();
+        }
+
+        /**
+         * Get specific group by id
+         * @param id {String} group id
+         * @returns {*}
+         */
+        function getSpecificById(id){
+            var deferred = $q.defer();
+            groupDaoService.getSpecificById(id).then(deferred.resolve, deferred.reject);
+            return deferred.promise;
+        }
 
         /**
          * Get All groups (only for admin)

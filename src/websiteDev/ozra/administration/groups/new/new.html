@@ -1,0 +1,46 @@
+<div class="md-padding" layout="column" flex>
+    <md-input-container aria-label="Name">
+        <label>Name</label>
+        <input required ng-model="groupNewAdminCtrl.group.name" type="text">
+    </md-input-container>
+
+    <md-switch required class="md-primary"
+               ng-model="groupNewAdminCtrl.group.administrator"
+               aria-label="Administrator">
+        Administrator Group
+    </md-switch>
+</div>
+
+<md-fab-speed-dial md-direction="up" md-open="groupNewAdminCtrl.isFabOpen"
+                   class="md-scale md-fab md-fab-bottom-right"
+                   ng-click="groupNewAdminCtrl.fabMouseClick()">
+    <md-fab-trigger>
+        <md-button aria-label="Menu" class="md-fab md-warn">
+            <md-tooltip md-direction="left"
+                        md-autohide="true">
+                Menu
+            </md-tooltip>
+            <ng-md-icon icon="dehaze"></ng-md-icon>
+        </md-button>
+    </md-fab-trigger>
+    <md-fab-actions>
+        <md-button aria-label="Cancel" class="md-fab md-raised md-mini"
+                   ui-sref="ozra.administration.groups">
+            <md-tooltip md-direction="left"
+                        md-autohide="true">
+                Cancel
+            </md-tooltip>
+            <ng-md-icon icon="cancel"></ng-md-icon>
+        </md-button>
+
+        <md-button aria-label="Save" class="md-fab md-raised md-mini"
+                   ng-disabled="!groupNewAdminCtrl.isGroupComplete()"
+                   ng-click="groupNewAdminCtrl.save()">
+            <md-tooltip md-direction="left"
+                        md-autohide="true">
+                Save
+            </md-tooltip>
+            <ng-md-icon icon="save"></ng-md-icon>
+        </md-button>
+    </md-fab-actions>
+</md-fab-speed-dial>

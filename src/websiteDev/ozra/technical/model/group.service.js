@@ -17,6 +17,7 @@
         var self = this;
 
         // Export
+        self.createEmptyNew = createEmptyNew;
         self.getFromData = getFromData;
 
         ////////////////
@@ -41,6 +42,14 @@
                 model.name = data.name;
                 model.administrator = data.administrator;
             }
+        }
+
+        /**
+         * Create empty group
+         * @returns {groupModelFactory.GroupModel}
+         */
+        function createEmptyNew(){
+            return new GroupModel();
         }
 
         /**

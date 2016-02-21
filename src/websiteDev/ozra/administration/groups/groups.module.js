@@ -8,7 +8,9 @@
 
     angular
         .module('ozra.administration.groups', [
-            'ozra.administration.groups.list'
+            'ozra.administration.groups.list',
+            'ozra.administration.groups.new',
+            'ozra.administration.groups.edit'
         ]);
 
 })();

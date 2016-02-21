@@ -19,10 +19,83 @@
         // Private
         var baseUrl = '/api/groups/';
         // Public
+        // Admin part
+        self.updateGroup = updateGroup;
+        self.deleteGroup = deleteGroup;
+        self.addNewGroup = addNewGroup;
+        self.createEmptyNew = createEmptyNew;
+        self.getSpecificById = getSpecificById;
+        // Normal part
         self.getAll = getAll;
         self.getCurrentUserGroups = getCurrentUserGroups;
 
         ////////////////
+
+        /**
+         * Update group
+         * @param group
+         * @returns {*}
+         */
+        function updateGroup(group){
+            var deferred = $q.defer();
+            var url = baseUrl + group.id;
+            requestService.put(url, group).then(function(response){
+                var group = groupModelFactory.getFromData(response.plain().group);
+                deferred.resolve(group);
+            }, deferred.reject);
+            return deferred.promise;
+        }
+
+        /**
+         * Delete a group
+         * @param group
+         * @returns {*}
+         */
+        function deleteGroup(group){
+            var deferred = $q.defer();
+            var url = baseUrl + group.id;
+            requestService.remove(url).then(function(response){
+                deferred.resolve(response.plain());
+            }, deferred.reject);
+            return deferred.promise;
+        }
+
+        /**
+         * Add new group
+         * @param newGroup
+         * @returns {*}
+         */
+        function addNewGroup(newGroup){
+            var deferred = $q.defer();
+            requestService.post(baseUrl, newGroup).then(function(response){
+                var group = groupModelFactory.getFromData(response.plain().group);
+                deferred.resolve(group);
+            }, deferred.reject);
+            return deferred.promise;
+        }
+
+        /**
+         * Create empty group
+         * @returns {*}
+         */
+        function createEmptyNew(){
+            return groupModelFactory.createEmptyNew();
+        }
+
+        /**
+         * Get specific group by id
+         * @param id {String} group id
+         * @returns {*}
+         */
+        function getSpecificById(id){
+            var deferred = $q.defer();
+            var url = baseUrl + id;
+            requestService.get(url).then(function(response){
+                var group = groupModelFactory.getFromData(response.plain().group);
+                deferred.resolve(group);
+            }, deferred.reject);
+            return deferred.promise;
+        }
 
         /**
          * Get all groups (only for admin)
