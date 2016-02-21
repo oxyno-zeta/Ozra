@@ -7,14 +7,14 @@
     'use strict';
 
     angular
-        .module('ozra.administration.users.list')
-        .controller('UsersListAdminController', UsersListAdminController);
+        .module('ozra.administration.groups.list')
+        .controller('GroupsListAdminController', GroupsListAdminController);
 
     /** @ngInject */
-    function UsersListAdminController(listUsers) {
+    function GroupsListAdminController(listGroups) {
         var vm = this;
         // Variables
-        vm.listUsers = listUsers;
+        vm.listGroups = listGroups;
 
         ////////////////
 

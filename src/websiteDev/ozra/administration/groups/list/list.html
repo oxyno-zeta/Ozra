@@ -1,0 +1,7 @@
+<md-list class="md-padding">
+    <md-subheader class="md-no-sticky">Groups list</md-subheader>
+    <md-list-item ng-repeat="group in groupsListAdminCtrl.listGroups"
+                  aria-label="{{group.name}} group">
+        <p ng-bind="group.name"></p>
+    </md-list-item>
+</md-list>

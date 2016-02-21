@@ -19,9 +19,26 @@
         // Private
         var baseUrl = '/api/groups/';
         // Public
+        self.getAll = getAll;
         self.getCurrentUserGroups = getCurrentUserGroups;
 
         ////////////////
+
+        /**
+         * Get all groups (only for admin)
+         * @returns {*}
+         */
+        function getAll(){
+            var deferred = $q.defer();
+            requestService.get(baseUrl).then(function(response){
+                var groups = [];
+                _.forEach(response.plain().groups, function(data){
+                    groups.push(groupModelFactory.getFromData(data));
+                });
+                deferred.resolve(groups);
+            }, deferred.reject);
+            return deferred.promise;
+        }
 
         /**
          * Get all groups for the current user

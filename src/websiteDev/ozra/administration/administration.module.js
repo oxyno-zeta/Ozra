@@ -9,7 +9,8 @@
     angular
         .module('ozra.administration', [
             'ozra.administration.menu',
-            'ozra.administration.users'
+            'ozra.administration.users',
+            'ozra.administration.groups'
         ]);
 
 })();

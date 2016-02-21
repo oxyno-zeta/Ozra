@@ -18,6 +18,8 @@
         // Functions
         vm.goToUsers = goToUsers;
         vm.isUsers = isUsers;
+        vm.goToGroups = goToGroups;
+        vm.isGroups = isGroups;
 
         ////////////////
 
@@ -34,6 +36,21 @@
          */
         function isUsers(){
             return $state.is('ozra.administration.users');
+        }
+
+        /**
+         * Go to groups page
+         */
+        function goToGroups() {
+            $state.go('ozra.administration.groups');
+        }
+
+        /**
+         * Check if groups button is ok
+         * @returns {boolean}
+         */
+        function isGroups(){
+            return $state.is('ozra.administration.groups');
         }
     }
 

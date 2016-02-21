@@ -17,10 +17,21 @@
         var self = this;
 
         // Public
+        self.getAll = getAll;
         self.getCurrentUserGroups = getCurrentUserGroups;
         self.isOneGroupAdministrator = isOneGroupAdministrator;
 
         ////////////////
+
+        /**
+         * Get All groups (only for admin)
+         * @returns {*}
+         */
+        function getAll(){
+            var deferred = $q.defer();
+            groupDaoService.getAll().then(deferred.resolve, deferred.reject);
+            return deferred.promise;
+        }
 
         /**
          * Get all groups for the current user
