@@ -187,7 +187,7 @@
             }, function(){
                 // Create toast
                 var toast = $mdToast.simple()
-                    .textContent('Add action failed !')
+                    .textContent('Update action failed !')
                     .position('top right')
                     .hideDelay(1500);
 
