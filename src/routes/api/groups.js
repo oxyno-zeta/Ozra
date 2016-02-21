@@ -27,14 +27,87 @@ module.exports = {
 function groupsUrls(mainApp){
     // Get all groups
     mainApp.get('/groups/', getAllGroups);
-    // Get all groups
+    // Get all groups for the token user
     mainApp.get('/groups/user/', getGroupsFromUser);
+    // Get group from id
+    mainApp.get('/groups/:id', getSpecificGroup);
     // Add group
     mainApp.post('/groups/', addGroup);
     // Delete group
     mainApp.delete('/groups/:id', deleteGroup);
     // Modify a group
     mainApp.put('/groups/:id', modifyGroup);
+}
+
+/**
+ * Get group from id
+ * @param req
+ * @param res
+ */
+function getSpecificGroup(req, res){
+    base.apiTokenSecurity(req, res).then(function(user){
+        // Success
+        var token = user.getToken();
+        // Get default response body
+        var responseBody = APIResponses.getDefaultResponseBody(token);
+        // Log
+        logger.info('User "' + user.getName() + '" authenticated');
+
+        // Check if data are valid
+        var groupId = req.params.id;
+        logger.warn(groupId);
+        if (!_.isString(groupId)|| _.isUndefined(groupId)|| _.isNull(groupId)){
+            // Id not valid
+            logger.error('Get group failed => data not valid => Stop');
+            if (configurationService.isVerbose()){
+                // Debug
+                logger.debug(groupId);
+            }
+            APIResponses.sendResponse(res, responseBody, APICodes.clientErrors.FORBIDDEN, false);
+            return;
+        }
+
+        base.isUserAdministrator(user).then(function(isAdmin) {
+            if (!isAdmin) {
+                // Not admin
+                logger.error('Get group failed => User "' + user.getName() + '" not administrator => Stop');
+                APIResponses.sendResponse(res, responseBody, APICodes.clientErrors.FORBIDDEN, false);
+                return;
+            }
+
+            // Get group
+            databaseService.getGroupFromId(groupId).then(function (group) {
+                // Ok
+                logger.info('Get group success');
+
+                // Put data
+                responseBody.group = group.toAPIJson();
+
+                if (configurationService.isVerbose()){
+                    // Debug
+                    logger.debug(group.toJson());
+                }
+
+                // Send response
+                APIResponses.sendResponse(res, responseBody, APICodes.normal.OK, true);
+            }, function(err){
+                // Fail
+                logger.error('Get group failed => Group not found => Stop');
+                if (configurationService.isVerbose()){
+                    // Debug
+                    logger.debug(err);
+                }
+                APIResponses.sendResponse(res, responseBody, APICodes.clientErrors.NOT_FOUND, false);
+            });
+        }, function(err){
+            logger.error('Get group failed => Something failed... => Stop');
+            if (configurationService.isVerbose()){
+                // Debug
+                logger.debug(err);
+            }
+            APIResponses.sendResponse(res, responseBody, APICodes.serverErrors.INTERNAL_ERROR, false);
+        });
+    });
 }
 
 /**
