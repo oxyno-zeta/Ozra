@@ -1,18 +1,19 @@
-<div class="md-padding" layout="column" flex>
-    <md-input-container aria-label="Name">
-        <label>Name</label>
-        <input ng-model="groupEditAdminCtrl.group.name"
-               ng-disabled="groupEditAdminCtrl.disableEdit"
-               type="text">
-    </md-input-container>
+<div class="md-padding">
+    <div class="border form" layout="column" flex>
+        <md-input-container aria-label="Name">
+            <label>Name</label>
+            <input ng-model="groupEditAdminCtrl.group.name"
+                   ng-disabled="groupEditAdminCtrl.disableEdit"
+                   type="text">
+        </md-input-container>
 
-    <md-switch class="md-primary"
-               ng-disabled="groupEditAdminCtrl.disableEdit"
-               ng-model="groupEditAdminCtrl.group.administrator"
-               aria-label="Administrator">
-        Administrator Group
-    </md-switch>
-
+        <md-switch class="md-primary"
+                   ng-disabled="groupEditAdminCtrl.disableEdit"
+                   ng-model="groupEditAdminCtrl.group.administrator"
+                   aria-label="Administrator">
+            Administrator Group
+        </md-switch>
+    </div>
 </div>
 
 <md-fab-speed-dial md-direction="up" md-open="groupEditAdminCtrl.isFabOpen"

@@ -1,53 +1,54 @@
-<div class="md-padding" layout="column" flex>
-    <md-input-container aria-label="Name">
-        <label>Name</label>
-        <input required ng-model="userNewAdminCtrl.user.name" type="text">
-    </md-input-container>
-
-    <div flex layout="row">
-        <md-input-container aria-label="Password" flex>
-            <label>Password</label>
-            <input required ng-model="userNewAdminCtrl.user.password"
-                   ng-change="userNewAdminCtrl.checkIsPasswordNotOk()"
-                   type="password">
+<div class="md-padding">
+    <div class="border form" layout="column" flex>
+        <md-input-container aria-label="Name">
+            <label>Name</label>
+            <input required ng-model="userNewAdminCtrl.user.name" type="text">
         </md-input-container>
 
-        <md-input-container aria-label="Check password" flex>
-            <label>Check password</label>
-            <input required ng-model="userNewAdminCtrl.checkPassword"
-                   ng-change="userNewAdminCtrl.checkIsPasswordNotOk()"
-                   type="password">
-        </md-input-container>
+        <div flex layout="row">
+            <md-input-container aria-label="Password" flex>
+                <label>Password</label>
+                <input required ng-model="userNewAdminCtrl.user.password"
+                       ng-change="userNewAdminCtrl.checkIsPasswordNotOk()"
+                       type="password">
+            </md-input-container>
 
-        <md-tooltip md-direction="down"
-                    md-autohide="true"
-                    md-visible="userNewAdminCtrl.passwordNotOk">
-            Can't save. Password are different !
-        </md-tooltip>
+            <md-input-container aria-label="Check password" flex>
+                <label>Check password</label>
+                <input required ng-model="userNewAdminCtrl.checkPassword"
+                       ng-change="userNewAdminCtrl.checkIsPasswordNotOk()"
+                       type="password">
+            </md-input-container>
+
+            <md-tooltip md-direction="down"
+                        md-autohide="true"
+                        md-visible="userNewAdminCtrl.passwordNotOk">
+                Can't save. Password are different !
+            </md-tooltip>
+        </div>
+
+        <div class="md-input-container">
+            <label class="label-color">Groups</label>
+            <md-chips ng-model="userNewAdminCtrl.user.groups"
+                      md-autocomplete-snap
+                      md-require-match="true">
+                <md-autocomplete
+                        md-no-cache="true"
+                        md-selected-item="selectedItem"
+                        md-search-text="searchText"
+                        md-items="item in userNewAdminCtrl.filterCurrentGroups(searchText)"
+                        md-item-text="item.name"
+                        placeholder="Search for a group">
+                    <span>{{item.name}}</span>
+                </md-autocomplete>
+                <md-chip-template>
+                    <span>
+                      {{$chip.name}}
+                    </span>
+                </md-chip-template>
+            </md-chips>
+        </div>
     </div>
-
-    <div class="md-input-container">
-        <label class="label-color">Groups</label>
-        <md-chips ng-model="userNewAdminCtrl.user.groups"
-                  md-autocomplete-snap
-                  md-require-match="true">
-            <md-autocomplete
-                    md-no-cache="true"
-                    md-selected-item="selectedItem"
-                    md-search-text="searchText"
-                    md-items="item in userNewAdminCtrl.filterCurrentGroups(searchText)"
-                    md-item-text="item.name"
-                    placeholder="Search for a group">
-                <span>{{item.name}}</span>
-            </md-autocomplete>
-            <md-chip-template>
-                <span>
-                  {{$chip.name}}
-                </span>
-            </md-chip-template>
-        </md-chips>
-    </div>
-
 </div>
 
 <md-fab-speed-dial md-direction="up" md-open="groupNewAdminCtrl.isFabOpen"
