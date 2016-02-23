@@ -55,7 +55,6 @@ function getSpecificGroup(req, res){
 
         // Check if data are valid
         var groupId = req.params.id;
-        logger.warn(groupId);
         if (!_.isString(groupId)|| _.isUndefined(groupId)|| _.isNull(groupId)){
             // Id not valid
             logger.error('Get group failed => data not valid => Stop');
