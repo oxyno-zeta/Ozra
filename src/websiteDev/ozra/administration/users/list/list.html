@@ -1,7 +1,16 @@
 <md-list class="md-padding">
     <md-subheader class="md-no-sticky">Users list</md-subheader>
-    <md-list-item ng-repeat="user in usersListAdminCtrl.listUsers"
-                  aria-label="{{user.name}} user">
+    <md-list-item ng-repeat="user in usersListAdminCtrl.listUsers track by user.id"
+                  aria-label="{{user.name}} user"
+                  ui-sref="ozra.administration.users.edit({id: user.id})">
         <p ng-bind="user.name"></p>
     </md-list-item>
 </md-list>
+
+<md-fab-speed-dial class="md-fab md-fab-bottom-right">
+    <md-fab-trigger>
+        <md-button aria-label="Add" class="md-fab md-warn" ui-sref="ozra.administration.users.new">
+            <ng-md-icon icon="add"></ng-md-icon>
+        </md-button>
+    </md-fab-trigger>
+</md-fab-speed-dial>

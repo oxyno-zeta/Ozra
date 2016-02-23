@@ -8,7 +8,9 @@
 
     angular
         .module('ozra.administration.users', [
-            'ozra.administration.users.list'
+            'ozra.administration.users.list',
+            'ozra.administration.users.new',
+            'ozra.administration.users.edit'
         ]);
 
 })();

@@ -17,6 +17,7 @@
 
         // Export
         self.getFromData = getFromData;
+        self.createEmptyNew = createEmptyNew;
 
         ////////////////
 
@@ -53,6 +54,14 @@
          */
         function getFromData(data) {
             return new UserModel(data);
+        }
+
+        /**
+         * Create empty user
+         * @returns {userModelFactory.UserModel}
+         */
+        function createEmptyNew(){
+            return new UserModel();
         }
     }
 

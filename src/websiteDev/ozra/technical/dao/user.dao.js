@@ -18,11 +18,68 @@
         // Private
         var baseUrl = '/api/users/';
         // Public
+        // Admin part
         self.getAll = getAll;
+        self.createEmptyNew = createEmptyNew;
+        self.addNewUser = addNewUser;
+        self.updateUser = updateUser;
+        self.deleteUser = deleteUser;
+        // Normal part
         self.getFromId = getFromId;
         self.updateUserPassword = updateUserPassword;
 
         ////////////////
+
+        /**
+         * Delete user
+         * @param user
+         * @returns {*}
+         */
+        function deleteUser(user){
+            var deferred = $q.defer();
+            var url = baseUrl + user.id;
+            requestService.remove(url).then(function(response){
+                deferred.resolve(response.plain());
+            }, deferred.reject);
+            return deferred.promise;
+        }
+
+        /**
+         * Update user
+         * @param user
+         * @returns {*}
+         */
+        function updateUser(user){
+            var deferred = $q.defer();
+            var url = baseUrl + user.id;
+            requestService.put(url, user).then(function(response){
+                var user = userModelFactory.getFromData(response.plain().user);
+                deferred.resolve(user);
+            }, deferred.reject);
+            return deferred.promise;
+        }
+
+        /**
+         * Add new user
+         * @param user
+         * @returns {*}
+         */
+        function addNewUser(user){
+            var deferred = $q.defer();
+            requestService.post(baseUrl, user).then(function(response){
+                var user = userModelFactory.getFromData(response.plain().user);
+                deferred.resolve(user);
+            }, deferred.reject);
+            return deferred.promise;
+        }
+
+        /**
+         * Create empty user
+         * @returns {*}
+         */
+        function createEmptyNew(){
+            return userModelFactory.createEmptyNew();
+        }
 
         /**
          * Get all users (only for admin)
