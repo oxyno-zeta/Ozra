@@ -108,13 +108,15 @@
 
         /**
          * Check if one group is administrator
-         * @param groups {Array} groups
+         * @param groups {Object} groups
          * @returns {boolean}
          */
         function isOneGroupAdministrator(groups){
-            var i;
-            for (i = 0; i < groups.length; i++){
-                if (groups[i].administrator){
+            var keys = _.keys(groups);
+            var i, key;
+            for (i = 0; i < keys.length; i++){
+                key = keys[i];
+                if (groups[key].administrator){
                     return true;
                 }
             }
