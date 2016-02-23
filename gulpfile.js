@@ -206,6 +206,7 @@ gulp.task('web:sass', function(){
     var injectFiles = gulp.src([
         path.join(webSourcesDir, '/**/*.scss'),
         path.join(wiredepConf.directory, '/**/*.scss'),
+        path.join('!' + wiredepConf.directory, '/**/demos/**/*.scss'),
         path.join('!' + webSourcesDir, '/ozra.scss')
     ], {
         read: false
