@@ -7,11 +7,6 @@
     'use strict';
 
     angular
-        .module('ozra.administration.groups.list', [])
-        .run(function($rootScope){
-            $rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error){
-                console.log(error);
-            });
-        });
+        .module('ozra.administration.groups.list', []);
 
 })();
