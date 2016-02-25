@@ -1,5 +1,6 @@
 
 // Require
+var path = require('path');
 var gulp = require('gulp');
 var bump = require('gulp-bump');
 var browserSync = require('browser-sync');
@@ -31,6 +32,9 @@ delete nodemonConfig.events;
 var sources = [
     'src/**/*', '!src/**/*.spec.js', '!src/{views,websiteDev,bower_components}/**/*',
     'package.json', 'bower.json', 'log4jsConf.json', 'README.md'
+];
+var binSources = [
+    'scripts/**/*'
 ];
 var distDirTemp = '.tmp';
 var distTempSources = distDirTemp + '/**/*';
@@ -119,7 +123,16 @@ gulp.task('clean:tmp', function(){
 // **************************************************** \\
 
 // Prepare
-gulp.task('prepare:archive', function(){
+gulp.task('prepare:archive', function(cb){
+    gulpSequence(['prepare:sources', 'prepare:binaries'], cb);
+});
+
+gulp.task('prepare:binaries', function(){
+    return gulp.src(binSources)
+        .pipe(gulp.dest(distDirTemp));
+});
+
+gulp.task('prepare:sources', function(){
     function onlyDirs(es) {
         return es.map(function(file, cb) {
             if (file.stat.isFile()) {
@@ -132,12 +145,12 @@ gulp.task('prepare:archive', function(){
 
     return gulp.src(sources)
         .pipe(onlyDirs(es))
-        .pipe(gulp.dest(distDirTemp));
+        .pipe(gulp.dest(path.join(distDirTemp, 'ozra')));
 });
 
 // Release
 gulp.task('release', function(cb){
-    gulpSequence('prepare:archive', 'web:release', ['tar', 'zip'], 'clean:tmp', cb);
+    gulpSequence('clean:tmp', 'prepare:archive', 'web:release', ['tar', 'zip'], cb);
 });
 
 gulp.task('zip', function(){
@@ -163,7 +176,6 @@ gulp.task('tar', function () {
 // **************************************************** \\
 // *********************  Site  *********************** \\
 // **************************************************** \\
-var path = require('path');
 var minifyHtml = require('gulp-minify-html');
 var angularTemplatecache = require('gulp-angular-templatecache');
 var wiredep = require('wiredep').stream;
@@ -294,7 +306,7 @@ gulp.task('web:release:build', ['web:dev'], function(){
             quotes: true,
             conditionals: true
         })))
-        .pipe(gulp.dest(path.join(distDirTemp, '/views/')));
+        .pipe(gulp.dest(path.join(distDirTemp, '/ozra/views/')));
 });
 
 gulp.task('web:release:clean', function(){
