@@ -19,6 +19,10 @@ Otherwise, it will create a folder with data in (leveldown).
 - RESTFULL API
 - Monitoring (not yet)
 
+## Requirements
+- NodeJS installed (tested on NodeJS 4.2)
+- NPM installed
+
 ## Install as service
 - Download archive and extract it
 - Launch the install script as "root" user
