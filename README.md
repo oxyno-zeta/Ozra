@@ -20,7 +20,7 @@ Otherwise, it will create a folder with data in (leveldown).
 - Monitoring (not yet)
 
 ## Requirements
-- NodeJS installed
+- NodeJS installed (tested on NodeJS 4.2)
 - NPM installed
 
 ## Install as service
