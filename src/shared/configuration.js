@@ -66,6 +66,7 @@ function getConfig(){
             }
         }
 
+        // Check environment variable
         var authorized = false;
         _.forEach(POSSIBLE_ENV, function(env){
             if (_.isEqual(config[ENV], env)){
@@ -75,6 +76,12 @@ function getConfig(){
 
         if (!authorized){
             config[ENV] = 'dev';
+        }
+
+        // Check verbose value (boolean or not boolean to transform it)
+        if (!_.isBoolean(config[VERBOSE])){
+            // Transform value
+            config[VERBOSE] = _.isEqual(config[VERBOSE], true);
         }
     }
 
