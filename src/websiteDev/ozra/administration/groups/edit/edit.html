@@ -1,0 +1,75 @@
+<div class="md-padding">
+    <div class="border form" layout="column" flex>
+        <md-input-container aria-label="Name">
+            <label>Name</label>
+            <input ng-model="groupEditAdminCtrl.group.name"
+                   ng-disabled="groupEditAdminCtrl.disableEdit"
+                   type="text">
+        </md-input-container>
+
+        <md-switch class="md-primary"
+                   ng-disabled="groupEditAdminCtrl.disableEdit"
+                   ng-model="groupEditAdminCtrl.group.administrator"
+                   aria-label="Administrator">
+            Administrator Group
+        </md-switch>
+    </div>
+</div>
+
+<md-fab-speed-dial md-direction="up" md-open="groupEditAdminCtrl.isFabOpen"
+                   class="md-scale md-fab md-fab-bottom-right"
+                   ng-click="groupEditAdminCtrl.fabMouseClick()">
+    <md-fab-trigger>
+        <md-button aria-label="Menu" class="md-fab md-warn">
+            <md-tooltip md-direction="left"
+                        md-autohide="true">
+                Menu
+            </md-tooltip>
+            <ng-md-icon icon="dehaze"></ng-md-icon>
+        </md-button>
+    </md-fab-trigger>
+    <md-fab-actions>
+        <md-button aria-label="Edit" class="md-fab md-raised md-mini"
+                   ng-if="groupEditAdminCtrl.disableEdit"
+                   ng-click="groupEditAdminCtrl.enterEditMode()">
+            <md-tooltip md-direction="left"
+                        md-autohide="true">
+                Edit
+            </md-tooltip>
+            <ng-md-icon icon="mode_edit"></ng-md-icon>
+        </md-button>
+
+        <md-button aria-label="Launch" class="md-fab md-raised md-mini"
+                   ng-if="groupEditAdminCtrl.disableEdit"
+                   ng-click="groupEditAdminCtrl.deleteGroup($event)">
+            <md-tooltip md-direction="left"
+                        md-autohide="true">
+                Delete
+            </md-tooltip>
+            <ng-md-icon icon="delete"></ng-md-icon>
+        </md-button>
+
+        <!-- ------------------------------------------------------------------- -->
+
+        <md-button aria-label="Cancel" class="md-fab md-raised md-mini"
+                   ng-if="!groupEditAdminCtrl.disableEdit"
+                   ng-click="groupEditAdminCtrl.leaveEditMode()">
+            <md-tooltip md-direction="left"
+                        md-autohide="true">
+                Cancel
+            </md-tooltip>
+            <ng-md-icon icon="cancel"></ng-md-icon>
+        </md-button>
+
+        <md-button aria-label="Save" class="md-fab md-raised md-mini"
+                   ng-if="!groupEditAdminCtrl.disableEdit"
+                   ng-disabled="!groupEditAdminCtrl.isGroupComplete()"
+                   ng-click="groupEditAdminCtrl.save()">
+            <md-tooltip md-direction="left"
+                        md-autohide="true">
+                Save
+            </md-tooltip>
+            <ng-md-icon icon="save"></ng-md-icon>
+        </md-button>
+    </md-fab-actions>
+</md-fab-speed-dial>

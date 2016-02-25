@@ -1,0 +1,22 @@
+
+<md-content layout-padding layout="row" flex>
+    <div class="login-margin" layout="row" flex>
+        <div layout="column" flex>
+            <md-input-container flex>
+                <label>Username</label>
+                <input type="text" ng-model="loginCtrl.username" required>
+            </md-input-container>
+
+            <md-input-container flex>
+                <label>Password</label>
+                <input type="password" ng-model="loginCtrl.password" required>
+            </md-input-container>
+
+            <md-button ng-disabled="loginCtrl.isDisabled()"
+                    ng-click="loginCtrl.submit()"
+                    flex>
+                Login
+            </md-button>
+        </div>
+    </div>
+</md-content>

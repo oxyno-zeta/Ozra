@@ -1,0 +1,28 @@
+{
+  "restartable": "rs",
+  "events": {
+    "restart": "echo 'display notification \"App restarted due to:\n'$FILENAME'\" with title \"nodemon\"'"
+  },
+  "watch": [
+    "node_modules/",
+    "src/"
+  ],
+  "ignore": [
+    ".git",
+    "node_modules/**/node_modules",
+    "src/websiteDev",
+    "src/views"
+  ],
+  "env": {
+    "OZRA_ENV": "dev",
+    "OZRA_PORT": 2050,
+    "OZRA_VERBOSE": true,
+    "OZRA_DATABASE_SERVER_URL": "http://localhost:5984",
+    "OZRA_DATABASE_NAME": "ozra"
+  },
+  "script": "src/main.js",
+  "options": {
+    "extensions": ["js"],
+    "exec": "node"
+  }
+}

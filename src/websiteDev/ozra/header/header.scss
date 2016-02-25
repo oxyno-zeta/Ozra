@@ -1,0 +1,45 @@
+.header {
+  .spacing-right {
+    margin-right: 15px;
+  }
+  .node {
+    font-size: 17px;
+    margin-top: 4px;
+  }
+  .top-button {
+    padding: 13px 0px 13px 0px;
+    border-radius: 0px;
+    .title {
+      font-size: 20px;
+      font-weight: bold;
+    }
+  }
+  .active {
+    background-color: white;
+    color: rgb(16,108,200) !important;
+    border-bottom: 2px solid rgb(255,82,82);
+    &:hover {
+      background-color: rgba(255,255,255,0.8) !important;
+    }
+  }
+}
+
+@media only screen and (min-width: 0) and (max-width: 959px) and (orientation: portrait) {
+  .md-toolbar-tools {
+    .top-button {
+      padding: 13px 0px 13px 0px;
+    }
+  }
+}
+
+@media only screen and (min-width: 0) and (max-width: 959px) and (orientation: landscape) {
+  .md-toolbar-tools {
+    .top-button {
+      padding: 5px 0px 5px 0px;
+    }
+  }
+}
+
+.static-position {
+  position: static;
+}

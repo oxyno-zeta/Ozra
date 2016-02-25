@@ -1,0 +1,26 @@
+<div class="md-padding" layout="column" flex md-scroll-y>
+    <div layout="row" layout-wrap layout-align="start center">
+        <md-card ng-repeat="action in actionsListCtrl.actions" class="actions-card">
+            <md-card-title>
+                <md-card-title-text>
+                    <span class="md-headline text-limiter" ng-bind="action.name"></span>
+                    <span class="md-subhead text-limiter" ng-bind="action.category"></span>
+                </md-card-title-text>
+            </md-card-title>
+            <md-card-actions layout="row" layout-align="end center">
+                <md-button class="md-raised" ui-sref="ozra.actions.properties({id:action.id})">See / Edit</md-button>
+
+                <div class="separator"></div>
+
+                <md-button class="md-raised md-primary" ng-click="actionsListCtrl.run(action.id)">Run</md-button>
+            </md-card-actions>
+        </md-card>
+    </div>
+</div>
+<md-fab-speed-dial class="md-fab md-fab-bottom-right">
+    <md-fab-trigger>
+        <md-button aria-label="Add" class="md-fab md-warn" ui-sref="ozra.actions.new">
+            <ng-md-icon icon="add"></ng-md-icon>
+        </md-button>
+    </md-fab-trigger>
+</md-fab-speed-dial>

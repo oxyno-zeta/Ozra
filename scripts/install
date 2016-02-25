@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# Stop at first error
+set -e
+
+HERE=$(pwd)
+INSTALL_DIR=/usr/local/lib/ozra
+
+echo "Installing service..."
+cp service/ozra /etc/init.d/
+
+echo "Installing default variables..."
+cp default/ozra /etc/default/
+
+echo "Copying ozra server..."
+cp -Rf ozra/ $INSTALL_DIR
+
+echo "Putting service as default..."
+update-rc.d ozra defaults
+
+echo "Installing npm dependencies..."
+cd $INSTALL_DIR
+npm install --production
+cd $HERE
+
+echo "Creating files..."
+touch $INSTALL_DIR/ozra.log
+

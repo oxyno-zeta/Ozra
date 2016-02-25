@@ -1,0 +1,137 @@
+<div class="md-padding" layout="column" flex>
+    <md-tabs md-dynamic-height md-selected="userEditAdminCtrl.selectedIndex" md-border-bottom class="border">
+        <md-tab label="General">
+            <md-content class="md-padding">
+                <div flex layout="column">
+                    <md-input-container aria-label="Name" flex>
+                        <label>Name</label>
+                        <input required
+                               ng-disabled="userEditAdminCtrl.disableEdit"
+                               ng-model="userEditAdminCtrl.user.name"
+                               type="text">
+                    </md-input-container>
+
+                    <div class="md-input-container" flex>
+                        <label class="label-color">Groups</label>
+                        <md-chips ng-model="userEditAdminCtrl.user.groups"
+                                  md-autocomplete-snap
+                                  md-require-match="true"
+                                  readonly="userEditAdminCtrl.disableEdit">
+                            <md-autocomplete
+                                    md-no-cache="true"
+                                    md-selected-item="selectedItem"
+                                    md-search-text="searchText"
+                                    md-items="item in userEditAdminCtrl.filterCurrentGroups(searchText)"
+                                    md-item-text="item.name"
+                                    placeholder="Search for a group">
+                                <span>{{item.name}}</span>
+                            </md-autocomplete>
+                            <md-chip-template>
+                                <span>
+                                  {{$chip.name}}
+                                </span>
+                            </md-chip-template>
+                        </md-chips>
+                    </div>
+                </div>
+            </md-content>
+        </md-tab>
+        <md-tab label="Password">
+            <md-content class="md-padding">
+                <div flex layout="row">
+                    <md-input-container aria-label="Password" flex>
+                        <label>Password</label>
+                        <input required ng-model="userEditAdminCtrl.user.password"
+                               ng-disabled="userEditAdminCtrl.disableEdit"
+                               ng-change="userEditAdminCtrl.checkIsPasswordNotOk()"
+                               type="password">
+                    </md-input-container>
+
+                    <md-input-container aria-label="Check password" flex>
+                        <label>Check password</label>
+                        <input required ng-model="userEditAdminCtrl.checkPassword"
+                               ng-disabled="userEditAdminCtrl.disableEdit"
+                               ng-change="userEditAdminCtrl.checkIsPasswordNotOk()"
+                               type="password">
+                    </md-input-container>
+
+                    <md-tooltip md-direction="down"
+                                md-autohide="true"
+                                ng-if="userEditAdminCtrl.selectedIndex === 1"
+                                md-visible="userEditAdminCtrl.passwordNotOk">
+                        Can't save. Password are different !
+                    </md-tooltip>
+                </div>
+            </md-content>
+        </md-tab>
+    </md-tabs>
+</div>
+
+<md-fab-speed-dial md-direction="up" md-open="userEditAdminCtrl.isFabOpen"
+                   class="md-scale md-fab md-fab-bottom-right"
+                   ng-click="userEditAdminCtrl.fabMouseClick()">
+    <md-fab-trigger>
+        <md-button aria-label="Menu" class="md-fab md-warn">
+            <md-tooltip md-direction="left"
+                        md-autohide="true">
+                Menu
+            </md-tooltip>
+            <ng-md-icon icon="dehaze"></ng-md-icon>
+        </md-button>
+    </md-fab-trigger>
+    <md-fab-actions>
+        <md-button aria-label="Edit" class="md-fab md-raised md-mini"
+                   ng-if="userEditAdminCtrl.disableEdit"
+                   ng-click="userEditAdminCtrl.enterEditMode()">
+            <md-tooltip md-direction="left"
+                        md-autohide="true">
+                Edit
+            </md-tooltip>
+            <ng-md-icon icon="mode_edit"></ng-md-icon>
+        </md-button>
+
+        <md-button aria-label="Launch" class="md-fab md-raised md-mini"
+                   ng-if="userEditAdminCtrl.disableEdit"
+                   ng-click="userEditAdminCtrl.deleteUser($event)">
+            <md-tooltip md-direction="left"
+                        md-autohide="true">
+                Delete
+            </md-tooltip>
+            <ng-md-icon icon="delete"></ng-md-icon>
+        </md-button>
+
+        <!-- ------------------------------------------------------------------- -->
+
+        <md-button aria-label="Cancel" class="md-fab md-raised md-mini"
+                   ng-if="!userEditAdminCtrl.disableEdit"
+                   ng-click="userEditAdminCtrl.leaveEditMode()">
+            <md-tooltip md-direction="left"
+                        md-autohide="true">
+                Cancel
+            </md-tooltip>
+            <ng-md-icon icon="cancel"></ng-md-icon>
+        </md-button>
+
+        <md-button aria-label="Save" class="md-fab md-raised md-mini"
+                   ng-if="!userEditAdminCtrl.disableEdit && (userEditAdminCtrl.selectedIndex === 0)"
+                   ng-disabled="!userEditAdminCtrl.isUserComplete()"
+                   ng-click="userEditAdminCtrl.save()">
+            <md-tooltip md-direction="left"
+                        md-autohide="true">
+                Save
+            </md-tooltip>
+            <ng-md-icon icon="save"></ng-md-icon>
+        </md-button>
+
+        <md-button aria-label="Save" class="md-fab md-raised md-mini"
+                   ng-if="!userEditAdminCtrl.disableEdit && (userEditAdminCtrl.selectedIndex === 1)"
+                   ng-disabled="userEditAdminCtrl.passwordNotOk"
+                   ng-click="userEditAdminCtrl.savePassword()">
+            <md-tooltip md-direction="left"
+                        md-autohide="true">
+                Save new password
+            </md-tooltip>
+            <ng-md-icon icon="save"></ng-md-icon>
+        </md-button>
+    </md-fab-actions>
+</md-fab-speed-dial>

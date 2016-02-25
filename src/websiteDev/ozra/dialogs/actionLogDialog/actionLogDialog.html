@@ -1,0 +1,30 @@
+<md-dialog aria-label="Action Log">
+    <md-toolbar ng-class="{'red-toolbar': actionLogDialog.isInError()}">
+        <div class="md-toolbar-tools">
+            <h2>Action Log</h2>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+        <div class="md-dialog-content">
+            <div>
+                <h5>Code : </h5>
+                <p ng-bind="actionLogDialog.result.code"></p>
+            </div>
+
+            <div ng-if="!actionLogDialog.isInError()">
+                <h5>Normal Output : </h5>
+                <p ng-bind="actionLogDialog.result.stdout"></p>
+            </div>
+
+            <div ng-if="actionLogDialog.isInError()">
+                <h5>Error Output : </h5>
+                <p ng-bind="actionLogDialog.result.stderr"></p>
+            </div>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button flex ng-click="actionLogDialog.answer()">
+            Ok
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

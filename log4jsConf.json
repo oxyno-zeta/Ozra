@@ -1,0 +1,11 @@
+{
+  "appenders": [{
+    "type": "file",
+    "filename": "ozra.log",
+    "category": [
+      "cheese"
+    ]
+  }, {
+    "type": "console"
+  }]
+}
