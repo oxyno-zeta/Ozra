@@ -8,30 +8,46 @@ Monitoring server and launcher of defined script by user.
 This server allow you to save script and run it through a RESTFULL API.
 Another thing is that you can monitor your server through WebSockets.
 
+IMPORTANT: Linux only for the moment !
+
+### Database
+Database used is NoSQL (CouchDB) so you can put your own server if you want.
+Otherwise, it will create a folder with data in (leveldown).
+
 ### Features
 - Run script on server
 - RESTFULL API
-- Monitoring
+- Monitoring (not yet)
 
-## Quick Start
-Install dependencies :
-```bash
-npm install
+## Install as service
+- Download archive and extract it
+- Launch the install script as "root" user
+- Start Ozra server with the command :
+```
+service ozra start
+```
+- To stop it, use :
+```
+service ozra stop
+```
+- Go on your browser at url : http://server-ip:2040/ (default port)
+
+(Default login : admin/admin)
+
+## No install and run
+If you don't want to install Ozra as service, simply go into "ozra" folder and run :
+```
+node main.js
 ```
 
-Run project :
-```bash
-node src/main.js
-```
-
+## Environment variables
+- "OZRA_PORT": Server port
+- "OZRA_VERBOSE": Server verbose (boolean value)
+- "OZRA_DATABASE_SERVER_URL": CouchDB database server url (not necessary, data will be put on hard drive)
+- "OZRA_DATABASE_NAME": Database name
 
 ## Powered by
 - NodeJS
-
-### NodeJS modules
-- ExpressJS
-- Lodash
-- PouchDB
 
 ## Licence
 Free for personal use. For commercial use, please, contact me.
