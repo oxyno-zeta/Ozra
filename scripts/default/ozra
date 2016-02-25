@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# Ozra environment
+export OZRA_ENV='prod'
+
+# Ozra server port
+export OZRA_PORT=2049
+
+# Ozra verbose option
+export OZRA_VERBOSE=false
+
+# Ozra database server url
+#export OZRA_DATABASE_SERVER_URL=""
+
+# Ozra database name
+export OZRA_DATABASE_NAME="ozra_db"
+
+
+
+
+
