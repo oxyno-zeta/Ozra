@@ -4,10 +4,31 @@
  * Licence: See Readme
  */
 
-// Require
+/* ************************************* */
+/* ********       REQUIRE       ******** */
+/* ************************************* */
 var uuid = require('uuid');
 var _ = require('lodash');
 var design = require('./designs/action.js');
+
+/* ************************************* */
+/* ********       EXPORTS       ******** */
+/* ************************************* */
+module.exports = {
+    Action: actionModel,
+    design: design.design,
+    type: design.type
+};
+
+/* ************************************* */
+/* ********  PRIVATE FUNCTIONS  ******** */
+/* ************************************* */
+
+
+
+/* ************************************* */
+/* ********   PUBLIC FUNCTIONS  ******** */
+/* ************************************* */
 
 /**
  * Action model
@@ -264,14 +285,6 @@ function actionModel(){
 
     return this;
 }
-
-
-// Export
-module.exports = {
-    Action: actionModel,
-    design: design.design,
-    type: design.type
-};
 
 
 

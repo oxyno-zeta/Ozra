@@ -48,7 +48,9 @@ var normal = {
 	}
 };
 
-// Exports
+/* ************************************* */
+/* ********       EXPORTS       ******** */
+/* ************************************* */
 module.exports = {
     clientErrors: clientErrors,
     normal: normal,

@@ -4,27 +4,41 @@
  * Licence: See Readme
  */
 
-// Require
+/* ************************************* */
+/* ********       REQUIRE       ******** */
+/* ************************************* */
 var promise = require('promise');
 var _ = require('lodash');
 var APICodes = require('./core/APICodes.js');
 var APIResponses = require('./core/APIResponses.js');
 var logger = require('../../shared/logger.js');
-var databaseService = require('../../services/databaseService.js');
+var userDaoService = require('../../dao/userDaoService');
+var groupDaoService = require('../../dao/groupDaoService');
 
-// Exports
+/* ************************************* */
+/* ********       EXPORTS       ******** */
+/* ************************************* */
 module.exports = {
     apiTokenSecurity: apiTokenSecurity,
     isUserAdministrator: isUserAdministrator,
     isGroupLastAdministrator: isGroupLastAdministrator
 };
 
-// Functions
+/* ************************************* */
+/* ********  PRIVATE FUNCTIONS  ******** */
+/* ************************************* */
+
+
+
+/* ************************************* */
+/* ********   PUBLIC FUNCTIONS  ******** */
+/* ************************************* */
+
 /**
  * Security function for api
  * @param req {object} Express request
  * @param res {object} Express response
- * @returns {promise}
+ * @returns {Promise}
  */
 function apiTokenSecurity(req, res){
     return new promise(function(resolve, reject){
@@ -43,7 +57,7 @@ function apiTokenSecurity(req, res){
         }
 
         // Check if this is right token
-        databaseService.getUserFromToken(token).then(function(user){
+        userDaoService.getUserFromToken(token).then(function(user){
             // Success
             resolve(user);
         }, function(error){
@@ -58,11 +72,11 @@ function apiTokenSecurity(req, res){
 /**
  * Is user administrator ?
  * @param user
- * @returns {promise} resolve true|false when admin, reject if something wrong
+ * @returns {Promise} resolve true|false when admin, reject if something wrong
  */
 function isUserAdministrator(user){
     return new promise(function(resolve, reject){
-        databaseService.getGroupsFromIds(user.getGroups()).then(function(groups){
+        groupDaoService.getGroupsFromIds(user.getGroups()).then(function(groups){
             var i;
             for (i = 0; i < groups.length; i++){
                 if (groups[i].isAdministrator()){
@@ -79,11 +93,11 @@ function isUserAdministrator(user){
 /**
  * Check if group is last administrator group
  * @param group {groupModel}
- * @returns {promise} (resolve: false if not last administrator, true if last administrator, reject: error)
+ * @returns {Promise} (resolve: false if not last administrator, true if last administrator, reject: error)
  */
 function isGroupLastAdministrator(group){
     return new promise(function(resolve, reject){
-        databaseService.getAllGroups().then(function(groups){
+        groupDaoService.getAllGroups().then(function(groups){
             // Remove group from result to find
             groups = _.remove(groups, function(element){
                 return !_.isEqual(element.getId(), group.getId());

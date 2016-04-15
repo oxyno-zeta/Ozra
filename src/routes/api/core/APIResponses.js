@@ -4,22 +4,35 @@
  * Licence: See Readme
  */
 
-// Require
+/* ************************************* */
+/* ********       REQUIRE       ******** */
+/* ************************************* */
 var logger = require('../../../shared/logger.js');
 var ConfigService = require('../../../shared/configuration.js');
 
-// Exports
+/* ************************************* */
+/* ********       EXPORTS       ******** */
+/* ************************************* */
 module.exports = {
     sendResponse: sendResponse,
     getDefaultResponseBody: getDefaultResponseBody
 };
 
-// Functions
+/* ************************************* */
+/* ********  PRIVATE FUNCTIONS  ******** */
+/* ************************************* */
+
+
+
+/* ************************************* */
+/* ********   PUBLIC FUNCTIONS  ******** */
+/* ************************************* */
+
 /**
  *
  * @param response {object} response The response of the request
- * @param body {object} body The body of the reponse
- * @param status {int} status Status code of the response
+ * @param body {object} body The body of the response
+ * @param status {Object} status Status code of the response
  * @param success {boolean} success of the response
  */
 function sendResponse(response, body, status, success){

@@ -4,10 +4,31 @@
  * Licence: See Readme
  */
 
-// Require
+/* ************************************* */
+/* ********       REQUIRE       ******** */
+/* ************************************* */
 var uuid = require('uuid');
 var _ = require('lodash');
 var design = require('./designs/user.js');
+
+/* ************************************* */
+/* ********       EXPORTS       ******** */
+/* ************************************* */
+module.exports = {
+    User: userModel,
+    design: design.design,
+    type: design.type
+};
+
+/* ************************************* */
+/* ********  PRIVATE FUNCTIONS  ******** */
+/* ************************************* */
+
+
+
+/* ************************************* */
+/* ********   PUBLIC FUNCTIONS  ******** */
+/* ************************************* */
 
 /**
  * User model
@@ -281,11 +302,5 @@ function userModel(){
     return this;
 }
 
-// Export
-module.exports = {
-    User: userModel,
-    design: design.design,
-    type: design.type
-};
 
 

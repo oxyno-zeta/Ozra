@@ -4,13 +4,15 @@
  * Licence: See Readme
  */
 
-// Require
+/* ************************************* */
+/* ********       REQUIRE       ******** */
+/* ************************************* */
 var express = require('express');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var serveStatic = require('serve-static');
 var cors = require('cors');
-var databaseService = require('./services/databaseService.js');
+var initService = require('./services/initService.js');
 var logger = require('./shared/logger.js');
 var ConfigService = require('./shared/configuration.js');
 var base = require('./routes/routesBase.js');
@@ -29,14 +31,24 @@ process.on('uncaughtException', function (err) {
 // Express variable
 var app = express();
 
-// Exports
+/* ************************************* */
+/* ********       EXPORTS       ******** */
+/* ************************************* */
 module.exports = {
     initServer: initServer,
     launch: launch,
     getExpressApp: getExpressApp
 };
 
-// Functions
+/* ************************************* */
+/* ********  PRIVATE FUNCTIONS  ******** */
+/* ************************************* */
+
+
+
+/* ************************************* */
+/* ********   PUBLIC FUNCTIONS  ******** */
+/* ************************************* */
 
 /**
  * Initialize server
@@ -63,24 +75,15 @@ function initServer(){
 
     logger.info('Initialize database...');
     // Initialize database
-    databaseService.initDatabase().then(function(){
-        // Update design document
-        databaseService.updateDesignDocument().then(function(){
-            logger.info('Server fully launched !');
-            // Put api
-            apiRoutes.putApiRoutes(app);
-        }, function(err){
-            // Error
-            logger.fatal('Server OFFLINE => DB failed to be updated with design documents => Stop');
-            if (ConfigService.isVerbose()){
-                logger.debug(err);
-            }
-        });
+    initService.launch().then(function(){
+        logger.info('Server fully launched !');
+        // Put api
+        apiRoutes.putApiRoutes(app);
     }, function(err){
         // Error
-        logger.fatal('Server OFFLINE => DB not initialize => Stop');
+        logger.fatal('Server OFFLINE => DB not initialized => Stop');
         if (ConfigService.isVerbose()){
-            logger.warn(err);
+            logger.debug(err);
         }
     });
 

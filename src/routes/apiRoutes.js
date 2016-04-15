@@ -4,7 +4,9 @@
  * Licence: See Readme
  */
 
-// Require
+/* ************************************* */
+/* ********       REQUIRE       ******** */
+/* ************************************* */
 var express = require('express');
 var router = express.Router();
 var errorsAPI = require('./api/errors.js');
@@ -13,12 +15,22 @@ var usersAPI = require('./api/users.js');
 var actionsAPI = require('./api/actions.js');
 var systemsAPI = require('./api/system.js');
 
-// Exports
+/* ************************************* */
+/* ********       EXPORTS       ******** */
+/* ************************************* */
 module.exports = {
     putApiRoutes: putApiRoutes
 };
 
-// Functions
+/* ************************************* */
+/* ********  PRIVATE FUNCTIONS  ******** */
+/* ************************************* */
+
+
+
+/* ************************************* */
+/* ********   PUBLIC FUNCTIONS  ******** */
+/* ************************************* */
 
 /**
  * Put API Routes

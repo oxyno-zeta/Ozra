@@ -4,14 +4,18 @@
  * Licence: See Readme
  */
 
-// Require
+/* ************************************* */
+/* ********       REQUIRE       ******** */
+/* ************************************* */
 var log4js = require('log4js');
 // Load configuration
 log4js.configure('log4jsConf.json', {});
 // Get logger
 var logger = log4js.getLogger('cheese');
 
-// Export
+/* ************************************* */
+/* ********       EXPORTS       ******** */
+/* ************************************* */
 module.exports = {
     info: info,
     trace: trace,
@@ -21,7 +25,15 @@ module.exports = {
     fatal: fatal
 };
 
-// Functions
+/* ************************************* */
+/* ********  PRIVATE FUNCTIONS  ******** */
+/* ************************************* */
+
+
+
+/* ************************************* */
+/* ********   PUBLIC FUNCTIONS  ******** */
+/* ************************************* */
 /**
  * Fatal log level
  * @param text {*}

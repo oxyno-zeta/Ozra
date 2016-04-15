@@ -4,6 +4,9 @@
  * Licence: See Readme
  */
 
+/* ************************************* */
+/* ********       REQUIRE       ******** */
+/* ************************************* */
 var nconf = require('nconf');
 var _ = require('lodash');
 
@@ -21,7 +24,7 @@ var POSSIBLE_ENV = ['dev', 'prod'];
 // Default configuration
 var DEFAULT_CONFIG = {
     'OZRA_ENV': 'dev',
-    'OZRA_PORT': 2049,
+    'OZRA_PORT': 2040,
     'OZRA_VERBOSE': true,
     'OZRA_DATABASE_SERVER_URL': '',
     'OZRA_DATABASE_NAME': 'Ozra_database'
@@ -42,7 +45,9 @@ nconf.argv();
 // Default
 nconf.defaults(DEFAULT_CONFIG);
 
-// Exports
+/* ************************************* */
+/* ********       EXPORTS       ******** */
+/* ************************************* */
 module.exports = {
     getConfig: getConfig,
     getPort: getPort,
@@ -50,6 +55,16 @@ module.exports = {
     isDeveloperMode: isDeveloperMode,
     getDatabaseConfig: getDatabaseConfig
 };
+
+/* ************************************* */
+/* ********  PRIVATE FUNCTIONS  ******** */
+/* ************************************* */
+
+
+
+/* ************************************* */
+/* ********   PUBLIC FUNCTIONS  ******** */
+/* ************************************* */
 
 /**
  * Get configuration

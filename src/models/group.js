@@ -4,10 +4,31 @@
  * Licence: See Readme
  */
 
-// Require
+/* ************************************* */
+/* ********       REQUIRE       ******** */
+/* ************************************* */
 var uuid = require('uuid');
 var _ = require('lodash');
 var design = require('./designs/group.js');
+
+/* ************************************* */
+/* ********       EXPORTS       ******** */
+/* ************************************* */
+module.exports = {
+    Group: groupModel,
+    design: design.design,
+    type: design.type
+};
+
+/* ************************************* */
+/* ********  PRIVATE FUNCTIONS  ******** */
+/* ************************************* */
+
+
+
+/* ************************************* */
+/* ********   PUBLIC FUNCTIONS  ******** */
+/* ************************************* */
 
 /**
  * Group Model
@@ -160,10 +181,3 @@ function groupModel(){
     return this;
 }
 
-
-// Export
-module.exports = {
-    Group: groupModel,
-    design: design.design,
-    type: design.type
-};

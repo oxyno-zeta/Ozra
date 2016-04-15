@@ -4,18 +4,34 @@
  * Licence: See Readme
  */
 
-//Require
+/* ************************************* */
+/* ********       REQUIRE       ******** */
+/* ************************************* */
 var base = require('../routesBase.js');
-var logger = require('../../shared/logger.js');
 var APIResponses = require('../api/core/APIResponses.js');
 var APICodes = require('../api/core/APICodes.js');
 
-// Exports
+/* ************************************* */
+/* ********       EXPORTS       ******** */
+/* ************************************* */
 module.exports = {
     errorUrls: errorUrls
 };
 
-// Functions
+/* ************************************* */
+/* ********  PRIVATE FUNCTIONS  ******** */
+/* ************************************* */
+
+
+
+/* ************************************* */
+/* ********   PUBLIC FUNCTIONS  ******** */
+/* ************************************* */
+
+/**
+ * API errors
+ * @param app
+ */
 function errorUrls(app){
 
     /* 404 not found if we don't find a route */

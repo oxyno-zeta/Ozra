@@ -3,12 +3,38 @@
  * Date: 04/12/2015
  * Licence: See Readme
  */
-//Require
+
+/* ************************************* */
+/* ********       REQUIRE       ******** */
+/* ************************************* */
 var bcrypt = require('bcrypt');
 var promise = require('promise');
 //Constants
 var tokenLength = 10;
 
+/* ************************************* */
+/* ********       EXPORTS       ******** */
+/* ************************************* */
+module.exports = {
+    genSalt: genSalt,
+    genSaltSync: genSaltSync,
+    genToken: genToken,
+    genTokenSync: genTokenSync,
+    genHash: genHash,
+    genHashSync: genHashSync,
+    compare: compare,
+    compareSync: compareSync
+};
+
+/* ************************************* */
+/* ********  PRIVATE FUNCTIONS  ******** */
+/* ************************************* */
+
+
+
+/* ************************************* */
+/* ********   PUBLIC FUNCTIONS  ******** */
+/* ************************************* */
 
 /**
  * Generate Salt
@@ -40,7 +66,7 @@ function genSaltSync(){
  * Generate hash
  * @param data {string} entry data
  * @param salt {string} salt
- * @returns {promise}
+ * @returns {Promise}
  */
 function genHash(data, salt){
     return new promise(function(resolve, reject){
@@ -68,7 +94,7 @@ function genHashSync(data, salt){
 
 /**
  * Generate token
- * @returns {promise}
+ * @returns {Promise}
  */
 function genToken(){
     return genSalt();
@@ -86,7 +112,7 @@ function genTokenSync(){
  * Compare data and hash
  * @param data {string} data entry
  * @param hash {string} hash
- * @returns {promise}
+ * @returns {Promise}
  */
 function compare(data, hash){
     return new promise(function(resolve, reject){
@@ -111,17 +137,5 @@ function compare(data, hash){
 function compareSync(data, hash){
     return bcrypt.compareSync(data, hash);
 }
-
-// Exports
-module.exports = {
-    genSalt: genSalt,
-    genSaltSync: genSaltSync,
-    genToken: genToken,
-    genTokenSync: genTokenSync,
-    genHash: genHash,
-    genHashSync: genHashSync,
-    compare: compare,
-    compareSync: compareSync
-};
 
 

@@ -3,7 +3,9 @@
  * Licence: See Readme
  */
 
-// Require
+/* ************************************* */
+/* ********       REQUIRE       ******** */
+/* ************************************* */
 var logger = require('./shared/logger.js');
 var server = require('./server.js');
 
