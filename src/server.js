@@ -12,6 +12,7 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var serveStatic = require('serve-static');
 var cors = require('cors');
+var helmet = require('helmet');
 var initService = require('./services/initService.js');
 var logger = require('./shared/logger.js');
 var ConfigService = require('./shared/configuration.js');
@@ -90,6 +91,8 @@ function initServer(){
     app.use(bodyParser.json()); // for parsing application/json
     app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
     app.use(cookieParser()); // For cookie parsing
+    // Put security in place
+    app.use(helmet());
 
     app.use(function (req, res, next) {
         // Log every clients
