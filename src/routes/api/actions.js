@@ -8,9 +8,9 @@
 /* ********       REQUIRE       ******** */
 /* ************************************* */
 var APIResponses = require('./core/APIResponses.js');
-var base = require('./base.js');
 var logger = require('../../shared/logger.js');
 var actionService = require('../../services/actionService');
+var securityService = require('../../services/securityService');
 
 /* ************************************* */
 /* ********       EXPORTS       ******** */
@@ -30,22 +30,17 @@ module.exports = {
  * @param res
  */
 function getAllActions(req, res){
-    base.apiTokenSecurity(req, res).then(function(user){
-        // Success
-        var token = user.getToken();
-        // Get default response body
-        var responseBody = APIResponses.getDefaultResponseBody(token);
-        // Log
-        logger.info('User "' + user.getName() + '" authenticated');
+    var user = req.user;
+    // Get default response body
+    var responseBody = APIResponses.getDefaultResponseBody(user.getToken());
 
-        actionService.api.getAll(user).then(function(response){
-            // Add data
-            responseBody.actions = response.data;
-            // Send
-            APIResponses.sendResponse(res, responseBody, response.status, true);
-        }, function(errorResponse){
-            APIResponses.sendResponse(res, responseBody, errorResponse.status, false);
-        });
+    actionService.api.getAll(user).then(function(response){
+        // Add data
+        responseBody.actions = response.data;
+        // Send
+        APIResponses.sendResponse(res, responseBody, response.status, true);
+    }, function(errorResponse){
+        APIResponses.sendResponse(res, responseBody, errorResponse.status, false);
     });
 }
 
@@ -55,24 +50,19 @@ function getAllActions(req, res){
  * @param res
  */
 function getAction(req, res){
-    base.apiTokenSecurity(req, res).then(function(user){
-        // Success
-        var token = user.getToken();
-        // Get default response body
-        var responseBody = APIResponses.getDefaultResponseBody(token);
-        // Action id
-        var actionId = req.params.id;
-        // Log
-        logger.info('User "' + user.getName() + '" authenticated');
+    var user = req.user;
+    // Get default response body
+    var responseBody = APIResponses.getDefaultResponseBody(user.getToken());
+    // Action id
+    var actionId = req.params.id;
 
-        actionService.api.getFromId(user, actionId).then(function(response){
-            // Add data
-            responseBody.action = response.data;
-            // Send
-            APIResponses.sendResponse(res, responseBody, response.status, true);
-        }, function(errorResponse){
-            APIResponses.sendResponse(res, responseBody, errorResponse.status, false);
-        });
+    actionService.api.getFromId(user, actionId).then(function(response){
+        // Add data
+        responseBody.action = response.data;
+        // Send
+        APIResponses.sendResponse(res, responseBody, response.status, true);
+    }, function(errorResponse){
+        APIResponses.sendResponse(res, responseBody, errorResponse.status, false);
     });
 }
 
@@ -82,24 +72,19 @@ function getAction(req, res){
  * @param res
  */
 function runAction(req, res){
-    base.apiTokenSecurity(req, res).then(function(user){
-        // Success
-        var token = user.getToken();
-        // Get default response body
-        var responseBody = APIResponses.getDefaultResponseBody(token);
-        // Action id
-        var actionId = req.params.id;
-        // Log
-        logger.info('User "' + user.getName() + '" authenticated');
+    var user = req.user;
+    // Get default response body
+    var responseBody = APIResponses.getDefaultResponseBody(user.getToken());
+    // Action id
+    var actionId = req.params.id;
 
-        actionService.api.run(user, actionId).then(function(response){
-            // Add data
-            responseBody.result = response.data;
-            // Send
-            APIResponses.sendResponse(res, responseBody, response.status, true);
-        }, function(errorResponse){
-            APIResponses.sendResponse(res, responseBody, errorResponse.status, false);
-        });
+    actionService.api.run(user, actionId).then(function(response){
+        // Add data
+        responseBody.result = response.data;
+        // Send
+        APIResponses.sendResponse(res, responseBody, response.status, true);
+    }, function(errorResponse){
+        APIResponses.sendResponse(res, responseBody, errorResponse.status, false);
     });
 }
 
@@ -109,24 +94,19 @@ function runAction(req, res){
  * @param res
  */
 function addAction(req, res){
-    base.apiTokenSecurity(req, res).then(function(user){
-        // Success
-        var token = user.getToken();
-        // Get default response body
-        var responseBody = APIResponses.getDefaultResponseBody(token);
-        // Get body
-        var body = req.body;
-        // Log
-        logger.info('User "' + user.getName() + '" authenticated');
+    var user = req.user;
+    // Get default response body
+    var responseBody = APIResponses.getDefaultResponseBody(user.getToken());
+    // Get body
+    var body = req.body;
 
-        actionService.api.add(user, body).then(function(response){
-            // Add data
-            responseBody.action = response.data;
-            // Send
-            APIResponses.sendResponse(res, responseBody, response.status, true);
-        }, function(errorResponse){
-            APIResponses.sendResponse(res, responseBody, errorResponse.status, false);
-        });
+    actionService.api.add(user, body).then(function(response){
+        // Add data
+        responseBody.action = response.data;
+        // Send
+        APIResponses.sendResponse(res, responseBody, response.status, true);
+    }, function(errorResponse){
+        APIResponses.sendResponse(res, responseBody, errorResponse.status, false);
     });
 }
 
@@ -136,22 +116,17 @@ function addAction(req, res){
  * @param res
  */
 function deleteAction(req, res){
-    base.apiTokenSecurity(req, res).then(function(user){
-        // Success
-        var token = user.getToken();
-        // Get default response body
-        var responseBody = APIResponses.getDefaultResponseBody(token);
-        // Action id
-        var actionId = req.params.id;
-        // Log
-        logger.info('User "' + user.getName() + '" authenticated');
+    var user = req.user;
+    // Get default response body
+    var responseBody = APIResponses.getDefaultResponseBody(user.getToken());
+    // Action id
+    var actionId = req.params.id;
 
-        actionService.api.remove(user, actionId).then(function(response){
-            // Send
-            APIResponses.sendResponse(res, responseBody, response.status, true);
-        }, function(errorResponse){
-            APIResponses.sendResponse(res, responseBody, errorResponse.status, false);
-        });
+    actionService.api.remove(user, actionId).then(function(response){
+        // Send
+        APIResponses.sendResponse(res, responseBody, response.status, true);
+    }, function(errorResponse){
+        APIResponses.sendResponse(res, responseBody, errorResponse.status, false);
     });
 }
 
@@ -161,24 +136,19 @@ function deleteAction(req, res){
  * @param res
  */
 function modifyAction(req,res){
-    base.apiTokenSecurity(req, res).then(function(user){
-        // Success
-        var token = user.getToken();
-        // Get default response body
-        var responseBody = APIResponses.getDefaultResponseBody(token);
-        // Get body
-        var body = req.body;
-        // Log
-        logger.info('User "' + user.getName() + '" authenticated');
+    var user = req.user;
+    // Get default response body
+    var responseBody = APIResponses.getDefaultResponseBody(user.getToken());
+    // Get body
+    var body = req.body;
 
-        actionService.api.modify(user, body, req.params.id).then(function(response){
-            // Add data
-            responseBody.action = response.data;
-            // Send
-            APIResponses.sendResponse(res, responseBody, response.status, true);
-        }, function(errorResponse){
-            APIResponses.sendResponse(res, responseBody, errorResponse.status, false);
-        });
+    actionService.api.modify(user, body, req.params.id).then(function(response){
+        // Add data
+        responseBody.action = response.data;
+        // Send
+        APIResponses.sendResponse(res, responseBody, response.status, true);
+    }, function(errorResponse){
+        APIResponses.sendResponse(res, responseBody, errorResponse.status, false);
     });
 }
 
@@ -191,6 +161,11 @@ function modifyAction(req,res){
  * @param mainApp {object} Main Express application
  */
 function actionsUrls(mainApp){
+    // Api token middleware
+    mainApp.use('/actions/', securityService.middleware.ozraTokenMiddleware());
+
+    /////////////////////////////
+
     // Get all actions
     mainApp.get('/actions/', getAllActions);
     // Get specific action

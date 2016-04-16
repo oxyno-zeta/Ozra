@@ -15,6 +15,7 @@ var configurationService = require('../shared/configuration.js');
 var logger = require('../shared/logger.js');
 var userDaoService = require('../dao/userDaoService');
 var groupDaoService = require('../dao/groupDaoService');
+var securityService = require('./securityService');
 var userModel = require('../models/user');
 var securityWrapperService = require('../wrappers/securityWrapperService');
 
@@ -44,49 +45,28 @@ module.exports = {
 
 /**
  * Get all users
- * @param user
  * @returns {Promise}
  */
-function getAll(user){
+function getAll(){
     return new Promise(function(resolve, reject){
-        // Check if user is administrator
-        base.isUserAdministrator(user).then(function(isAdmin){
-            if (!isAdmin){
-                logger.error('Get all users failed => Not an administrator => Stop');
-                reject({
-                    status: APICodes.clientErrors.FORBIDDEN
-                });
-                return;
+        userDaoService.getAllUsers().then(function(users){
+            var usersList = [];
+            _.forEach(users, function(user){
+                usersList.push(user.toAPIJson());
+            });
+
+            // Log
+            logger.info('Get all users => ok');
+
+            // Log users if verbose activated
+            if (configurationService.isVerbose()){
+                logger.debug(usersList);
             }
 
-            userDaoService.getAllUsers().then(function(users){
-                var usersList = [];
-                _.forEach(users, function(user){
-                    usersList.push(user.toAPIJson());
-                });
-
-                // Log
-                logger.info('Get all users => ok');
-
-                // Log users if verbose activated
-                if (configurationService.isVerbose()){
-                    logger.debug(usersList);
-                }
-
-                // Response
-                resolve({
-                    status: APICodes.normal.OK,
-                    data: usersList
-                });
-            }, function(err){
-                logger.error('Get all users failed => Something failed... => Stop');
-                if (configurationService.isVerbose()){
-                    // Debug
-                    logger.debug(err);
-                }
-                reject({
-                    status: APICodes.serverErrors.INTERNAL_ERROR
-                });
+            // Response
+            resolve({
+                status: APICodes.normal.OK,
+                data: usersList
             });
         }, function(err){
             logger.error('Get all users failed => Something failed... => Stop');
@@ -109,7 +89,7 @@ function getAll(user){
  */
 function getFromId(user, id){
     return new Promise(function(resolve, reject){
-        base.isUserAdministrator(user).then(function(isAdmin){
+        securityService.isUserAdministrator(user).then(function(isAdmin){
             // Check if data are correct
             if (!_.isEqual(user.getId(), id) && !isAdmin){
                 // Not good user
@@ -207,74 +187,55 @@ function add(user, userData){
         groupDaoService.getGroupsFromIds(newUser.getGroups()).then(function(){
             // Groups found => ok
 
-            // Check if user if admin
-            base.isUserAdministrator(user).then(function(isAdmin){
-                if (!isAdmin){
-                    logger.error('Add user failed => Not an administrator => Stop');
+            // Check if user already exist
+            userDaoService.getUserFromName(newUser.getName()).then(function(){
+                // User found => fail
+                logger.error('Add user failed => user "' + newUser.getName() + '" already exist => Stop');
+                if (configurationService.isVerbose()){
+                    logger.debug(newUser.toAPIJson());
+                }
+                reject({
+                    status: APICodes.clientErrors.CONFLICT
+                });
+            }, function(err){
+                // Check if something wrong
+                if (err){
+                    logger.error('Add user failed => Something failed... => Stop');
+                    if (configurationService.isVerbose()){
+                        // Debug
+                        logger.debug(err);
+                    }
                     reject({
-                        status: APICodes.clientErrors.FORBIDDEN
+                        status: APICodes.serverErrors.INTERNAL_ERROR
                     });
                     return;
                 }
-                // Check if user already exist
-                userDaoService.getUserFromName(newUser.getName()).then(function(){
-                    // User found => fail
-                    logger.error('Add user failed => user "' + newUser.getName() + '" already exist => Stop');
+
+                // Nothing found => ok
+
+
+                // Add user in database
+                userDaoService.putUser(newUser.toJson()).then(function(){
+                    logger.info('Add user "' + newUser.getName() + '" success');
+
+                    // Debug
                     if (configurationService.isVerbose()){
                         logger.debug(newUser.toAPIJson());
                     }
-                    reject({
-                        status: APICodes.clientErrors.CONFLICT
+
+                    resolve({
+                        status: APICodes.normal.CREATED,
+                        data: newUser.toAPIJson()
                     });
                 }, function(err){
-                    // Check if something wrong
-                    if (err){
-                        logger.error('Add user failed => Something failed... => Stop');
-                        if (configurationService.isVerbose()){
-                            // Debug
-                            logger.debug(err);
-                        }
-                        reject({
-                            status: APICodes.serverErrors.INTERNAL_ERROR
-                        });
-                        return;
-                    }
-
-                    // Nothing found => ok
-
-
-                    // Add user in database
-                    userDaoService.putUser(newUser.toJson()).then(function(){
-                        logger.info('Add user "' + newUser.getName() + '" success');
-
+                    logger.error('Add user failed => Something failed... => Stop');
+                    if (configurationService.isVerbose()){
                         // Debug
-                        if (configurationService.isVerbose()){
-                            logger.debug(newUser.toAPIJson());
-                        }
-
-                        resolve({
-                            status: APICodes.normal.CREATED,
-                            data: newUser.toAPIJson()
-                        });
-                    }, function(err){
-                        logger.error('Add user failed => Something failed... => Stop');
-                        if (configurationService.isVerbose()){
-                            // Debug
-                            logger.debug(err);
-                        }
-                        reject({
-                            status: APICodes.serverErrors.INTERNAL_ERROR
-                        });
+                        logger.debug(err);
+                    }
+                    reject({
+                        status: APICodes.serverErrors.INTERNAL_ERROR
                     });
-                });
-            }, function(err){
-                logger.error('Add user failed => Something failed... => Stop');
-                if (configurationService.isVerbose()){
-                    // Debug
-                    logger.debug(err);
-                }
-                reject({
-                    status: APICodes.serverErrors.INTERNAL_ERROR
                 });
             });
         }, function(err){
@@ -325,43 +286,22 @@ function remove(user, id){
             return;
         }
 
-        base.isUserAdministrator(user).then(function(isAdmin){
-            if (!isAdmin){
-                // Not admin
-                logger.error('Delete user failed => User "' + user.getName() + '" not administrator => Stop');
-                reject({
-                    status: APICodes.clientErrors.FORBIDDEN
-                });
-                return;
-            }
-
-            // Administrator user detected
-            // Get user to remove
-            userDaoService.getUserFromId(id).then(function(userFromId){
-                // Got it => delete it
-                userDaoService.deleteUser(userFromId.toJson()).then(function(){
-                    // Done
-                    logger.info('Delete user : "' + userFromId.getName() + '" done');
-                    // Log user if verbose activated
-                    if (configurationService.isVerbose()){
-                        logger.debug(userFromId.toAPIJson());
-                    }
-                    resolve({
-                        status: APICodes.normal.OK
-                    });
-                }, function(err){
-                    // Fail
-                    logger.error('Delete user failed => Something failed... => Stop');
-                    if (configurationService.isVerbose()){
-                        // Debug
-                        logger.debug(err);
-                    }
-                    reject({
-                        status: APICodes.serverErrors.INTERNAL_ERROR
-                    });
+        // Get user to remove
+        userDaoService.getUserFromId(id).then(function(userFromId){
+            // Got it => delete it
+            userDaoService.deleteUser(userFromId.toJson()).then(function(){
+                // Done
+                logger.info('Delete user : "' + userFromId.getName() + '" done');
+                // Log user if verbose activated
+                if (configurationService.isVerbose()){
+                    logger.debug(userFromId.toAPIJson());
+                }
+                resolve({
+                    status: APICodes.normal.OK
                 });
             }, function(err){
-                logger.error('Get all users failed => Something failed... => Stop');
+                // Fail
+                logger.error('Delete user failed => Something failed... => Stop');
                 if (configurationService.isVerbose()){
                     // Debug
                     logger.debug(err);
@@ -384,7 +324,7 @@ function remove(user, id){
 }
 
 /**
- * Modify user informations
+ * Modify user data
  * @param user
  * @param userData
  * @param id
@@ -398,69 +338,49 @@ function modifyUser(user, userData, id){
             .setName(userData.name)
             .setGroups(userData.groups);
 
-        base.isUserAdministrator(user).then(function(isAdmin){
-            if (!isAdmin){
-                // Not admin
-                logger.error('Modification user failed => User "' + user.getName() + '" not administrator => Stop');
-                reject({
-                    status: APICodes.clientErrors.FORBIDDEN
-                });
-                return;
+        // Check if data are valid
+        if (!_.isEqual(id, userData.id) || !userModified.isMinimumValid()){
+            // Error
+            logger.error('Modification user failed => data not valid => Stop');
+            if (configurationService.isVerbose()){
+                // Debug
+                logger.debug(userModified.toAPIJson());
             }
+            reject({
+                status: APICodes.clientErrors.FORBIDDEN
+            });
+            return; // Stop here
+        }
 
-            // Check if data are valid
-            if (!_.isEqual(id, userData.id) || !userModified.isMinimumValid()){
-                // Error
-                logger.error('Modification user failed => data not valid => Stop');
-                if (configurationService.isVerbose()){
-                    // Debug
-                    logger.debug(userModified.toAPIJson());
-                }
-                reject({
-                    status: APICodes.clientErrors.FORBIDDEN
-                });
-                return; // Stop here
-            }
+        // Check if groups are ok
+        groupDaoService.getGroupsFromIds(userModified.getGroups()).then(function(){
+            // Groups exists => ok
 
-            // Check if groups are ok
-            groupDaoService.getGroupsFromIds(userModified.getGroups()).then(function(){
-                // Groups exists => ok
-
-                // Function to follow
-                function go(){
-                    // Get modified user in db
-                    userDaoService.getUserFromId(userModified.getId()).then(function(userModifiedInDB){
-                        // Set new information on user in db to put only new data in
-                        userModifiedInDB
-                            .setName(userModified.getName())
-                            .setGroups(userModified.getGroups());
-                        // Check if userData contains password to crypt it
-                        if (!(
-                                _.isUndefined(userData.password) ||
-                                _.isNull(userData.password) ||
-                                !_.isString(userData.password)
-                            )){
-                            // Password exist => need to hash it
-                            var salt = userModifiedInDB.getSalt();
-                            userModifiedInDB.setPassword(securityWrapperService.genHashSync(userData.password, salt));
-                        }
-                        // Put user modified in database
-                        userDaoService.putUser(userModifiedInDB.toJson()).then(function(){
-                            // Ok
-                            logger.info('Modification user "' + userModified.getName() + '" success !');
-                            resolve({
-                                status: APICodes.normal.OK,
-                                data: userModified.toAPIJson()
-                            });
-                        }, function(err){
-                            logger.error('Modification user failed => Something failed... => Stop');
-                            if (configurationService.isVerbose()){
-                                // Debug
-                                logger.debug(err);
-                            }
-                            reject({
-                                status: APICodes.serverErrors.INTERNAL_ERROR
-                            });
+            // Function to follow
+            function go(){
+                // Get modified user in db
+                userDaoService.getUserFromId(userModified.getId()).then(function(userModifiedInDB){
+                    // Set new information on user in db to put only new data in
+                    userModifiedInDB
+                        .setName(userModified.getName())
+                        .setGroups(userModified.getGroups());
+                    // Check if userData contains password to crypt it
+                    if (!(
+                            _.isUndefined(userData.password) ||
+                            _.isNull(userData.password) ||
+                            !_.isString(userData.password)
+                        )){
+                        // Password exist => need to hash it
+                        var salt = userModifiedInDB.getSalt();
+                        userModifiedInDB.setPassword(securityWrapperService.genHashSync(userData.password, salt));
+                    }
+                    // Put user modified in database
+                    userDaoService.putUser(userModifiedInDB.toJson()).then(function(){
+                        // Ok
+                        logger.info('Modification user "' + userModified.getName() + '" success !');
+                        resolve({
+                            status: APICodes.normal.OK,
+                            data: userModified.toAPIJson()
                         });
                     }, function(err){
                         logger.error('Modification user failed => Something failed... => Stop');
@@ -472,51 +392,51 @@ function modifyUser(user, userData, id){
                             status: APICodes.serverErrors.INTERNAL_ERROR
                         });
                     });
-                }
-
-                // Check if new user name exist
-                userDaoService.getUserFromName(userModified.getName()).then(function(userInDB){
-                    // User exist
-                    // Check if it isn't the same user
-                    if (!_.isEqual(userInDB.getId(), userModified.getId())){
-                        // Not same user => fail
-                        logger.error('Modification user failed => User "' + userModified.getName() +
-                            '" already exist => Stop');
-                        if (configurationService.isVerbose()){
-                            // Debug
-                            logger.debug(userModified.toAPIJson());
-                        }
-                        reject({
-                            status: APICodes.clientErrors.CONFLICT
-                        });
-                        return;
+                }, function(err){
+                    logger.error('Modification user failed => Something failed... => Stop');
+                    if (configurationService.isVerbose()){
+                        // Debug
+                        logger.debug(err);
                     }
+                    reject({
+                        status: APICodes.serverErrors.INTERNAL_ERROR
+                    });
+                });
+            }
 
-                    // Same user => ok
-                    go();
-                }, function(){
-                    // User doesn't exist => ok
-                    go();
-                });
-            }, function(err){
-                // Fail
-                logger.error('Modification user failed => User groups doesn\'t exist => Stop');
-                if (configurationService.isVerbose()){
-                    // Debug
-                    logger.debug(err);
+            // Check if new user name exist
+            userDaoService.getUserFromName(userModified.getName()).then(function(userInDB){
+                // User exist
+                // Check if it isn't the same user
+                if (!_.isEqual(userInDB.getId(), userModified.getId())){
+                    // Not same user => fail
+                    logger.error('Modification user failed => User "' + userModified.getName() +
+                        '" already exist => Stop');
+                    if (configurationService.isVerbose()){
+                        // Debug
+                        logger.debug(userModified.toAPIJson());
+                    }
+                    reject({
+                        status: APICodes.clientErrors.CONFLICT
+                    });
+                    return;
                 }
-                reject({
-                    status: APICodes.clientErrors.NOT_FOUND
-                });
+
+                // Same user => ok
+                go();
+            }, function(){
+                // User doesn't exist => ok
+                go();
             });
         }, function(err){
-            logger.error('Modification user failed => Something failed... => Stop');
+            // Fail
+            logger.error('Modification user failed => User groups doesn\'t exist => Stop');
             if (configurationService.isVerbose()){
                 // Debug
                 logger.debug(err);
             }
             reject({
-                status: APICodes.serverErrors.INTERNAL_ERROR
+                status: APICodes.clientErrors.NOT_FOUND
             });
         });
     });
@@ -530,7 +450,7 @@ function modifyUser(user, userData, id){
  */
 function modifyUserPassword(user, userData, id){
     return new Promise(function(resolve, reject){
-        base.isUserAdministrator(user).then(function(isAdmin){
+        securityService.isUserAdministrator(user).then(function(isAdmin){
             if (!isAdmin && !_.isEqual(userData.id, user.getId()) ){
                 // Not admin or not same user
                 logger.error('Modification user password failed => User "' + user.getName() +

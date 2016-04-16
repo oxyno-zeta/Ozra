@@ -9,7 +9,7 @@
 /* ************************************* */
 var APIResponses = require('./core/APIResponses.js');
 var APICodes = require('./core/APICodes.js');
-var base = require('./base.js');
+var securityService = require('../../services/securityService');
 var userService = require('../../services/userService');
 var logger = require('../../shared/logger.js');
 
@@ -30,23 +30,19 @@ module.exports = {
  * @param res
  */
 function getAllUsers(req, res){
-    base.apiTokenSecurity(req, res).then(function(user){
-        // Success
-        var token = user.getToken();
-        // Get default response body
-        var responseBody = APIResponses.getDefaultResponseBody(token);
-        // Log
-        logger.info('User "' + user.getName() + '" authenticated');
+    // Get user
+    var user = req.user;
+    // Get default response body
+    var responseBody = APIResponses.getDefaultResponseBody(user.getToken());
 
-        userService.api.getAll(user).then(function(response){
-            // Add data
-            responseBody.users = response.data;
-            // Send response
-            APIResponses.sendResponse(res, responseBody, response.status, true);
-        }, function(response){
-            // Send response
-            APIResponses.sendResponse(res, responseBody, response.status, false);
-        });
+    userService.api.getAll().then(function(response){
+        // Add data
+        responseBody.users = response.data;
+        // Send response
+        APIResponses.sendResponse(res, responseBody, response.status, true);
+    }, function(response){
+        // Send response
+        APIResponses.sendResponse(res, responseBody, response.status, false);
     });
 }
 
@@ -56,25 +52,21 @@ function getAllUsers(req, res){
  * @param res
  */
 function getUser(req, res){
-    base.apiTokenSecurity(req, res).then(function(user){
-        // Success
-        var token = user.getToken();
-        // Get default response body
-        var responseBody = APIResponses.getDefaultResponseBody(token);
-        // User id
-        var userId = req.params.id;
-        // Log
-        logger.info('User "' + user.getName() + '" authenticated');
+    // Get user
+    var user = req.user;
+    // Get default response body
+    var responseBody = APIResponses.getDefaultResponseBody(user.getToken());
+    // User id
+    var userId = req.params.id;
 
-        userService.api.getFromId(user, userId).then(function(response){
-            // Add data
-            responseBody.user = response.data;
-            // Send response
-            APIResponses.sendResponse(res, responseBody, response.status, true);
-        }, function(response){
-            // Send response
-            APIResponses.sendResponse(res, responseBody, response.status, false);
-        });
+    userService.api.getFromId(user, userId).then(function(response){
+        // Add data
+        responseBody.user = response.data;
+        // Send response
+        APIResponses.sendResponse(res, responseBody, response.status, true);
+    }, function(response){
+        // Send response
+        APIResponses.sendResponse(res, responseBody, response.status, false);
     });
 }
 
@@ -84,25 +76,20 @@ function getUser(req, res){
  * @param res
  */
 function addUser(req, res){
-    base.apiTokenSecurity(req, res).then(function(user){
-        // Success
-        var token = user.getToken();
-        // Get default response body
-        var responseBody = APIResponses.getDefaultResponseBody(token);
-        // Body
-        var body = req.body;
-        // Log
-        logger.info('User "' + user.getName() + '" authenticated');
+    var user = req.user;
+    // Get default response body
+    var responseBody = APIResponses.getDefaultResponseBody(user.getToken());
+    // Body
+    var body = req.body;
 
-        userService.api.add(user, body).then(function(response){
-            // Add data
-            responseBody.user = response.data;
-            // Send response
-            APIResponses.sendResponse(res, responseBody, response.status, true);
-        }, function(response){
-            // Send response
-            APIResponses.sendResponse(res, responseBody, response.status, false);
-        });
+    userService.api.add(user, body).then(function(response){
+        // Add data
+        responseBody.user = response.data;
+        // Send response
+        APIResponses.sendResponse(res, responseBody, response.status, true);
+    }, function(response){
+        // Send response
+        APIResponses.sendResponse(res, responseBody, response.status, false);
     });
 }
 
@@ -112,23 +99,18 @@ function addUser(req, res){
  * @param res
  */
 function deleteUser(req, res){
-    base.apiTokenSecurity(req, res).then(function(user){
-        // Success
-        var token = user.getToken();
-        // User id
-        var userId = req.params.id;
-        // Get default response body
-        var responseBody = APIResponses.getDefaultResponseBody(token);
-        // Log
-        logger.info('User "' + user.getName() + '" authenticated');
+    var user = req.user;
+    // User id
+    var userId = req.params.id;
+    // Get default response body
+    var responseBody = APIResponses.getDefaultResponseBody(user.getToken());
 
-        userService.api.remove(user, userId).then(function(response){
-            // Send response
-            APIResponses.sendResponse(res, responseBody, response.status, true);
-        }, function(response){
-            // Send response
-            APIResponses.sendResponse(res, responseBody, response.status, false);
-        });
+    userService.api.remove(user, userId).then(function(response){
+        // Send response
+        APIResponses.sendResponse(res, responseBody, response.status, true);
+    }, function(response){
+        // Send response
+        APIResponses.sendResponse(res, responseBody, response.status, false);
     });
 }
 
@@ -139,27 +121,22 @@ function deleteUser(req, res){
  * @param res
  */
 function modifyUser(req, res){
-    base.apiTokenSecurity(req, res).then(function(user){
-        // Success
-        var token = user.getToken();
-        // Get body
-        var body = req.body;
-        // User id
-        var userId = req.params.id;
-        // Get default response body
-        var responseBody = APIResponses.getDefaultResponseBody(token);
-        // Log
-        logger.info('User "' + user.getName() + '" authenticated');
+    var user = req.user;
+    // Get body
+    var body = req.body;
+    // User id
+    var userId = req.params.id;
+    // Get default response body
+    var responseBody = APIResponses.getDefaultResponseBody(user.getToken());
 
-        userService.api.modifyUser(user, body, userId).then(function(response){
-            // Add data
-            responseBody.user = response.data;
-            // Send response
-            APIResponses.sendResponse(res, responseBody, response.status, true);
-        }, function(response){
-            // Send response
-            APIResponses.sendResponse(res, responseBody, response.status, false);
-        });
+    userService.api.modifyUser(user, body, userId).then(function(response){
+        // Add data
+        responseBody.user = response.data;
+        // Send response
+        APIResponses.sendResponse(res, responseBody, response.status, true);
+    }, function(response){
+        // Send response
+        APIResponses.sendResponse(res, responseBody, response.status, false);
     });
 }
 
@@ -169,27 +146,22 @@ function modifyUser(req, res){
  * @param res
  */
 function modifyUserPassword(req, res){
-    base.apiTokenSecurity(req, res).then(function(user){
-        // Success
-        var token = user.getToken();
-        // Get body
-        var body = req.body;
-        // User id
-        var userId = req.params.id;
-        // Get default response body
-        var responseBody = APIResponses.getDefaultResponseBody(token);
-        // Log
-        logger.info('User "' + user.getName() + '" authenticated');
+    var user = req.user;
+    // Get body
+    var body = req.body;
+    // User id
+    var userId = req.params.id;
+    // Get default response body
+    var responseBody = APIResponses.getDefaultResponseBody(user.getToken());
 
-        userService.api.modifyUserPassword(user, body, userId).then(function(response){
-            // Add data
-            responseBody.user = response.data;
-            // Send response
-            APIResponses.sendResponse(res, responseBody, response.status, true);
-        }, function(response){
-            // Send response
-            APIResponses.sendResponse(res, responseBody, response.status, false);
-        });
+    userService.api.modifyUserPassword(user, body, userId).then(function(response){
+        // Add data
+        responseBody.user = response.data;
+        // Send response
+        APIResponses.sendResponse(res, responseBody, response.status, true);
+    }, function(response){
+        // Send response
+        APIResponses.sendResponse(res, responseBody, response.status, false);
     });
 }
 
@@ -203,16 +175,21 @@ function modifyUserPassword(req, res){
  * @param mainApp {object} Main Express application
  */
 function usersUrls(mainApp){
+    // Api token middleware
+    mainApp.use('/users/', securityService.middleware.ozraTokenMiddleware());
+
+    /////////////////////////////
+
     // Get all users
-    mainApp.get('/users/', getAllUsers);
+    mainApp.get('/users/', securityService.middleware.ozraRequireAdminMiddleware(), getAllUsers);
     // Get specific user
     mainApp.get('/users/:id', getUser);
     // Add user
-    mainApp.post('/users/', addUser);
+    mainApp.post('/users/', securityService.middleware.ozraRequireAdminMiddleware(), addUser);
     // Delete user
-    mainApp.delete('/users/:id', deleteUser);
+    mainApp.delete('/users/:id', securityService.middleware.ozraRequireAdminMiddleware(), deleteUser);
     // Modify a user
-    mainApp.put('/users/:id', modifyUser);
+    mainApp.put('/users/:id', securityService.middleware.ozraRequireAdminMiddleware(), modifyUser);
     // Modify user password
     mainApp.put('/users/:id/password', modifyUserPassword);
 }

@@ -10,7 +10,7 @@
 var _ = require('lodash');
 var APIResponses = require('../routes/api/core/APIResponses.js');
 var APICodes = require('../routes/api/core/APICodes.js');
-var base = require('../routes/api/base.js');
+var securityService = require('./securityService');
 var configurationService = require('../shared/configuration.js');
 var logger = require('../shared/logger.js');
 var executionWrapperService = require('../wrappers/executionWrapperService');
@@ -50,7 +50,7 @@ module.exports = {
 function getAll(user){
     return new Promise(function(resolve, reject){
         // Check if user is administrator
-        base.isUserAdministrator(user).then(function(isAdmin){
+        securityService.isUserAdministrator(user).then(function(isAdmin){
             function success(actions){
                 var actionsArray = [];
                 _.forEach(actions, function(action){
@@ -114,7 +114,7 @@ function getAll(user){
  */
 function getFromId(user, id){
     return new Promise(function(resolve, reject){
-        base.isUserAdministrator(user).then(function(isAdmin){
+        securityService.isUserAdministrator(user).then(function(isAdmin){
             actionDaoService.getActionFromId(id).then(function (action){
                 if (!isAdmin) { // Administrator can get every actions
                     // Not administrator user detected
@@ -179,7 +179,7 @@ function getFromId(user, id){
  */
 function run(user, id){
     return new Promise(function(resolve, reject){
-        base.isUserAdministrator(user).then(function(isAdmin){
+        securityService.isUserAdministrator(user).then(function(isAdmin){
             function go(){
                 actionDaoService.getActionFromId(id).then(function(action){
                     // Success
@@ -285,7 +285,7 @@ function add(user, actionData){
             return;
         }
 
-        base.isUserAdministrator(user).then(function(isAdmin){
+        securityService.isUserAdministrator(user).then(function(isAdmin){
             // Check if groups exist
             groupDaoService.getGroupsFromIds(newAction.getGroups()).then(function(groups){
                 if (!isAdmin) { // Administrator can add action without this verification
@@ -396,7 +396,7 @@ function add(user, actionData){
  */
 function remove(user, id){
     return new Promise(function(resolve, reject){
-        base.isUserAdministrator(user).then(function(isAdmin){
+        securityService.isUserAdministrator(user).then(function(isAdmin){
             function go(){
                 actionDaoService.getActionFromId(id).then(function(actionInDB){
                     // Remove
@@ -516,7 +516,7 @@ function modify(user, actionData, id){
             return;
         }
 
-        base.isUserAdministrator(user).then(function(isAdmin){
+        securityService.isUserAdministrator(user).then(function(isAdmin){
             // Check if data are correct (same id in actionData and params) and data
             if (!_.isEqual(id, actionData.id) || !newAction.isValid()){
                 // Error

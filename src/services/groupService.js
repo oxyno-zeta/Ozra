@@ -10,8 +10,8 @@
 var _ = require('lodash');
 var APIResponses = require('../routes/api/core/APIResponses.js');
 var APICodes = require('../routes/api/core/APICodes.js');
-var base = require('../routes/api/base.js');
 var configurationService = require('../shared/configuration.js');
+var securityService = require('./securityService');
 var logger = require('../shared/logger.js');
 var groupModel = require('../models/group.js');
 var groupDaoService = require('../dao/groupDaoService.js');
@@ -42,50 +42,28 @@ module.exports = {
 
 /**
  * Get all groups
- * @param user
  * @returns {Promise}
  */
-function getAll(user){
+function getAll(){
     return new Promise(function(resolve, reject){
-        base.isUserAdministrator(user).then(function(isAdmin){
-            if (!isAdmin){
-                logger.error('Get all groups failed => Not an administrator => Stop');
+        groupDaoService.getAllGroups().then(function(groups){
+            var groupsArray = [];
+            _.forEach(groups, function(group){
+                groupsArray.push(group.toAPIJson());
+            });
 
-                reject({
-                    status: APICodes.clientErrors.FORBIDDEN
-                });
-                return;
+            // Log
+            logger.info('Get all groups => ok');
+
+            // Log groups if verbose activated
+            if (configurationService.isVerbose()){
+                logger.debug(groupsArray);
             }
 
-            groupDaoService.getAllGroups().then(function(groups){
-                var groupsArray = [];
-                _.forEach(groups, function(group){
-                    groupsArray.push(group.toAPIJson());
-                });
-
-                // Log
-                logger.info('Get all groups => ok');
-
-                // Log groups if verbose activated
-                if (configurationService.isVerbose()){
-                    logger.debug(groupsArray);
-                }
-
-                // Response
-                resolve({
-                    status: APICodes.normal.OK,
-                    data: groupsArray
-                });
-            }, function(err){
-                logger.error('Get all groups failed => Something failed... => Stop');
-                if (configurationService.isVerbose()){
-                    // Debug
-                    logger.debug(err);
-                }
-
-                reject({
-                    status: APICodes.serverErrors.INTERNAL_ERROR
-                });
+            // Response
+            resolve({
+                status: APICodes.normal.OK,
+                data: groupsArray
             });
         }, function(err){
             logger.error('Get all groups failed => Something failed... => Stop');
@@ -165,51 +143,29 @@ function getFromId(user, id){
             return;
         }
 
-        base.isUserAdministrator(user).then(function(isAdmin) {
-            if (!isAdmin) {
-                // Not admin
-                logger.error('Get group failed => User "' + user.getName() + '" not administrator => Stop');
+        groupDaoService.getGroupFromId(id).then(function (group) {
+            // Ok
+            logger.info('Get group success');
 
-                reject({
-                    status: APICodes.clientErrors.FORBIDDEN
-                });
-                return;
+            if (configurationService.isVerbose()){
+                // Debug
+                logger.debug(group.toJson());
             }
 
-            // Get group
-            groupDaoService.getGroupFromId(id).then(function (group) {
-                // Ok
-                logger.info('Get group success');
-
-                if (configurationService.isVerbose()){
-                    // Debug
-                    logger.debug(group.toJson());
-                }
-
-                // Response
-                resolve({
-                    status: APICodes.normal.OK,
-                    data: group.toAPIJson()
-                });
-            }, function(err){
-                // Fail
-                logger.error('Get group failed => Group not found => Stop');
-                if (configurationService.isVerbose()){
-                    // Debug
-                    logger.debug(err);
-                }
-                reject({
-                    status: APICodes.clientErrors.NOT_FOUND
-                });
+            // Response
+            resolve({
+                status: APICodes.normal.OK,
+                data: group.toAPIJson()
             });
         }, function(err){
-            logger.error('Get group failed => Something failed... => Stop');
+            // Fail
+            logger.error('Get group failed => Group not found => Stop');
             if (configurationService.isVerbose()){
                 // Debug
                 logger.debug(err);
             }
             reject({
-                status: APICodes.clientErrors.INTERNAL_ERROR
+                status: APICodes.clientErrors.NOT_FOUND
             });
         });
     });
@@ -236,50 +192,29 @@ function remove(user, id){
             return;
         }
 
-        base.isUserAdministrator(user).then(function(isAdmin){
-            if (!isAdmin){
-                // Not admin
-                logger.error('Add group failed => User "' + user.getName() + '" not administrator => Stop');
-                reject({
-                    status: APICodes.clientErrors.FORBIDDEN
-                });
-                return;
-            }
+        // Get group
+        groupDaoService.getGroupFromId(id).then(function(group){
+            securityService.isGroupLastAdministrator(group).then(function(isLastAdminGroup){
+                // Check if last administrator group
+                if (isLastAdminGroup){
+                    logger.error('Delete group failed => Trying to remove last administrator group => Stop');
+                    reject({
+                        status: APICodes.clientErrors.FORBIDDEN
+                    });
+                    return;
+                }
 
-            // Get group
-            groupDaoService.getGroupFromId(id).then(function(group){
-                base.isGroupLastAdministrator(group).then(function(isLastAdminGroup){
-                    // Check if last administrator group
-                    if (isLastAdminGroup){
-                        logger.error('Delete group failed => Trying to remove last administrator group => Stop');
-                        reject({
-                            status: APICodes.clientErrors.FORBIDDEN
-                        });
-                        return;
+                // Got it => delete it
+                groupDaoService.deleteGroup(group.toJson()).then(function(){
+                    // Done
+                    logger.info('Delete group : "' + group.getName() + '" done');
+                    // Log group if verbose activated
+                    if (configurationService.isVerbose()){
+                        logger.debug(group.toJson());
                     }
-
-                    // Got it => delete it
-                    groupDaoService.deleteGroup(group.toJson()).then(function(){
-                        // Done
-                        logger.info('Delete group : "' + group.getName() + '" done');
-                        // Log group if verbose activated
-                        if (configurationService.isVerbose()){
-                            logger.debug(group.toJson());
-                        }
-                        resolve({
-                            status: APICodes.normal.OK,
-                            data: null
-                        });
-                    }, function(err){
-                        // Fail
-                        logger.error('Delete group failed => Something failed... => Stop');
-                        if (configurationService.isVerbose()){
-                            // Debug
-                            logger.debug(err);
-                        }
-                        reject({
-                            status: APICodes.serverErrors.INTERNAL_ERROR
-                        });
+                    resolve({
+                        status: APICodes.normal.OK,
+                        data: null
                     });
                 }, function(err){
                     // Fail
@@ -294,23 +229,24 @@ function remove(user, id){
                 });
             }, function(err){
                 // Fail
-                logger.error('Delete group failed => Group not found => Stop');
+                logger.error('Delete group failed => Something failed... => Stop');
                 if (configurationService.isVerbose()){
                     // Debug
                     logger.debug(err);
                 }
                 reject({
-                    status: APICodes.clientErrors.NOT_FOUND
+                    status: APICodes.serverErrors.INTERNAL_ERROR
                 });
             });
         }, function(err){
-            logger.error('Delete group failed => Something failed... => Stop');
+            // Fail
+            logger.error('Delete group failed => Group not found => Stop');
             if (configurationService.isVerbose()){
                 // Debug
                 logger.debug(err);
             }
             reject({
-                status: APICodes.serverErrors.INTERNAL_ERROR
+                status: APICodes.clientErrors.NOT_FOUND
             });
         });
     });
@@ -345,59 +281,38 @@ function add(user, groupData){
 
         // Data valid
 
-        // Check if user if administrator
-        base.isUserAdministrator(user).then(function(isAdmin){
-            if (!isAdmin){
-                // Not admin
-                logger.error('Add group failed => User "' + user.getName() + '" not administrator => Stop');
-                reject({
-                    status: APICodes.clientErrors.FORBIDDEN
-                });
-                return;
-            }
-
-            // Check if group name already exist
-            groupDaoService.getGroupFromName(newGroup.getName()).then(function(){
-                // Fail => exist...
-                logger.error('Add group failed => Name already exist => Stop');
-                reject({
-                    status: APICodes.clientErrors.CONFLICT
-                });
-            }, function(){
-                // Ok => not found
-                // Add group to database
-                groupDaoService.putGroup(newGroup.toJson()).then(function(){
-                    // Ok => added
-                    logger.info('Add group "' + newGroup.getName() + '" success');
-                    // Log new group if verbose activated
-                    if (configurationService.isVerbose()){
-                        logger.debug(newGroup.toJson());
-                    }
-                    // Response
-                    resolve({
-                        status: APICodes.normal.CREATED,
-                        data: newGroup.toAPIJson()
-                    });
-                }, function(err){
-                    // Fail
-                    logger.error('Add group failed => Something failed... => Stop');
-                    if (configurationService.isVerbose()){
-                        // Debug
-                        logger.debug(err);
-                    }
-                    reject({
-                        status: APICodes.serverErrors.INTERNAL_ERROR
-                    });
-                });
-            });
-        }, function(err){
-            logger.error('Add group failed => Something failed... => Stop');
-            if (configurationService.isVerbose()){
-                // Debug
-                logger.debug(err);
-            }
+        // Check if group name already exist
+        groupDaoService.getGroupFromName(newGroup.getName()).then(function(){
+            // Fail => exist...
+            logger.error('Add group failed => Name already exist => Stop');
             reject({
-                status: APICodes.serverErrors.INTERNAL_ERROR
+                status: APICodes.clientErrors.CONFLICT
+            });
+        }, function(){
+            // Ok => not found
+            // Add group to database
+            groupDaoService.putGroup(newGroup.toJson()).then(function(){
+                // Ok => added
+                logger.info('Add group "' + newGroup.getName() + '" success');
+                // Log new group if verbose activated
+                if (configurationService.isVerbose()){
+                    logger.debug(newGroup.toJson());
+                }
+                // Response
+                resolve({
+                    status: APICodes.normal.CREATED,
+                    data: newGroup.toAPIJson()
+                });
+            }, function(err){
+                // Fail
+                logger.error('Add group failed => Something failed... => Stop');
+                if (configurationService.isVerbose()){
+                    // Debug
+                    logger.debug(err);
+                }
+                reject({
+                    status: APICodes.serverErrors.INTERNAL_ERROR
+                });
             });
         });
     });
@@ -418,99 +333,78 @@ function modify(user, groupData, groupId){
             .setName(groupData.name)
             .setAdministrator(groupData.administrator);
 
-        // Check if user is administrator
-        base.isUserAdministrator(user).then(function(isAdmin){
-            if (!isAdmin){
-                // Not admin
-                logger.error('Modification group failed => User "' + user.getName() + '" not administrator => Stop');
-                reject({
-                    status: APICodes.clientErrors.FORBIDDEN
-                });
-                return;
+        // Check if data are correct (same id in body and params) and data
+        if (!_.isEqual(groupId, groupModification.getId()) || !groupModification.isMinimumValid()){
+            // Error
+            logger.error('Modification group failed => data not valid => Stop');
+            if (configurationService.isVerbose()){
+                // Debug
+                logger.debug(groupModification.toJson());
             }
+            reject({
+                status: APICodes.clientErrors.FORBIDDEN
+            });
+            return; // Stop here
+        }
 
-            // Check if data are correct (same id in body and params) and data
-            if (!_.isEqual(groupId, groupModification.getId()) || !groupModification.isMinimumValid()){
-                // Error
-                logger.error('Modification group failed => data not valid => Stop');
-                if (configurationService.isVerbose()){
-                    // Debug
-                    logger.debug(groupModification.toJson());
-                }
-                reject({
-                    status: APICodes.clientErrors.FORBIDDEN
-                });
-                return; // Stop here
-            }
-
-            // Check if group exist in database
-            groupDaoService.getGroupFromId(groupModification.getId()).then(function(oldGroup){
-                // Function to go after checking
-                function go(){
-                    groupModification.setRevision(oldGroup.getRevision());
-                    // Add group to database
-                    groupDaoService.putGroup(groupModification.toJson()).then(function(){
-                        // Ok => added
-                        logger.info('Modification group name : "' + groupModification.getName() + '" success');
-                        // Log new group if verbose activated
-                        if (configurationService.isVerbose()){
-                            logger.debug(groupModification.toJson());
-                        }
-                        // Response
-                        resolve({
-                            status: APICodes.normal.OK,
-                            data: groupModification.toAPIJson()
-                        });
-                    }, function(err){
-                        // Fail
-                        logger.error('Modification group failed => Something failed... => Stop');
-                        if (configurationService.isVerbose()){
-                            // Debug
-                            logger.debug(err);
-                        }
-                        reject({
-                            status: APICodes.serverErrors.INTERNAL_ERROR
-                        });
-                    });
-                }
-                // Check if group new name already exist
-                groupDaoService.getGroupFromName(groupModification.getName()).then(function(oldGroupFromName){
-                    // Check if group is the same
-                    if (!_.isEqual(oldGroupFromName.getId(), groupModification.getId())){
-                        // Fail => exist on another group...
-                        logger.error('Modification group failed => Name already exist => Stop');
-                        reject({
-                            status: APICodes.clientErrors.CONFLICT
-                        });
-                        return;
+        // Check if group exist in database
+        groupDaoService.getGroupFromId(groupModification.getId()).then(function(oldGroup){
+            // Function to go after checking
+            function go(){
+                groupModification.setRevision(oldGroup.getRevision());
+                // Add group to database
+                groupDaoService.putGroup(groupModification.toJson()).then(function(){
+                    // Ok => added
+                    logger.info('Modification group name : "' + groupModification.getName() + '" success');
+                    // Log new group if verbose activated
+                    if (configurationService.isVerbose()){
+                        logger.debug(groupModification.toJson());
                     }
-                    // Same group detected
-                    // Data ok
-                    go();
-                }, function(){
-                    // Ok => not found
-                    // Data ok
-                    go();
+                    // Response
+                    resolve({
+                        status: APICodes.normal.OK,
+                        data: groupModification.toAPIJson()
+                    });
+                }, function(err){
+                    // Fail
+                    logger.error('Modification group failed => Something failed... => Stop');
+                    if (configurationService.isVerbose()){
+                        // Debug
+                        logger.debug(err);
+                    }
+                    reject({
+                        status: APICodes.serverErrors.INTERNAL_ERROR
+                    });
                 });
-            }, function(err){
-                // Fail
-                logger.error('Modification group failed => Group not exist => Stop');
-                if (configurationService.isVerbose()){
-                    // Debug
-                    logger.debug(err);
+            }
+            // Check if group new name already exist
+            groupDaoService.getGroupFromName(groupModification.getName()).then(function(oldGroupFromName){
+                // Check if group is the same
+                if (!_.isEqual(oldGroupFromName.getId(), groupModification.getId())){
+                    // Fail => exist on another group...
+                    logger.error('Modification group failed => Name already exist => Stop');
+                    reject({
+                        status: APICodes.clientErrors.CONFLICT
+                    });
+                    return;
                 }
-                reject({
-                    status: APICodes.serverErrors.NOT_FOUND
-                });
+                // Same group detected
+                // Data ok
+                go();
+            }, function(){
+                // Ok => not found
+                // Data ok
+                go();
             });
         }, function(err){
-            logger.error('Modification group failed => Something failed... => Stop');
+            // Fail
+            logger.error('Modification group failed => Group not exist => Stop');
             if (configurationService.isVerbose()){
                 // Debug
                 logger.debug(err);
             }
             reject({
-                status: APICodes.serverErrors.INTERNAL_ERROR
+                status: APICodes.serverErrors.NOT_FOUND
             });
         });
     });
