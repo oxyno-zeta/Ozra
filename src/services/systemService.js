@@ -10,7 +10,6 @@
 var _ = require('lodash');
 var APIResponses = require('../routes/api/core/APIResponses.js');
 var APICodes = require('../routes/api/core/APICodes.js');
-var base = require('../routes/api/base.js');
 var configurationService = require('../shared/configuration.js');
 var logger = require('../shared/logger.js');
 var userDaoService = require('../dao/userDaoService');
