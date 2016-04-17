@@ -96,7 +96,7 @@ function getConfig(){
         // Check verbose value (boolean or not boolean to transform it)
         if (!_.isBoolean(config[VERBOSE])){
             // Transform value
-            config[VERBOSE] = _.isEqual(config[VERBOSE], true);
+            config[VERBOSE] = _.isEqual(config[VERBOSE], true) || _.isEqual(config[VERBOSE], 'true');
         }
     }
 
