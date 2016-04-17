@@ -171,6 +171,10 @@ function run(user, id){
                     // Success
                     function finish(result){
                         logger.debug(result);
+
+                        // Check if there is an error to put return code
+                        result.code = (_.isNull(result.error)) ? 0 : result.error.code;
+
                         resolve({
                             status: APICodes.normal.OK,
                             data: result
