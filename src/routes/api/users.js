@@ -165,6 +165,25 @@ function modifyUserPassword(req, res){
     });
 }
 
+/**
+ * Get Current user
+ * @param req
+ * @param res
+ */
+function getCurrentUser(req, res){
+    var user = req.user;
+    // Get default response body
+    var responseBody = APIResponses.getDefaultResponseBody(user.getToken());
+
+    // Log
+    logger.info('Get current user for "' + user.getName() + '" succeed');
+
+    // Add data
+    responseBody.user = user.toAPIJson();
+    // Send response
+    APIResponses.sendResponse(res, responseBody, APICodes.normal.OK, true);
+}
+
 
 /* ************************************* */
 /* ********   PUBLIC FUNCTIONS  ******** */
@@ -182,6 +201,8 @@ function usersUrls(mainApp){
 
     // Get all users
     mainApp.get('/users/', securityService.middleware.ozraRequireAdminMiddleware(), getAllUsers);
+    // Get current user
+    mainApp.get('/users/current', getCurrentUser);
     // Get specific user
     mainApp.get('/users/:id', getUser);
     // Add user
