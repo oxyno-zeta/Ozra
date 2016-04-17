@@ -10,10 +10,10 @@
 // Require
 var PouchDB = require('pouchdb');
 var _ = require('lodash');
-var config = require('../shared/configuration.js');
+var config = require('../services/configurationService');
 
 // Models
-var groupModel = require('../models/group.js');
+var groupModel = require('../models/group');
 
 // Database variable
 var db = new PouchDB(config.getDatabaseConfig());

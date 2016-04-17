@@ -8,11 +8,11 @@
 /* ********       REQUIRE       ******** */
 /* ************************************* */
 var _ = require('lodash');
-var APIResponses = require('../routes/api/core/APIResponses.js');
-var APICodes = require('../routes/api/core/APICodes.js');
+var APIResponses = require('../routes/api/core/APIResponses');
+var APICodes = require('../routes/api/core/APICodes');
 var securityService = require('./securityService');
-var configurationService = require('../shared/configuration.js');
-var logger = require('../shared/logger.js');
+var configurationService = require('../services/configurationService');
+var logger = require('../shared/logger');
 var executionWrapperService = require('../wrappers/executionWrapperService');
 var groupDaoService = require('../dao/groupDaoService');
 var actionDaoService = require('../dao/actionDaoService');

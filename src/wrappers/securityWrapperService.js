@@ -8,7 +8,6 @@
 /* ********       REQUIRE       ******** */
 /* ************************************* */
 var bcrypt = require('bcrypt');
-var promise = require('promise');
 //Constants
 var tokenLength = 10;
 
@@ -41,7 +40,7 @@ module.exports = {
  * @returns {promise}
  */
 function genSalt(){
-    return new promise(function(resolve, reject){
+    return new Promise(function(resolve, reject){
         bcrypt.genSalt(tokenLength, function(err, salt){
             if (err !== undefined){
                 // Error case
@@ -69,7 +68,7 @@ function genSaltSync(){
  * @returns {Promise}
  */
 function genHash(data, salt){
-    return new promise(function(resolve, reject){
+    return new Promise(function(resolve, reject){
         bcrypt.hash(data, salt, function(err, hash){
             if (err !== undefined){
                 // Error
@@ -115,7 +114,7 @@ function genTokenSync(){
  * @returns {Promise}
  */
 function compare(data, hash){
-    return new promise(function(resolve, reject){
+    return new Promise(function(resolve, reject){
         bcrypt.compare(data, hash, function(err, result){
             if (err !== undefined){
                 // Error

@@ -9,10 +9,10 @@
 /* ************************************* */
 var PouchDB = require('pouchdb');
 var _ = require('lodash');
-var config = require('../shared/configuration.js');
+var config = require('../services/configurationService');
 
 // Models
-var actionModel = require('../models/action.js');
+var actionModel = require('../models/action');
 
 // Database variable
 var db = new PouchDB(config.getDatabaseConfig());

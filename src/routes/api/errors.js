@@ -7,9 +7,9 @@
 /* ************************************* */
 /* ********       REQUIRE       ******** */
 /* ************************************* */
-var base = require('../routesBase.js');
-var APIResponses = require('../api/core/APIResponses.js');
-var APICodes = require('../api/core/APICodes.js');
+var base = require('../routesBase');
+var APIResponses = require('../api/core/APIResponses');
+var APICodes = require('../api/core/APICodes');
 
 /* ************************************* */
 /* ********       EXPORTS       ******** */
@@ -35,7 +35,7 @@ module.exports = {
 function errorUrls(app){
 
     /* 404 not found if we don't find a route */
-    app.use(function(req, res, next){
+    app.use(function(req, res){
 
         // Log Client
         base.logClientError(req);

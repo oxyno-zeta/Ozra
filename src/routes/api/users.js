@@ -7,11 +7,11 @@
 /* ************************************* */
 /* ********       REQUIRE       ******** */
 /* ************************************* */
-var APIResponses = require('./core/APIResponses.js');
-var APICodes = require('./core/APICodes.js');
+var APIResponses = require('./core/APIResponses');
+var APICodes = require('./core/APICodes');
 var securityService = require('../../services/securityService');
 var userService = require('../../services/userService');
-var logger = require('../../shared/logger.js');
+var logger = require('../../shared/logger');
 
 /* ************************************* */
 /* ********       EXPORTS       ******** */

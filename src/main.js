@@ -6,8 +6,8 @@
 /* ************************************* */
 /* ********       REQUIRE       ******** */
 /* ************************************* */
-var logger = require('./shared/logger.js');
-var server = require('./server.js');
+var logger = require('./shared/logger');
+var server = require('./server');
 
 // Catch unexpected error and log it
 process.on('uncaughtException', function (err) {

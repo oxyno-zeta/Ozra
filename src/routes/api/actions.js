@@ -7,8 +7,8 @@
 /* ************************************* */
 /* ********       REQUIRE       ******** */
 /* ************************************* */
-var APIResponses = require('./core/APIResponses.js');
-var logger = require('../../shared/logger.js');
+var APIResponses = require('./core/APIResponses');
+var logger = require('../../shared/logger');
 var actionService = require('../../services/actionService');
 var securityService = require('../../services/securityService');
 

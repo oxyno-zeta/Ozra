@@ -11,7 +11,7 @@ var _ = require('lodash');
 var APIResponses = require('../routes/api/core/APIResponses');
 var APICodes = require('../routes/api/core/APICodes');
 var logger = require('../shared/logger');
-var configurationService = require('../shared/configuration');
+var configurationService = require('../services/configurationService');
 var userDaoService = require('../dao/userDaoService');
 var groupDaoService = require('../dao/groupDaoService');
 

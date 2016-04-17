@@ -9,7 +9,7 @@
 /* ************************************* */
 var uuid = require('uuid');
 var _ = require('lodash');
-var design = require('./designs/group.js');
+var design = require('./designs/group');
 
 /* ************************************* */
 /* ********       EXPORTS       ******** */

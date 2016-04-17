@@ -7,8 +7,8 @@
 /* ************************************* */
 /* ********       REQUIRE       ******** */
 /* ************************************* */
-var logger = require('../../../shared/logger.js');
-var ConfigService = require('../../../shared/configuration.js');
+var logger = require('../../../shared/logger');
+var configurationService = require('../../../services/configurationService');
 
 /* ************************************* */
 /* ********       EXPORTS       ******** */
@@ -42,7 +42,7 @@ function sendResponse(response, body, status, success){
 	// Update response
 	response.status(status.code);
 	// Debug part
-	if (ConfigService.isVerbose()) {
+	if (configurationService.isVerbose()) {
 		logger.debug('Answer = ' + JSON.stringify(body));
 	}
 	// Send response

@@ -8,13 +8,13 @@
 /* ********       REQUIRE       ******** */
 /* ************************************* */
 var _ = require('lodash');
-var APIResponses = require('../routes/api/core/APIResponses.js');
-var APICodes = require('../routes/api/core/APICodes.js');
-var configurationService = require('../shared/configuration.js');
+var APIResponses = require('../routes/api/core/APIResponses');
+var APICodes = require('../routes/api/core/APICodes');
+var configurationService = require('../services/configurationService');
 var securityService = require('./securityService');
-var logger = require('../shared/logger.js');
-var groupModel = require('../models/group.js');
-var groupDaoService = require('../dao/groupDaoService.js');
+var logger = require('../shared/logger');
+var groupModel = require('../models/group');
+var groupDaoService = require('../dao/groupDaoService');
 
 /* ************************************* */
 /* ********       EXPORTS       ******** */

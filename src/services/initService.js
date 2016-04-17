@@ -9,15 +9,15 @@
 /* ************************************* */
 var PouchDB = require('pouchdb');
 var _ = require('lodash');
-var config = require('../shared/configuration.js');
+var config = require('../services/configurationService');
 
 // Dao
-var groupDaoService = require('../dao/groupDaoService.js');
-var userDaoService = require('../dao/userDaoService.js');
-var actionDaoService = require('../dao/actionDaoService.js');
+var groupDaoService = require('../dao/groupDaoService');
+var userDaoService = require('../dao/userDaoService');
+var actionDaoService = require('../dao/actionDaoService');
 
 // Wrappers
-var securityWrapperService = require('../wrappers/securityWrapperService.js');
+var securityWrapperService = require('../wrappers/securityWrapperService');
 
 // Database variable
 var db = new PouchDB(config.getDatabaseConfig());

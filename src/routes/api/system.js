@@ -8,7 +8,7 @@
 /* ********       REQUIRE       ******** */
 /* ************************************* */
 var _ = require('lodash');
-var APIResponses = require('./core/APIResponses.js');
+var APIResponses = require('./core/APIResponses');
 var systemService = require('../../services/systemService');
 
 /* ************************************* */

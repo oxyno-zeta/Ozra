@@ -9,11 +9,11 @@
 /* ************************************* */
 var express = require('express');
 var router = express.Router();
-var errorsAPI = require('./api/errors.js');
-var groupsAPI = require('./api/groups.js');
-var usersAPI = require('./api/users.js');
-var actionsAPI = require('./api/actions.js');
-var systemsAPI = require('./api/system.js');
+var errorsAPI = require('./api/errors');
+var groupsAPI = require('./api/groups');
+var usersAPI = require('./api/users');
+var actionsAPI = require('./api/actions');
+var systemsAPI = require('./api/system');
 
 /* ************************************* */
 /* ********       EXPORTS       ******** */

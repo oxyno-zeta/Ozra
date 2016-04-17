@@ -8,7 +8,6 @@
 /* ********       REQUIRE       ******** */
 /* ************************************* */
 var _ = require('lodash');
-var promise = require('promise');
 var child = require('child_process');
 
 /* ************************************* */
@@ -35,7 +34,7 @@ module.exports = {
  * @returns {*|exports|module.exports}
  */
 function exec(command, options){
-    return new promise(function(resolve, reject){
+    return new Promise(function(resolve, reject){
         // Execute command
         child.exec(command, options, function(error, stdout, stderr){
             // Result template

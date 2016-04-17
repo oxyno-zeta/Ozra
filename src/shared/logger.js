@@ -8,6 +8,7 @@
 /* ********       REQUIRE       ******** */
 /* ************************************* */
 var log4js = require('log4js');
+var configurationService = require('../services/configurationService');
 // Load configuration
 log4js.configure('log4jsConf.json', {});
 // Get logger
@@ -18,7 +19,6 @@ var logger = log4js.getLogger('cheese');
 /* ************************************* */
 module.exports = {
     info: info,
-    trace: trace,
     debug: debug,
     warn: warn,
     error: error,
@@ -63,15 +63,9 @@ function warn(text){
  * @param text {*}
  */
 function debug(text){
-    logger.debug(text);
-}
-
-/**
- * Trace log level
- * @param text {*}
- */
-function trace(text){
-    logger.trace(text);
+    if (configurationService.isVerbose()){
+        logger.debug(text);
+    }
 }
 
 /**
