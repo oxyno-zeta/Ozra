@@ -61,9 +61,7 @@ function getAll(user){
                 logger.info('Get all actions => success');
 
                 // Log actions if verbose activated
-                if (configurationService.isVerbose()){
-                    logger.debug(actionsArray);
-                }
+                logger.debug(actionsArray);
 
                 // Response
                 resolve({
@@ -74,10 +72,7 @@ function getAll(user){
 
             function error(err){
                 logger.error('Get all actions failed => Something failed... => Stop');
-                if (configurationService.isVerbose()){
-                    // Debug
-                    logger.debug(err);
-                }
+                logger.debug(err);
                 reject({
                     status: APICodes.serverErrors.INTERNAL_ERROR
                 });
@@ -95,10 +90,7 @@ function getAll(user){
             }
         }, function(err){
             logger.error('Get all actions failed => Something failed... => Stop');
-            if (configurationService.isVerbose()){
-                // Debug
-                logger.debug(err);
-            }
+            logger.debug(err);
             reject({
                 status: APICodes.serverErrors.INTERNAL_ERROR
             });
@@ -150,20 +142,14 @@ function getFromId(user, id){
                 });
             }, function(err){
                 logger.error('Get action failed => Not found => Stop');
-                if (configurationService.isVerbose()){
-                    // Debug
-                    logger.debug(err);
-                }
+                logger.debug(err);
                 reject({
                     status: APICodes.clientErrors.NOT_FOUND
                 });
             });
         }, function(err){
             logger.error('Get action failed => Something failed... => Stop');
-            if (configurationService.isVerbose()){
-                // Debug
-                logger.debug(err);
-            }
+            logger.debug(err);
             reject({
                 status: APICodes.serverErrors.INTERNAL_ERROR
             });
@@ -184,9 +170,7 @@ function run(user, id){
                 actionDaoService.getActionFromId(id).then(function(action){
                     // Success
                     function finish(result){
-                        if (configurationService.isVerbose()){
-                            logger.debug(result);
-                        }
+                        logger.debug(result);
                         resolve({
                             status: APICodes.normal.OK,
                             data: result
@@ -202,10 +186,7 @@ function run(user, id){
                     });
                 }, function(err){
                     logger.error('Run action failed => action not found or something failed... => Stop');
-                    if (configurationService.isVerbose()){
-                        // Debug
-                        logger.debug(err);
-                    }
+                    logger.debug(err);
                     reject({
                         status: APICodes.clientErrors.NOT_FOUND
                     });
@@ -242,10 +223,7 @@ function run(user, id){
             });
         }, function(err){
             logger.error('Deleted action failed => Something failed... => Stop');
-            if (configurationService.isVerbose()){
-                // Debug
-                logger.debug(err);
-            }
+            logger.debug(err);
             reject({
                 status: APICodes.serverErrors.INTERNAL_ERROR
             });
@@ -276,9 +254,7 @@ function add(user, actionData){
         // Check if data are valid
         if (!newAction.isValid()){
             logger.error('Add action failed => Data not valid (entries) => Stop');
-            if (configurationService.isVerbose()){
-                logger.debug(newAction.toJson());
-            }
+            logger.debug(newAction.toJson());
             reject({
                 status: APICodes.clientErrors.FORBIDDEN
             });
@@ -306,9 +282,7 @@ function add(user, actionData){
                     // Check if data are valid
                     if (!authorized) {
                         logger.error('Add action failed => Data not valid (groups error) => Stop');
-                        if (configurationService.isVerbose()) {
-                            logger.debug(actionData);
-                        }
+                        logger.debug(actionData);
                         reject({
                             status: APICodes.clientErrors.FORBIDDEN
                         });
@@ -320,9 +294,7 @@ function add(user, actionData){
                 actionDaoService.getActionFromCategory(newAction.getName(), newAction.getCategory()).then(function(){
                     // Error : found an action
                     logger.error('Add action failed => user "' + newAction.getName() + '" already exist => Stop');
-                    if (configurationService.isVerbose()){
-                        logger.debug(newAction.toJson());
-                    }
+                    logger.debug(newAction.toJson());
                     reject({
                         status: APICodes.clientErrors.CONFLICT
                     });
@@ -330,10 +302,7 @@ function add(user, actionData){
                     // Check if something wrong
                     if (err){
                         logger.error('Add action failed => Something failed... => Stop');
-                        if (configurationService.isVerbose()){
-                            // Debug
-                            logger.debug(err);
-                        }
+                        logger.debug(err);
                         reject({
                             status: APICodes.serverErrors.INTERNAL_ERROR
                         });
@@ -346,9 +315,7 @@ function add(user, actionData){
                         logger.info('Add action "' + newAction.getName() + '" success');
 
                         // Debug
-                        if (configurationService.isVerbose()){
-                            logger.debug(newAction.toJson());
-                        }
+                        logger.debug(newAction.toJson());
 
                         resolve({
                             status: APICodes.normal.CREATED,
@@ -356,10 +323,7 @@ function add(user, actionData){
                         });
                     }, function(err){
                         logger.error('Add action failed => Something failed... => Stop');
-                        if (configurationService.isVerbose()){
-                            // Debug
-                            logger.debug(err);
-                        }
+                        logger.debug(err);
                         reject({
                             status: APICodes.serverErrors.INTERNAL_ERROR
                         });
@@ -367,20 +331,14 @@ function add(user, actionData){
                 });
             }, function(err){
                 logger.error('Add action failed => Data not valid (group not found) => Stop');
-                if (configurationService.isVerbose()){
-                    // Debug
-                    logger.debug(err);
-                }
+                logger.debug(err);
                 reject({
                     status: APICodes.clientErrors.FORBIDDEN
                 });
             });
         }, function(err){
             logger.error('Add actions failed => Something failed... => Stop');
-            if (configurationService.isVerbose()){
-                // Debug
-                logger.debug(err);
-            }
+            logger.debug(err);
             reject({
                 status: APICodes.serverErrors.INTERNAL_ERROR
             });
@@ -402,30 +360,21 @@ function remove(user, id){
                     // Remove
                     actionDaoService.deleteAction(actionInDB.toJson()).then(function(success){
                         logger.info('Deleted action "' + actionInDB.getName() + '" => Success');
-                        if(configurationService.isVerbose()){
-                            // Debug
-                            logger.debug(success);
-                        }
+                        logger.debug(success);
                         resolve({
                             status: APICodes.normal.OK,
                             data: null
                         });
                     }, function(err){
                         logger.error('Deleted action failed => Something failed... => Stop');
-                        if (configurationService.isVerbose()){
-                            // Debug
-                            logger.debug(err);
-                        }
+                        logger.debug(err);
                         reject({
                             status: APICodes.serverErrors.INTERNAL_ERROR
                         });
                     });
                 }, function(err){
                     logger.error('Delete action failed => action not found or something failed... => Stop');
-                    if (configurationService.isVerbose()){
-                        // Debug
-                        logger.debug(err);
-                    }
+                    logger.debug(err);
                     reject({
                         status: APICodes.clientErrors.NOT_FOUND
                     });
@@ -461,20 +410,14 @@ function remove(user, id){
                 go();
             }, function(err){
                 logger.error('Deleted action failed => Cannot get actions for this user (from group ids) => Stop');
-                if (configurationService.isVerbose()){
-                    // Debug
-                    logger.debug(err);
-                }
+                logger.debug(err);
                 reject({
                     status: APICodes.serverErrors.INTERNAL_ERROR
                 });
             });
         }, function(err){
             logger.error('Deleted action failed => Something failed... => Stop');
-            if (configurationService.isVerbose()){
-                // Debug
-                logger.debug(err);
-            }
+            logger.debug(err);
             reject({
                 status: APICodes.serverErrors.INTERNAL_ERROR
             });
@@ -507,9 +450,7 @@ function modify(user, actionData, id){
         // Check if data are valid
         if (!newAction.isValid()){
             logger.error('Add action failed => Data not valid (entries) => Stop');
-            if (configurationService.isVerbose()){
-                logger.debug(newAction.toJson());
-            }
+            logger.debug(newAction.toJson());
             reject({
                 status: APICodes.clientErrors.FORBIDDEN
             });
@@ -521,10 +462,7 @@ function modify(user, actionData, id){
             if (!_.isEqual(id, actionData.id) || !newAction.isValid()){
                 // Error
                 logger.error('Modification action failed => data not valid => Stop');
-                if (configurationService.isVerbose()){
-                    // Debug
-                    logger.debug(newAction.toJson());
-                }
+                logger.debug(newAction.toJson());
                 reject({
                     status: APICodes.clientErrors.FORBIDDEN
                 });
@@ -547,30 +485,21 @@ function modify(user, actionData, id){
                             // Put in database
                             actionDaoService.putAction(newAction.toJson()).then(function (result) {
                                 logger.info('Modification action success');
-                                if (configurationService.isVerbose()) {
-                                    // Debug
-                                    logger.debug(result);
-                                }
+                                logger.debug(result);
                                 resolve({
                                     status: APICodes.normal.OK,
                                     data: newAction.toAPIJson()
                                 });
                             }, function (err) {
                                 logger.error('Modification action failed => Something failed... => Stop');
-                                if (configurationService.isVerbose()) {
-                                    // Debug
-                                    logger.debug(err);
-                                }
+                                logger.debug(err);
                                 reject({
                                     status: APICodes.serverErrors.INTERNAL_ERROR
                                 });
                             });
                         }, function(err){
                             logger.error('Modification action failed => Something failed... => Stop');
-                            if (configurationService.isVerbose()){
-                                // Debug
-                                logger.debug(err);
-                            }
+                            logger.debug(err);
                             reject({
                                 status: APICodes.serverErrors.INTERNAL_ERROR
                             });
@@ -591,10 +520,7 @@ function modify(user, actionData, id){
                         if (_.isUndefined(result)) {
                             // Error
                             logger.error('Modification action failed => Cannot find action for this user => Stop');
-                            if (configurationService.isVerbose()) {
-                                // Debug
-                                logger.debug(newAction.toJson());
-                            }
+                            logger.debug(newAction.toJson());
                             reject({
                                 status: APICodes.clientErrors.FORBIDDEN
                             });
@@ -604,10 +530,7 @@ function modify(user, actionData, id){
                         go2();
                     }, function(err){
                         logger.error('Modification action failed => Something failed... => Stop');
-                        if (configurationService.isVerbose()){
-                            // Debug
-                            logger.debug(err);
-                        }
+                        logger.debug(err);
                         reject({
                             status: APICodes.serverErrors.INTERNAL_ERROR
                         });
@@ -619,11 +542,8 @@ function modify(user, actionData, id){
                         if (!_.isEqual(newAction.getId(), actionInDB.getId())){
                             // Not same action => Failed
                             logger.error('Modification action failed => Same action name detected => Stop');
-                            if (configurationService.isVerbose()){
-                                // Debug
-                                logger.debug(actionInDB.toJson());
-                                logger.debug(newAction.toJson());
-                            }
+                            logger.debug(actionInDB.toJson());
+                            logger.debug(newAction.toJson());
                             reject({
                                 status: APICodes.clientErrors.FORBIDDEN
                             });
@@ -635,10 +555,7 @@ function modify(user, actionData, id){
                         // Check if something wrong
                         if (err){
                             logger.error('Modification action failed => Something failed... => Stop');
-                            if (configurationService.isVerbose()){
-                                // Debug
-                                logger.debug(err);
-                            }
+                            logger.debug(err);
                             reject({
                                 status: APICodes.serverErrors.INTERNAL_ERROR
                             });
@@ -650,20 +567,14 @@ function modify(user, actionData, id){
             }, function(){
                 // Error
                 logger.error('Modification action failed => data not valid (groups not found) => Stop');
-                if (configurationService.isVerbose()){
-                    // Debug
-                    logger.debug(newAction.toJson());
-                }
+                logger.debug(newAction.toJson());
                 reject({
                     status: APICodes.clientErrors.FORBIDDEN
                 });
             });
         }, function(err){
             logger.error('Modification action failed => Something failed... => Stop');
-            if (configurationService.isVerbose()){
-                // Debug
-                logger.debug(err);
-            }
+            logger.debug(err);
             reject({
                 status: APICodes.serverErrors.INTERNAL_ERROR
             });

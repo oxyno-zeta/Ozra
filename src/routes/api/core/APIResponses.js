@@ -42,9 +42,7 @@ function sendResponse(response, body, status, success){
 	// Update response
 	response.status(status.code);
 	// Debug part
-	if (configurationService.isVerbose()) {
-		logger.debug('Answer = ' + JSON.stringify(body));
-	}
+	logger.debug('Answer = ' + JSON.stringify(body));
 	// Send response
 	response.json(body);
 }

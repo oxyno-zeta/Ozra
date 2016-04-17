@@ -58,9 +58,7 @@ function getAll(){
             logger.info('Get all users => ok');
 
             // Log users if verbose activated
-            if (configurationService.isVerbose()){
-                logger.debug(usersList);
-            }
+            logger.debug(usersList);
 
             // Response
             resolve({
@@ -69,10 +67,7 @@ function getAll(){
             });
         }, function(err){
             logger.error('Get all users failed => Something failed... => Stop');
-            if (configurationService.isVerbose()){
-                // Debug
-                logger.debug(err);
-            }
+            logger.debug(err);
             reject({
                 status: APICodes.serverErrors.INTERNAL_ERROR
             });
@@ -120,20 +115,14 @@ function getFromId(user, id){
                 });
             }, function(err){
                 logger.error('Get user failed => Not found => Stop');
-                if (configurationService.isVerbose()){
-                    // Debug
-                    logger.debug(err);
-                }
+                logger.debug(err);
                 reject({
                     status: APICodes.clientErrors.NOT_FOUND
                 });
             });
         }, function(err){
             logger.error('Get user failed => Something failed... => Stop');
-            if (configurationService.isVerbose()){
-                // Debug
-                logger.debug(err);
-            }
+            logger.debug(err);
             reject({
                 status: APICodes.serverErrors.INTERNAL_ERROR
             });
@@ -154,9 +143,7 @@ function add(user, userData){
         if (!_.isString(userData.password) || _.isUndefined(userData.password)||
             _.isNull(userData.password) || _.isEqual(userData.password, '')){
             logger.error('Add user failed => Data not valid (no password) => Stop');
-            if (configurationService.isVerbose()){
-                logger.debug(userData);
-            }
+            logger.debug(userData);
             reject({
                 status: APICodes.clientErrors.FORBIDDEN
             });
@@ -174,9 +161,7 @@ function add(user, userData){
         // Check data are ok
         if (!newUser.isFullValid()){
             logger.error('Add user failed => Data not valid (data error) => Stop');
-            if (configurationService.isVerbose()){
-                logger.debug(newUser.toAPIJson());
-            }
+            logger.debug(newUser.toAPIJson());
             reject({
                 status: APICodes.clientErrors.FORBIDDEN
             });
@@ -190,9 +175,7 @@ function add(user, userData){
             userDaoService.getUserFromName(newUser.getName()).then(function(){
                 // User found => fail
                 logger.error('Add user failed => user "' + newUser.getName() + '" already exist => Stop');
-                if (configurationService.isVerbose()){
-                    logger.debug(newUser.toAPIJson());
-                }
+                logger.debug(newUser.toAPIJson());
                 reject({
                     status: APICodes.clientErrors.CONFLICT
                 });
@@ -200,10 +183,7 @@ function add(user, userData){
                 // Check if something wrong
                 if (err){
                     logger.error('Add user failed => Something failed... => Stop');
-                    if (configurationService.isVerbose()){
-                        // Debug
-                        logger.debug(err);
-                    }
+                    logger.debug(err);
                     reject({
                         status: APICodes.serverErrors.INTERNAL_ERROR
                     });
@@ -218,9 +198,7 @@ function add(user, userData){
                     logger.info('Add user "' + newUser.getName() + '" success');
 
                     // Debug
-                    if (configurationService.isVerbose()){
-                        logger.debug(newUser.toAPIJson());
-                    }
+                    logger.debug(newUser.toAPIJson());
 
                     resolve({
                         status: APICodes.normal.CREATED,
@@ -228,10 +206,7 @@ function add(user, userData){
                     });
                 }, function(err){
                     logger.error('Add user failed => Something failed... => Stop');
-                    if (configurationService.isVerbose()){
-                        // Debug
-                        logger.debug(err);
-                    }
+                    logger.debug(err);
                     reject({
                         status: APICodes.serverErrors.INTERNAL_ERROR
                     });
@@ -239,10 +214,8 @@ function add(user, userData){
             });
         }, function(err){
             logger.error('Add user failed => Data not valid (groups error) => Stop');
-            if (configurationService.isVerbose()){
-                logger.debug(newUser.toAPIJson());
-                logger.debug(err);
-            }
+            logger.debug(newUser.toAPIJson());
+            logger.debug(err);
             reject({
                 status: APICodes.clientErrors.FORBIDDEN
             });
@@ -262,10 +235,7 @@ function remove(user, id){
         if (!_.isString(id)|| _.isUndefined(id)|| _.isNull(id)){
             // Id not valid
             logger.error('Delete user failed => data not valid => Stop');
-            if (configurationService.isVerbose()){
-                // Debug
-                logger.debug(id);
-            }
+            logger.debug(id);
             reject({
                 status: APICodes.clientErrors.FORBIDDEN
             });
@@ -275,10 +245,7 @@ function remove(user, id){
         if (_.isEqual(user.getId(), id)){
             // Id not valid
             logger.error('Delete user failed => trying to delete own user => Stop');
-            if (configurationService.isVerbose()){
-                // Debug
-                logger.debug(id);
-            }
+            logger.debug(id);
             reject({
                 status: APICodes.clientErrors.FORBIDDEN
             });
@@ -292,29 +259,21 @@ function remove(user, id){
                 // Done
                 logger.info('Delete user : "' + userFromId.getName() + '" done');
                 // Log user if verbose activated
-                if (configurationService.isVerbose()){
-                    logger.debug(userFromId.toAPIJson());
-                }
+                logger.debug(userFromId.toAPIJson());
                 resolve({
                     status: APICodes.normal.OK
                 });
             }, function(err){
                 // Fail
                 logger.error('Delete user failed => Something failed... => Stop');
-                if (configurationService.isVerbose()){
-                    // Debug
-                    logger.debug(err);
-                }
+                logger.debug(err);
                 reject({
                     status: APICodes.serverErrors.INTERNAL_ERROR
                 });
             });
         }, function(err){
             logger.error('Get all users failed => Something failed... => Stop');
-            if (configurationService.isVerbose()){
-                // Debug
-                logger.debug(err);
-            }
+            logger.debug(err);
             reject({
                 status: APICodes.serverErrors.INTERNAL_ERROR
             });
@@ -341,10 +300,7 @@ function modifyUser(user, userData, id){
         if (!_.isEqual(id, userData.id) || !userModified.isMinimumValid()){
             // Error
             logger.error('Modification user failed => data not valid => Stop');
-            if (configurationService.isVerbose()){
-                // Debug
-                logger.debug(userModified.toAPIJson());
-            }
+            logger.debug(userModified.toAPIJson());
             reject({
                 status: APICodes.clientErrors.FORBIDDEN
             });
@@ -383,20 +339,14 @@ function modifyUser(user, userData, id){
                         });
                     }, function(err){
                         logger.error('Modification user failed => Something failed... => Stop');
-                        if (configurationService.isVerbose()){
-                            // Debug
-                            logger.debug(err);
-                        }
+                        logger.debug(err);
                         reject({
                             status: APICodes.serverErrors.INTERNAL_ERROR
                         });
                     });
                 }, function(err){
                     logger.error('Modification user failed => Something failed... => Stop');
-                    if (configurationService.isVerbose()){
-                        // Debug
-                        logger.debug(err);
-                    }
+                    logger.debug(err);
                     reject({
                         status: APICodes.serverErrors.INTERNAL_ERROR
                     });
@@ -411,10 +361,7 @@ function modifyUser(user, userData, id){
                     // Not same user => fail
                     logger.error('Modification user failed => User "' + userModified.getName() +
                         '" already exist => Stop');
-                    if (configurationService.isVerbose()){
-                        // Debug
-                        logger.debug(userModified.toAPIJson());
-                    }
+                    logger.debug(userModified.toAPIJson());
                     reject({
                         status: APICodes.clientErrors.CONFLICT
                     });
@@ -430,10 +377,7 @@ function modifyUser(user, userData, id){
         }, function(err){
             // Fail
             logger.error('Modification user failed => User groups doesn\'t exist => Stop');
-            if (configurationService.isVerbose()){
-                // Debug
-                logger.debug(err);
-            }
+            logger.debug(err);
             reject({
                 status: APICodes.clientErrors.NOT_FOUND
             });
@@ -466,10 +410,7 @@ function modifyUserPassword(user, userData, id){
             if (_.isUndefined(userData.password) || _.isNull(userData.password) || !_.isString(userData.password)){
                 // Error
                 logger.error('Modification user password failed => data not valid => Stop');
-                if (configurationService.isVerbose()){
-                    // Debug
-                    logger.debug(userData);
-                }
+                logger.debug(userData);
                 reject({
                     status: APICodes.clientErrors.FORBIDDEN
                 });
@@ -479,10 +420,7 @@ function modifyUserPassword(user, userData, id){
             if (!_.isEqual(userData.id, user.getId()) && !_.isEqual(id, userData.id)){
                 // Error
                 logger.error('Modification user password failed => data not valid => Stop');
-                if (configurationService.isVerbose()){
-                    // Debug
-                    logger.debug(userData);
-                }
+                logger.debug(userData);
                 reject({
                     status: APICodes.clientErrors.FORBIDDEN
                 });
@@ -506,30 +444,21 @@ function modifyUserPassword(user, userData, id){
                     });
                 }, function(err){
                     logger.error('Modification user failed => Something failed... => Stop');
-                    if (configurationService.isVerbose()){
-                        // Debug
-                        logger.debug(err);
-                    }
+                    logger.debug(err);
                     reject({
                         status: APICodes.serverErrors.INTERNAL_ERROR
                     });
                 });
             }, function(err){
                 logger.error('Modification user password failed => User id not found in database => Stop');
-                if (configurationService.isVerbose()){
-                    // Debug
-                    logger.debug(err);
-                }
+                logger.debug(err);
                 reject({
                     status: APICodes.clientErrors.NOT_FOUND
                 });
             });
         }, function(err){
             logger.error('Modification user password failed => Something failed... => Stop');
-            if (configurationService.isVerbose()){
-                // Debug
-                logger.debug(err);
-            }
+            logger.debug(err);
             reject({
                 status: APICodes.serverErrors.INTERNAL_ERROR
             });

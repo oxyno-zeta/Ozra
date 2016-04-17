@@ -56,9 +56,7 @@ function getAll(){
             logger.info('Get all groups => ok');
 
             // Log groups if verbose activated
-            if (configurationService.isVerbose()){
-                logger.debug(groupsArray);
-            }
+            logger.debug(groupsArray);
 
             // Response
             resolve({
@@ -67,10 +65,7 @@ function getAll(){
             });
         }, function(err){
             logger.error('Get all groups failed => Something failed... => Stop');
-            if (configurationService.isVerbose()){
-                // Debug
-                logger.debug(err);
-            }
+            logger.debug(err);
 
             reject({
                 status: APICodes.serverErrors.INTERNAL_ERROR
@@ -96,9 +91,7 @@ function getFromUser(user){
             logger.info('Normal response');
 
             // Log groups if verbose activated
-            if (configurationService.isVerbose()){
-                logger.debug(groupsObject);
-            }
+            logger.debug(groupsObject);
 
             // Response
             resolve({
@@ -107,10 +100,7 @@ function getFromUser(user){
             });
         }, function(err){
             logger.error('Get all groups failed => Something failed... => Stop');
-            if (configurationService.isVerbose()){
-                // Debug
-                logger.debug(err);
-            }
+            logger.debug(err);
 
             // Response
             reject({
@@ -132,10 +122,7 @@ function getFromId(user, id){
         if (!_.isString(id)|| _.isUndefined(id)|| _.isNull(id)){
             // Id not valid
             logger.error('Get group failed => data not valid => Stop');
-            if (configurationService.isVerbose()){
-                // Debug
-                logger.debug(id);
-            }
+            logger.debug(id);
 
             reject({
                 status: APICodes.clientErrors.FORBIDDEN
@@ -147,10 +134,7 @@ function getFromId(user, id){
             // Ok
             logger.info('Get group success');
 
-            if (configurationService.isVerbose()){
-                // Debug
-                logger.debug(group.toJson());
-            }
+            logger.debug(group.toJson());
 
             // Response
             resolve({
@@ -160,10 +144,7 @@ function getFromId(user, id){
         }, function(err){
             // Fail
             logger.error('Get group failed => Group not found => Stop');
-            if (configurationService.isVerbose()){
-                // Debug
-                logger.debug(err);
-            }
+            logger.debug(err);
             reject({
                 status: APICodes.clientErrors.NOT_FOUND
             });
@@ -182,10 +163,7 @@ function remove(user, id){
         if (!_.isString(id)|| _.isUndefined(id)|| _.isNull(id)){
             // Id not valid
             logger.error('Delete group failed => data not valid => Stop');
-            if (configurationService.isVerbose()){
-                // Debug
-                logger.debug(id);
-            }
+            logger.debug(id);
             reject({
                 status: APICodes.clientErrors.FORBIDDEN
             });
@@ -209,9 +187,7 @@ function remove(user, id){
                     // Done
                     logger.info('Delete group : "' + group.getName() + '" done');
                     // Log group if verbose activated
-                    if (configurationService.isVerbose()){
-                        logger.debug(group.toJson());
-                    }
+                    logger.debug(group.toJson());
                     resolve({
                         status: APICodes.normal.OK,
                         data: null
@@ -219,10 +195,7 @@ function remove(user, id){
                 }, function(err){
                     // Fail
                     logger.error('Delete group failed => Something failed... => Stop');
-                    if (configurationService.isVerbose()){
-                        // Debug
-                        logger.debug(err);
-                    }
+                    logger.debug(err);
                     reject({
                         status: APICodes.serverErrors.INTERNAL_ERROR
                     });
@@ -230,10 +203,7 @@ function remove(user, id){
             }, function(err){
                 // Fail
                 logger.error('Delete group failed => Something failed... => Stop');
-                if (configurationService.isVerbose()){
-                    // Debug
-                    logger.debug(err);
-                }
+                logger.debug(err);
                 reject({
                     status: APICodes.serverErrors.INTERNAL_ERROR
                 });
@@ -241,10 +211,7 @@ function remove(user, id){
         }, function(err){
             // Fail
             logger.error('Delete group failed => Group not found => Stop');
-            if (configurationService.isVerbose()){
-                // Debug
-                logger.debug(err);
-            }
+            logger.debug(err);
             reject({
                 status: APICodes.clientErrors.NOT_FOUND
             });
@@ -269,10 +236,7 @@ function add(user, groupData){
         if (!newGroup.isMinimumValid()){
             // Error
             logger.error('Add group failed => data not valid => Stop');
-            if (configurationService.isVerbose()){
-                // Debug
-                logger.debug(newGroup.toJson());
-            }
+            logger.debug(newGroup.toJson());
             reject({
                 status: APICodes.clientErrors.FORBIDDEN
             });
@@ -295,9 +259,7 @@ function add(user, groupData){
                 // Ok => added
                 logger.info('Add group "' + newGroup.getName() + '" success');
                 // Log new group if verbose activated
-                if (configurationService.isVerbose()){
-                    logger.debug(newGroup.toJson());
-                }
+                logger.debug(newGroup.toJson());
                 // Response
                 resolve({
                     status: APICodes.normal.CREATED,
@@ -306,10 +268,7 @@ function add(user, groupData){
             }, function(err){
                 // Fail
                 logger.error('Add group failed => Something failed... => Stop');
-                if (configurationService.isVerbose()){
-                    // Debug
-                    logger.debug(err);
-                }
+                logger.debug(err);
                 reject({
                     status: APICodes.serverErrors.INTERNAL_ERROR
                 });
@@ -337,10 +296,7 @@ function modify(user, groupData, groupId){
         if (!_.isEqual(groupId, groupModification.getId()) || !groupModification.isMinimumValid()){
             // Error
             logger.error('Modification group failed => data not valid => Stop');
-            if (configurationService.isVerbose()){
-                // Debug
-                logger.debug(groupModification.toJson());
-            }
+            logger.debug(groupModification.toJson());
             reject({
                 status: APICodes.clientErrors.FORBIDDEN
             });
@@ -357,9 +313,7 @@ function modify(user, groupData, groupId){
                     // Ok => added
                     logger.info('Modification group name : "' + groupModification.getName() + '" success');
                     // Log new group if verbose activated
-                    if (configurationService.isVerbose()){
-                        logger.debug(groupModification.toJson());
-                    }
+                    logger.debug(groupModification.toJson());
                     // Response
                     resolve({
                         status: APICodes.normal.OK,
@@ -368,10 +322,7 @@ function modify(user, groupData, groupId){
                 }, function(err){
                     // Fail
                     logger.error('Modification group failed => Something failed... => Stop');
-                    if (configurationService.isVerbose()){
-                        // Debug
-                        logger.debug(err);
-                    }
+                    logger.debug(err);
                     reject({
                         status: APICodes.serverErrors.INTERNAL_ERROR
                     });
@@ -399,10 +350,7 @@ function modify(user, groupData, groupId){
         }, function(err){
             // Fail
             logger.error('Modification group failed => Group not exist => Stop');
-            if (configurationService.isVerbose()){
-                // Debug
-                logger.debug(err);
-            }
+            logger.debug(err);
             reject({
                 status: APICodes.serverErrors.NOT_FOUND
             });

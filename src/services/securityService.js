@@ -101,10 +101,7 @@ function ozraRequireAdminMiddleware(){
             APIResponses.sendResponse(res, body, APICodes.clientErrors.FORBIDDEN, false);
         }, function(err){
             logger.error('Something failed in require administrator middleware... => Stop');
-            if (configurationService.isVerbose()){
-                // Debug
-                logger.debug(err);
-            }
+            logger.debug(err);
             APIResponses.sendResponse(res, body, APICodes.serverErrors.INTERNAL_ERROR, false);
         });
     };

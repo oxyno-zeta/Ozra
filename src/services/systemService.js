@@ -49,9 +49,7 @@ function login(body){
             _.isEqual(body.password, '')) {
             // Empty body
             logger.error('Login failed => Nothing in body => Stop');
-            if (configurationService.isVerbose()){
-                logger.debug(body);
-            }
+            logger.debug(body);
             reject({
                 status: APICodes.clientErrors.BAD_REQUEST
             });
@@ -65,9 +63,7 @@ function login(body){
                 // Check result
                 if (!result){
                     logger.error('Login failed => Wrong password => Stop');
-                    if (configurationService.isVerbose()){
-                        logger.debug(body);
-                    }
+                    logger.debug(body);
                     reject({
                         status: APICodes.clientErrors.FORBIDDEN
                     });
@@ -88,10 +84,7 @@ function login(body){
                 });
             }, function(err){
                 logger.error('Login failed => Something failed... => Stop');
-                if (configurationService.isVerbose()){
-                    // Debug
-                    logger.debug(err);
-                }
+                logger.debug(err);
                 reject({
                     status: APICodes.serverErrors.INTERNAL_ERROR
                 });
@@ -99,10 +92,7 @@ function login(body){
         }, function(err){
             if (err){
                 logger.error('Login failed => Something failed... => Stop');
-                if (configurationService.isVerbose()){
-                    // Debug
-                    logger.debug(err);
-                }
+                logger.debug(err);
                 reject({
                     status: APICodes.serverErrors.INTERNAL_ERROR
                 });
@@ -110,9 +100,7 @@ function login(body){
             }
 
             logger.error('Login failed => User not found => Stop');
-            if (configurationService.isVerbose()){
-                logger.debug(body);
-            }
+            logger.debug(body);
             reject({
                 status: APICodes.clientErrors.NOT_AUTHORIZED
             });
