@@ -74,20 +74,6 @@ function initServer(){
         }
     }
 
-    logger.info('Initialize database...');
-    // Initialize database
-    initService.launch().then(function(){
-        logger.info('Server fully launched !');
-        // Put api
-        apiRoutes.putApiRoutes(app);
-    }, function(err){
-        // Error
-        logger.fatal('Server OFFLINE => DB not initialized => Stop');
-        if (ConfigService.isVerbose()){
-            logger.debug(err);
-        }
-    });
-
     app.use(bodyParser.json()); // for parsing application/json
     app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
     app.use(cookieParser()); // For cookie parsing
@@ -105,6 +91,19 @@ function initServer(){
     app.use('/bower_components', serveStatic(__dirname + '/bower_components/'));
     app.use(serveStatic(__dirname + '/views/'));
 
+    logger.info('Initialize database...');
+    // Initialize database
+    initService.launch().then(function(){
+        logger.info('Server fully launched !');
+        // Put api
+        apiRoutes.putApiRoutes(app);
+    }, function(err){
+        // Error
+        logger.fatal('Server OFFLINE => DB not initialized => Stop');
+        if (ConfigService.isVerbose()){
+            logger.debug(err);
+        }
+    });
 }
 
 /**
