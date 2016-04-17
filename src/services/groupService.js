@@ -130,23 +130,40 @@ function getFromId(user, id){
             return;
         }
 
-        groupDaoService.getGroupFromId(id).then(function (group) {
-            // Ok
-            logger.info('Get group success');
+        securityService.isUserAdministrator(user).then(function(isAdmin){
+            // Check that user have this group
+            if (!_.includes(user.getGroups(), id) && !isAdmin){
+                logger.error('Get group failed => User "' + user.getName() + '" try to get another group than theirs');
+                reject({
+                    status: APICodes.clientErrors.FORBIDDEN
+                });
+                return;
+            }
 
-            logger.debug(group.toJson());
+            groupDaoService.getGroupFromId(id).then(function (group) {
+                // Ok
+                logger.info('Get group success');
 
-            // Response
-            resolve({
-                status: APICodes.normal.OK,
-                data: group.toAPIJson()
+                logger.debug(group.toJson());
+
+                // Response
+                resolve({
+                    status: APICodes.normal.OK,
+                    data: group.toAPIJson()
+                });
+            }, function(err){
+                // Fail
+                logger.error('Get group failed => Group not found => Stop');
+                logger.debug(err);
+                reject({
+                    status: APICodes.clientErrors.NOT_FOUND
+                });
             });
         }, function(err){
-            // Fail
-            logger.error('Get group failed => Group not found => Stop');
+            logger.error('Something failed... => Stop');
             logger.debug(err);
             reject({
-                status: APICodes.clientErrors.NOT_FOUND
+                status: APICodes.serverErrors.INTERNAL_ERROR
             });
         });
     });

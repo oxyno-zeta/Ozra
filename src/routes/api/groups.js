@@ -171,7 +171,7 @@ function groupsUrls(mainApp){
     // Get all groups for the token user
     mainApp.get('/groups/user/', getGroupsFromUser);
     // Get group from id
-    mainApp.get('/groups/:id', securityService.middleware.ozraRequireAdminMiddleware(), getSpecificGroup);
+    mainApp.get('/groups/:id', getSpecificGroup);
     // Add group
     mainApp.post('/groups/', securityService.middleware.ozraRequireAdminMiddleware(), addGroup);
     // Delete group
