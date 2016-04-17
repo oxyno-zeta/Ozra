@@ -24,7 +24,7 @@ var POSSIBLE_ENV = ['dev', 'prod'];
 // Default configuration
 var DEFAULT_CONFIG = {
     'OZRA_ENV': 'dev',
-    'OZRA_PORT': 2040,
+    'OZRA_PORT': 2050,
     'OZRA_VERBOSE': true,
     'OZRA_DATABASE_SERVER_URL': '',
     'OZRA_DATABASE_NAME': 'Ozra_database'
