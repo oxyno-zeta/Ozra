@@ -150,74 +150,96 @@ function add(user, userData){
             return;
         }
         // Generate user
-        var salt = securityWrapperService.genSaltSync();
-        var newUser = new userModel.User()
-            .setName(userData.name)
-            .setToken(securityWrapperService.genTokenSync())
-            .setPassword(securityWrapperService.genHashSync(userData.password, salt))
-            .setSalt(salt)
-            .setGroups(userData.groups);
+        var promises = [];
+        promises.push(securityWrapperService.genSalt());
+        promises.push(securityWrapperService.genToken());
 
-        // Check data are ok
-        if (!newUser.isFullValid()){
-            logger.error('Add user failed => Data not valid (data error) => Stop');
-            logger.debug(newUser.toAPIJson());
-            reject({
-                status: APICodes.clientErrors.FORBIDDEN
-            });
-            return;
-        }
+        Promise.all(promises).then(function(results) {
+            var salt = results[0];
+            var token = results[1];
 
-        groupDaoService.getGroupsFromIds(newUser.getGroups()).then(function(){
-            // Groups found => ok
+            securityWrapperService.genHash(userData.password, salt).then(function(encryptedPassword){
+                var newUser = new userModel.User()
+                    .setName(userData.name)
+                    .setToken(token)
+                    .setPassword(encryptedPassword)
+                    .setSalt(salt)
+                    .setGroups(userData.groups);
 
-            // Check if user already exist
-            userDaoService.getUserFromName(newUser.getName()).then(function(){
-                // User found => fail
-                logger.error('Add user failed => user "' + newUser.getName() + '" already exist => Stop');
-                logger.debug(newUser.toAPIJson());
-                reject({
-                    status: APICodes.clientErrors.CONFLICT
-                });
-            }, function(err){
-                // Check if something wrong
-                if (err){
-                    logger.error('Add user failed => Something failed... => Stop');
-                    logger.debug(err);
+                // Check data are ok
+                if (!newUser.isFullValid()){
+                    logger.error('Add user failed => Data not valid (data error) => Stop');
+                    logger.debug(newUser.toAPIJson());
                     reject({
-                        status: APICodes.serverErrors.INTERNAL_ERROR
+                        status: APICodes.clientErrors.FORBIDDEN
                     });
                     return;
                 }
 
-                // Nothing found => ok
+                groupDaoService.getGroupsFromIds(newUser.getGroups()).then(function(){
+                    // Groups found => ok
+
+                    // Check if user already exist
+                    userDaoService.getUserFromName(newUser.getName()).then(function(){
+                        // User found => fail
+                        logger.error('Add user failed => user "' + newUser.getName() + '" already exist => Stop');
+                        logger.debug(newUser.toAPIJson());
+                        reject({
+                            status: APICodes.clientErrors.CONFLICT
+                        });
+                    }, function(err){
+                        // Check if something wrong
+                        if (err){
+                            logger.error('Add user failed => Something failed... => Stop');
+                            logger.debug(err);
+                            reject({
+                                status: APICodes.serverErrors.INTERNAL_ERROR
+                            });
+                            return;
+                        }
+
+                        // Nothing found => ok
 
 
-                // Add user in database
-                userDaoService.putUser(newUser.toJson()).then(function(){
-                    logger.info('Add user "' + newUser.getName() + '" success');
+                        // Add user in database
+                        userDaoService.putUser(newUser.toJson()).then(function(){
+                            logger.info('Add user "' + newUser.getName() + '" success');
 
-                    // Debug
-                    logger.debug(newUser.toAPIJson());
+                            // Debug
+                            logger.debug(newUser.toAPIJson());
 
-                    resolve({
-                        status: APICodes.normal.CREATED,
-                        data: newUser.toAPIJson()
+                            resolve({
+                                status: APICodes.normal.CREATED,
+                                data: newUser.toAPIJson()
+                            });
+                        }, function(err){
+                            logger.error('Add user failed => Something failed... => Stop');
+                            logger.debug(err);
+                            reject({
+                                status: APICodes.serverErrors.INTERNAL_ERROR
+                            });
+                        });
                     });
                 }, function(err){
-                    logger.error('Add user failed => Something failed... => Stop');
+                    logger.error('Add user failed => Data not valid (groups error) => Stop');
+                    logger.debug(newUser.toAPIJson());
                     logger.debug(err);
                     reject({
-                        status: APICodes.serverErrors.INTERNAL_ERROR
+                        status: APICodes.clientErrors.FORBIDDEN
                     });
+                });
+            }, function(err){
+                logger.error('Add user failed => Something failed... => Stop');
+                logger.debug(err);
+                reject({
+                    status: APICodes.serverErrors.INTERNAL_ERROR
                 });
             });
         }, function(err){
-            logger.error('Add user failed => Data not valid (groups error) => Stop');
-            logger.debug(newUser.toAPIJson());
+            logger.error('Add user failed => Something failed... => Stop');
             logger.debug(err);
             reject({
-                status: APICodes.clientErrors.FORBIDDEN
+                status: APICodes.serverErrors.INTERNAL_ERROR
             });
         });
     });

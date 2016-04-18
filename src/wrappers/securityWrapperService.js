@@ -7,29 +7,63 @@
 /* ************************************* */
 /* ********       REQUIRE       ******** */
 /* ************************************* */
-var bcrypt = require('bcrypt');
+var crypto = require('crypto');
+var _ = require('lodash');
 //Constants
-var tokenLength = 10;
+var defaultRandomLength = 30;
+var defaultIterations = 10000;
+var defaultKeyLength = 64;
 
 /* ************************************* */
 /* ********       EXPORTS       ******** */
 /* ************************************* */
 module.exports = {
     genSalt: genSalt,
-    genSaltSync: genSaltSync,
     genToken: genToken,
-    genTokenSync: genTokenSync,
     genHash: genHash,
-    genHashSync: genHashSync,
-    compare: compare,
-    compareSync: compareSync
+    compare: compare
 };
 
 /* ************************************* */
 /* ********  PRIVATE FUNCTIONS  ******** */
 /* ************************************* */
 
+/**
+ * Generate Random
+ * @returns {Promise}
+ */
+function generateRandom() {
+    return new Promise(function(resolve, reject){
+        crypto.randomBytes(defaultRandomLength, function(err, random){
+            if (err) {
+                reject(err);
+            } else {
+                resolve(random.toString('base64'));
+            }
+        });
+    });
+}
 
+/**
+ * Encrypt password
+ *
+ * @param {String} password
+ * @param {String} salt
+ * @return {String}
+ */
+function encryptPassword(password, salt) {
+    return new Promise(function(resolve, reject){
+        var saltBuffer = new Buffer(salt, 'base64');
+
+        crypto.pbkdf2(password, saltBuffer, defaultIterations, defaultKeyLength, function(err, key) {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(key.toString('base64'));
+            }
+        });
+    });
+}
 
 /* ************************************* */
 /* ********   PUBLIC FUNCTIONS  ******** */
@@ -37,58 +71,10 @@ module.exports = {
 
 /**
  * Generate Salt
- * @returns {promise}
- */
-function genSalt(){
-    return new Promise(function(resolve, reject){
-        bcrypt.genSalt(tokenLength, function(err, salt){
-            if (err !== undefined){
-                // Error case
-                reject(err);
-                return;
-            }
-            // Resolve
-            resolve(salt);
-        });
-    });
-}
-
-/**
- * Generate Salt synchronously
- * @returns {*}
- */
-function genSaltSync(){
-    return bcrypt.genSaltSync(tokenLength);
-}
-
-/**
- * Generate hash
- * @param data {string} entry data
- * @param salt {string} salt
  * @returns {Promise}
  */
-function genHash(data, salt){
-    return new Promise(function(resolve, reject){
-        bcrypt.hash(data, salt, function(err, hash){
-            if (err !== undefined){
-                // Error
-                reject(err);
-                return;
-            }
-            // Resolve
-            resolve(hash);
-        });
-    });
-}
-
-/**
- * Generate hash
- * @param data {string} entry data
- * @param salt {string} salt
- * @returns {*}
- */
-function genHashSync(data, salt){
-    return bcrypt.hashSync(data, salt);
+function genSalt(){
+    return generateRandom();
 }
 
 /**
@@ -100,41 +86,33 @@ function genToken(){
 }
 
 /**
- * Generate token
- * @returns {*}
- */
-function genTokenSync(){
-    return genSaltSync();
-}
-
-/**
- * Compare data and hash
- * @param data {string} data entry
- * @param hash {string} hash
+ * Generate hash
+ * @param data {String} entry data
+ * @param salt {String} salt
  * @returns {Promise}
  */
-function compare(data, hash){
-    return new Promise(function(resolve, reject){
-        bcrypt.compare(data, hash, function(err, result){
-            if (err !== undefined){
-                // Error
-                reject(err);
-                return;
-            }
-            // Ok
-            resolve(result);
-        });
-    });
+function genHash(data, salt){
+    return encryptPassword(data, salt);
 }
 
 /**
  * Compare data and hash
- * @param data {string} data entry
- * @param hash {string} hash
- * @returns {*}
+ * @param password {String} password
+ * @param salt {String} salt
+ * @param hash {String} hash
+ * @returns {Promise}
  */
-function compareSync(data, hash){
-    return bcrypt.compareSync(data, hash);
+function compare(password, salt, hash){
+    return new Promise(function(resolve, reject){
+        encryptPassword(password, salt).then(function(encrypt){
+            if (_.isEqual(encrypt, hash)){
+                resolve();
+            }
+            else {
+                reject();
+            }
+        }, reject);
+    });
 }
 
 

@@ -59,17 +59,7 @@ function login(body){
         // Get user in database
         userDaoService.getUserFromName(body.username).then(function(user){
             // Check it is right password
-            securityWrapperService.compare(body.password, user.getPassword()).then(function(result){
-                // Check result
-                if (!result){
-                    logger.error('Login failed => Wrong password => Stop');
-                    logger.debug(body);
-                    reject({
-                        status: APICodes.clientErrors.FORBIDDEN
-                    });
-                    return;
-                }
-
+            securityWrapperService.compare(body.password, user.getSalt(), user.getPassword()).then(function(result){
                 // Ok
                 logger.info('Login Success for user "' + user.getName() + '"');
 
@@ -83,10 +73,18 @@ function login(body){
                     data: data
                 });
             }, function(err){
-                logger.error('Login failed => Something failed... => Stop');
-                logger.debug(err);
+                if (err) {
+                    logger.error('Login failed => Something failed... => Stop');
+                    logger.debug(err);
+                    reject({
+                        status: APICodes.serverErrors.INTERNAL_ERROR
+                    });
+                }
+
+                logger.error('Login failed => Wrong password => Stop');
+                logger.debug(body);
                 reject({
-                    status: APICodes.serverErrors.INTERNAL_ERROR
+                    status: APICodes.clientErrors.NOT_AUTHORIZED
                 });
             });
         }, function(err){
@@ -99,7 +97,7 @@ function login(body){
                 return;
             }
 
-            logger.error('Login failed => User not found => Stop');
+            logger.error('Login failed => Wrong username => Stop');
             logger.debug(body);
             reject({
                 status: APICodes.clientErrors.NOT_AUTHORIZED

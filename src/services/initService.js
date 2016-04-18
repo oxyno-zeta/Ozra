@@ -8,8 +8,7 @@
 /* ********       REQUIRE       ******** */
 /* ************************************* */
 var PouchDB = require('pouchdb');
-var _ = require('lodash');
-var config = require('../services/configurationService');
+var configurationService = require('../services/configurationService');
 
 // Dao
 var groupDaoService = require('../dao/groupDaoService');
@@ -20,7 +19,7 @@ var actionDaoService = require('../dao/actionDaoService');
 var securityWrapperService = require('../wrappers/securityWrapperService');
 
 // Database variable
-var db = new PouchDB(config.getDatabaseConfig());
+var db = new PouchDB(configurationService.getDatabaseConfig());
 
 
 /* ************************************* */
@@ -64,43 +63,54 @@ function initDatabase(){
             name:'Administrator',
             administrator: true
         });
-        var salt = securityWrapperService.genSaltSync();
-        var user = userDaoService.createUserFromData({
-            name: 'admin',
-            password: securityWrapperService.genHashSync('admin', salt),
-            salt: salt,
-            token: securityWrapperService.genTokenSync(),
-            groups: [
-                group.getId()
-            ]
-        });
 
+        var promises = [];
+        promises.push(securityWrapperService.genSalt());
+        promises.push(securityWrapperService.genToken());
 
-        // Need initialization
-        db.destroy().then(function(){
-            // Create new database
-            db = new PouchDB(config.getDatabaseConfig());
-            // Array to store functions
-            var promises = [];
-            // Create and store functions : designs
-            promises.push(new Promise(function(resolve, reject){
-                db.put(userDaoService.getDesignDocumentSync()).then(resolve).catch(reject);
-            }));
-            promises.push(new Promise(function(resolve, reject){
-                db.put(actionDaoService.getDesignDocumentSync()).then(resolve).catch(reject);
-            }));
-            promises.push(new Promise(function(resolve, reject){
-                db.put(groupDaoService.getDesignDocumentSync()).then(resolve).catch(reject);
-            }));
-            // Create and store functions : documents
-            promises.push(new Promise(function(resolve, reject){
-                db.put(group.toJson()).then(resolve).catch(reject);
-            }));
-            promises.push(new Promise(function(resolve, reject){
-                db.put(user.toJson()).then(resolve).catch(reject);
-            }));
-            // Launch functions
-            Promise.all(promises).then(resolve,reject);
+        Promise.all(promises).then(function(results){
+            var salt = results[0];
+            var token = results[1];
+
+            securityWrapperService.genHash('admin', salt).then(function(encryptedPassword){
+                var user = userDaoService.createUserFromData({
+                    name: 'admin',
+                    password: encryptedPassword,
+                    salt: salt,
+                    token: token,
+                    groups: [
+                        group.getId()
+                    ]
+                });
+
+                // Need initialization
+                db.destroy().then(function(){
+                    // Create new database
+                    db = new PouchDB(configurationService.getDatabaseConfig());
+                    // Array to store functions
+                    promises = [];
+                    // Create and store functions : designs
+                    promises.push(new Promise(function(resolve, reject){
+                        db.put(userDaoService.getDesignDocumentSync()).then(resolve).catch(reject);
+                    }));
+                    promises.push(new Promise(function(resolve, reject){
+                        db.put(actionDaoService.getDesignDocumentSync()).then(resolve).catch(reject);
+                    }));
+                    promises.push(new Promise(function(resolve, reject){
+                        db.put(groupDaoService.getDesignDocumentSync()).then(resolve).catch(reject);
+                    }));
+                    // Create and store functions : documents
+                    promises.push(new Promise(function(resolve, reject){
+                        db.put(group.toJson()).then(resolve).catch(reject);
+                    }));
+                    promises.push(new Promise(function(resolve, reject){
+                        db.put(user.toJson()).then(resolve).catch(reject);
+                    }));
+                    // Launch functions
+                    Promise.all(promises).then(resolve,reject);
+                }, reject);
+
+            }, reject);
         }, reject);
     });
 }
