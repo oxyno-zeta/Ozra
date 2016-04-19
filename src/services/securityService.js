@@ -44,7 +44,7 @@ module.exports = {
 function ozraTokenMiddleware(){
     return function(req, res, next){
         // Get the user token
-        var token = req.query['token'];
+        var token = req.get('Ozra-Token') || req.query['token'];
 
         // Prepare the response to default
         var body = APIResponses.getDefaultResponseBody(token);
@@ -67,7 +67,14 @@ function ozraTokenMiddleware(){
             logger.info('User "' + user.getName() + '" authenticated');
 
             next();
-        }, function(){
+        }, function(err){
+            if (!_.isUndefined(err)){
+                // Database error
+                logger.error('Database error => Stop');
+                logger.error(err);
+                APIResponses.sendResponse(res, body, APICodes.serverErrors.INTERNAL_ERROR, false);
+                return;
+            }
             // Error
             logger.error('User unknown => not authorized');
             APIResponses.sendResponse(res, body, APICodes.clientErrors.FORBIDDEN, false);
