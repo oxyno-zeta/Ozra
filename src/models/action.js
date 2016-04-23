@@ -10,6 +10,7 @@
 var uuid = require('uuid');
 var _ = require('lodash');
 var design = require('./designs/action');
+var general = require('./general/general');
 
 /* ************************************* */
 /* ********       EXPORTS       ******** */
@@ -41,6 +42,7 @@ function actionModel(){
     json._id = uuid.v1();
     json._rev = undefined;
     json.type = design.type;
+    json.version = general.modelVersion;
     json.name = undefined;
     json.category = undefined;
     json.script = undefined;
@@ -209,6 +211,7 @@ function actionModel(){
         // Delete data
         delete result._id;
         delete result._rev;
+        delete result.version;
         return result;
     };
 

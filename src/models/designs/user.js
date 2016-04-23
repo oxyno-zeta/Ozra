@@ -5,6 +5,11 @@
  */
 
 /* ************************************* */
+/* ********       REQUIRE       ******** */
+/* ************************************* */
+var general = require('../general/general');
+
+/* ************************************* */
 /* ********   PUBLIC FUNCTIONS  ******** */
 /* ************************************* */
 // Type
@@ -14,7 +19,7 @@ var type = 'user';
 /* istanbul ignore next */
 var userDesign = {
     _id: '_design/users',
-    version: '0.0.3',
+    version: general.modelVersion,
     /* jshint ignore:start */
     views: {
         getAll: {

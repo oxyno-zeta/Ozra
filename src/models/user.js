@@ -10,6 +10,7 @@
 var uuid = require('uuid');
 var _ = require('lodash');
 var design = require('./designs/user');
+var general = require('./general/general');
 
 /* ************************************* */
 /* ********       EXPORTS       ******** */
@@ -41,6 +42,7 @@ function userModel(){
     json._id = uuid.v1();
     json._rev = undefined;
     json.type = design.type;
+    json.version = general.modelVersion;
     json.name = undefined;
     json.password = undefined;
     json.salt = undefined;
@@ -210,6 +212,7 @@ function userModel(){
         delete result.salt;
         delete result._id;
         delete result._rev;
+        delete result.version;
         return result;
     };
     /**
