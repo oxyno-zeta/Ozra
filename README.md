@@ -1,4 +1,7 @@
 # Ozra
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/oxyno-zeta/Ozra.svg)](https://greenkeeper.io/)
+
 Launcher and monitoring server
 
 ## Project
